@@ -20,9 +20,28 @@ namespace DIY
     /// </summary>
     public partial class MainWindow : Window
     {
+        private PreferencesWindow pWindow;
+
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Preferences_Click(object sender, RoutedEventArgs e)
+        {
+            if(pWindow == null)
+            {
+                pWindow = new PreferencesWindow();
+            }
+            if(pWindow.IsVisible)
+            {
+                pWindow.Focus();
+            } else
+            {
+                pWindow.Close();
+                pWindow = new PreferencesWindow();
+                pWindow.Show();
+            }
         }
     }
 }

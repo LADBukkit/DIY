@@ -21,7 +21,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding Background}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{DynamicResource DIY_MENU_BG}" BorderThickness="1">
                         <!-- Fixing WPF border bug -->
                         <Border.Style>
                             <Style TargetType="Border">
@@ -67,6 +67,9 @@
                                                 <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}" Value="Normal">
                                                     <Setter Property="Content" Value="&#x1f5d6;" />
                                                 </DataTrigger>
+                                                <DataTrigger Binding="{Binding ResizeMode, RelativeSource={RelativeSource AncestorType=Window}}" Value="NoResize">
+                                                    <Setter Property="Visibility" Value="Hidden" />
+                                                </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Button.Style>
@@ -77,7 +80,17 @@
                                         DockPanel.Dock="Right"
                                         Width="50"
                                         WindowChrome.IsHitTestVisibleInChrome="True" 
-                                        Click="Minimize_Button_Click" />
+                                        Click="Minimize_Button_Click">
+                                    <Button.Style>
+                                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonStyle}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ResizeMode, RelativeSource={RelativeSource AncestorType=Window}}" Value="NoResize">
+                                                    <Setter Property="Visibility" Value="Hidden" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
                             </DockPanel>
                             <!-- TODO -->
                             <AdornerDecorator DockPanel.Dock="Top">

@@ -1,0 +1,48 @@
+﻿<Window x:Class="DIY.PreferencesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DIY"
+        mc:Ignorable="d"
+        Title="Preferences" Height="400" Width="600" Style="{StaticResource WindowStyle}" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <local:StringColorConverter x:Key="StringColorConverter"/>
+    </Window.Resources>
+    
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20*" />
+            <ColumnDefinition Width="80*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+            <Border BorderBrush="{x:Null}" Height="40" Background="{DynamicResource DIY_MENU_BG}" >
+                <TextBlock FontSize="20" VerticalAlignment="Center" TextAlignment="Center">Theme</TextBlock>
+            </Border>
+        </StackPanel>
+        <Grid Grid.Column="1" Margin="5" x:Name="Theme">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <local:PrefColorCtrl Grid.Row="0" Resource="DIY_BG" Label="Background" Text="{Binding Source={StaticResource DIY_BG}, Path=Color, Converter={StaticResource StringColorConverter}}" FontSize="20" VerticalAlignment="Center" />
+            <local:PrefColorCtrl Grid.Row="1" Resource="DIY_FG" Label="Foreground" Text="{Binding Source={StaticResource DIY_FG}, Path=Color, Converter={StaticResource StringColorConverter}}" FontSize="20" VerticalAlignment="Center"/>
+            <local:PrefColorCtrl Grid.Row="2" Resource="DIY_BUTTON_HOVER" Label="Button Hover" Text="{Binding Source={StaticResource DIY_BUTTON_HOVER}, Path=Color, Converter={StaticResource StringColorConverter}}" FontSize="20" VerticalAlignment="Center"/>
+            <local:PrefColorCtrl Grid.Row="3" Resource="DIY_MENU_BG" Label="Menu Background" Text="{Binding Source={StaticResource DIY_MENU_BG}, Path=Color, Converter={StaticResource StringColorConverter}}" FontSize="20" VerticalAlignment="Center"/>
+            <local:PrefColorCtrl Grid.Row="4" Resource="DIY_BRUSH_BG" Label="Brush Background" Text="{Binding Source={StaticResource DIY_BRUSH_BG}, Path=Color, Converter={StaticResource StringColorConverter}}" FontSize="20" VerticalAlignment="Center"/>
+            <local:PrefColorCtrl Grid.Row="5" Resource="DIY_BRUSH_FG" Label="Brush Foreground" Text="{Binding Source={StaticResource DIY_BRUSH_FG}, Path=Color, Converter={StaticResource StringColorConverter}}" FontSize="20" VerticalAlignment="Center"/>
+            <Grid Grid.Row="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70*"/>
+                    <ColumnDefinition Width="30*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="1" Content="Update" FontSize="20" Click="Update_Click"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
