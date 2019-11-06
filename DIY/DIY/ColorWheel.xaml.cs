@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,6 +22,8 @@ namespace DIY
         public double hue = 0D;
         public double saturation = 0D;
         public double lightness = 1D;
+
+        private bool noUpdate = false;
 
         public ColorWheel()
         {
@@ -137,8 +140,7 @@ namespace DIY
 
             lightSlider.Value = lightness * 100;
 
-            byte r, g, b;
-            ToRGB(hue, saturation, lightness, out r, out g, out b);
+            ToRGB(hue, saturation, lightness, out byte r, out byte g, out byte b);
 
             colorView.Background = new SolidColorBrush(Color.FromRgb(r, g, b));
             if(lightness > 0.5)
@@ -148,7 +150,10 @@ namespace DIY
             {
                 colorView.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
             }
+
+            noUpdate = true;
             colorView.Text = "#" + r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
+            noUpdate = false;
         }
 
         private void lightSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -178,7 +183,8 @@ namespace DIY
             }
             hue = grad;
 
-            radius /= w / 2;
+            radius /= (w - 10) / 2;
+            if (radius > 1) radius = 1;
             saturation = radius;
 
             UpdatePointer();
@@ -202,12 +208,12 @@ namespace DIY
 
         private void colorView_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (noUpdate) return;
             if (colorView.Text.Length != 7) return;
             try
             {
                 Color c = (Color) ColorConverter.ConvertFromString(colorView.Text);
-                double h, s, l;
-                ToHSL(c.R, c.G, c.B, out h, out s, out l);
+                ToHSL(c.R, c.G, c.B, out double h, out double s, out double l);
                 hue = h;
                 saturation = s;
                 lightness = l;
