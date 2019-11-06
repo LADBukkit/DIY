@@ -7,6 +7,8 @@
     <SolidColorBrush x:Key="DIY_FG" Color="#DEE4E7"/>
     <SolidColorBrush x:Key="DIY_BUTTON_HOVER" Color="#202020" />
     <SolidColorBrush x:Key="DIY_MENU_BG" Color="#232323"/>
+    <SolidColorBrush x:Key="DIY_BRUSH_FG" Color="#999999"/>
+    <SolidColorBrush x:Key="DIY_BRUSH_BG" Color="#252525"/>
 
     <!-- STYLE -->
     <Style x:Key="DefaultStyle" TargetType="Control">

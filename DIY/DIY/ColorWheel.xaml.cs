@@ -221,5 +221,11 @@ namespace DIY
             }
             catch (FormatException) { }
         }
+
+        public Color GetColor()
+        {
+            ToRGB(hue, saturation, lightness, out byte r, out byte g, out byte b);
+            return Color.FromRgb(r, g, b);
+        }
     }
 }

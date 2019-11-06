@@ -9,6 +9,7 @@
                 <ResourceDictionary Source="/Style/Style.xaml" />
                 <ResourceDictionary Source="/Style/Button.xaml" />
                 <ResourceDictionary Source="/Style/Menu.xaml" />
+                <ResourceDictionary Source="/Style/BrushRadioButton.xaml" />
 
                 <ResourceDictionary Source="/WindowStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
