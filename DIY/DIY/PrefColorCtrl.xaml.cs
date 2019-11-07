@@ -58,5 +58,10 @@ namespace DIY
             Application.Current.Resources[Resource] = Default;
             Text = "#" + Default.Color.R.ToString("X2") + Default.Color.G.ToString("X2") + Default.Color.B.ToString("X2");
         }
+
+        private void Image_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+
+        }
     }
 }
