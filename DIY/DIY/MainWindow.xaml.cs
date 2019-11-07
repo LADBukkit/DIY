@@ -25,6 +25,8 @@ namespace DIY
         public MainWindow()
         {
             InitializeComponent();
+
+            brush.IsChecked = true;
         }
 
         private void Preferences_Click(object sender, RoutedEventArgs e)
@@ -42,6 +44,21 @@ namespace DIY
                 pWindow = new PreferencesWindow();
                 pWindow.Show();
             }
+        }
+
+        private void Tool_Checked(object sender, RoutedEventArgs e)
+        {
+            if (toolProperties == null) return;
+            if(sender == brush)
+            {
+                Tool.Brush b = new Tool.Brush();
+                b.PrepareProperties(toolProperties);
+            }
+        }
+
+        private void Window_ContentRendered(object sender, EventArgs e)
+        {
+            contentZoomBox.FitToBounds();
         }
     }
 }

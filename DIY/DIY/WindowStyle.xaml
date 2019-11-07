@@ -21,7 +21,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{DynamicResource DIY_MENU_BG}" BorderThickness="1">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{DynamicResource DIY_MENU_BG}" BorderThickness="2">
                         <!-- Fixing WPF border bug -->
                         <Border.Style>
                             <Style TargetType="Border">

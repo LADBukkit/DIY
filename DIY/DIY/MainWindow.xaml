@@ -4,11 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DIY"
+        xmlns:wpfTool="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="DrawItYourself" Height="530" Width="700" Style="{StaticResource WindowStyle}" WindowStartupLocation="CenterScreen" >
+        Title="DrawItYourself" Height="530" Width="700" Style="{StaticResource WindowStyle}" WindowState="Maximized"
+        ContentRendered="Window_ContentRendered">
 
-    <DockPanel LastChildFill="False">
-        <Menu DockPanel.Dock="Top">
+    <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top" BorderBrush="{DynamicResource DIY_MENU_BG}" BorderThickness="0 0 0 1">
             <MenuItem Header="_File">
                 <MenuItem Header="_New" InputGestureText="Ctrl+N"/>
                 <MenuItem Header="_Open" InputGestureText="Ctrl+O"/>
@@ -40,56 +42,71 @@
             </MenuItem>
         </Menu>
 
-        <StackPanel DockPanel.Dock="Right" Width="200">
-            <local:ColorWheel Height="250" Width="200">
-                
-            </local:ColorWheel>
-        </StackPanel>
-        <StackPanel DockPanel.Dock="Left" Width="120">
-            <!--
+        <Border BorderBrush="{DynamicResource DIY_MENU_BG}" BorderThickness="1 0 0 0" DockPanel.Dock="Right" Width="250" Padding="25">
+            <StackPanel DockPanel.Dock="Right">
+                <local:ColorWheel Height="250" Width="200">
+
+                </local:ColorWheel>
+            </StackPanel>
+        </Border>
+        
+        <Border BorderBrush="{DynamicResource DIY_MENU_BG}" BorderThickness="0 0 1 0" DockPanel.Dock="Left" Width="182" Padding="10">
+            <StackPanel>
+                <!--
                 Icons made by 
                 https://www.flaticon.com/authors/freepik
                 https://www.flaticon.com/authors/nikita-golubev
-            -->
-            <WrapPanel>
-                <RadioButton x:Name="brush" GroupName="brush" IsChecked="True" Style="{StaticResource BrushRadioButton}" Width="40" Height="40">
-                    <Viewbox Margin="2">
-                        <Canvas Width="512" Height="512">
-                            <Canvas>
-                                <Path Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" Data="M505.025 19.549c-14.688-14.686-44.146-6.307-92.708 26.377c-41.254 27.766-90.738 69.819-139.336 118.417    c-72.047 72.046-126.823 142.784-145.061 186.458c-3.002-1.088-6.115-1.958-9.327-2.593c-18.872-3.733-39.369 1.04-56.238 13.086    c-24.207 17.286-30.618 41.971-31.549 46.132c-5.096 19.032-14.747 37.191-27.921 52.529c-4.237 4.933-3.753 12.349 1.09 16.691    c16.927 15.17 38.58 22.779 61.102 22.779c21.706 0 44.22-7.069 64.077-21.249c9.311-6.649 16.36-14.001 17.725-15.456    c16.872-18.131 24.036-41.904 20.482-63.625c42.85-15.361 117.553-72.181 192.871-147.499    c48.598-48.598 90.652-98.083 118.417-139.336C511.332 63.696 519.713 34.238 505.025 19.549z M129.392 446.415    c-0.642 0.685-6.495 6.852-14.13 12.302c-27.732 19.8-61.684 22.09-86.345 6.845c11.549-15.834 20.132-33.683 25.063-52.254    v-0.001c0.055-0.208 0.105-0.418 0.149-0.63c0.041-0.189 4.193-19.127 22.119-31.927c11.53-8.235 25.277-11.547 37.711-9.089    c10.255 2.026 18.876 7.88 24.275 16.48C148.829 405.018 145.104 429.532 129.392 446.415z M159.217 376.663    c-0.245-0.41-3.87-7.77-10.624-13.24c5.819-15.557 18.346-36.584 35.806-60.729l37.455 37.455    C195.505 359.116 173.914 371.48 159.217 376.663z M241.198 325.685l-42.301-42.301c7.31-9.41 15.219-19.157 23.648-29.127    l47.806 47.806C260.233 310.608 250.489 318.493 241.198 325.685z M455.159 104.266c-26.926 38.916-66.643 85.235-111.832 130.422    c-18.973 18.973-37.367 36.232-54.844 51.694l-50.257-50.257c15.94-18.032 33.32-36.538 51.661-54.877    c45.188-45.189 91.507-84.905 130.422-111.834c47.916-33.155 64.45-33.208 67.626-32.774    C488.371 39.813 488.313 56.353 455.159 104.266z"/>
+                -->
+                <WrapPanel>
+                    <RadioButton x:Name="brush" GroupName="tool" Checked="Tool_Checked" Style="{StaticResource BrushRadioButton}" Width="40" Height="40">
+                        <Viewbox Margin="2">
+                            <Canvas Width="512" Height="512">
+                                <Canvas>
+                                    <Path Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" Data="M505.025 19.549c-14.688-14.686-44.146-6.307-92.708 26.377c-41.254 27.766-90.738 69.819-139.336 118.417    c-72.047 72.046-126.823 142.784-145.061 186.458c-3.002-1.088-6.115-1.958-9.327-2.593c-18.872-3.733-39.369 1.04-56.238 13.086    c-24.207 17.286-30.618 41.971-31.549 46.132c-5.096 19.032-14.747 37.191-27.921 52.529c-4.237 4.933-3.753 12.349 1.09 16.691    c16.927 15.17 38.58 22.779 61.102 22.779c21.706 0 44.22-7.069 64.077-21.249c9.311-6.649 16.36-14.001 17.725-15.456    c16.872-18.131 24.036-41.904 20.482-63.625c42.85-15.361 117.553-72.181 192.871-147.499    c48.598-48.598 90.652-98.083 118.417-139.336C511.332 63.696 519.713 34.238 505.025 19.549z M129.392 446.415    c-0.642 0.685-6.495 6.852-14.13 12.302c-27.732 19.8-61.684 22.09-86.345 6.845c11.549-15.834 20.132-33.683 25.063-52.254    v-0.001c0.055-0.208 0.105-0.418 0.149-0.63c0.041-0.189 4.193-19.127 22.119-31.927c11.53-8.235 25.277-11.547 37.711-9.089    c10.255 2.026 18.876 7.88 24.275 16.48C148.829 405.018 145.104 429.532 129.392 446.415z M159.217 376.663    c-0.245-0.41-3.87-7.77-10.624-13.24c5.819-15.557 18.346-36.584 35.806-60.729l37.455 37.455    C195.505 359.116 173.914 371.48 159.217 376.663z M241.198 325.685l-42.301-42.301c7.31-9.41 15.219-19.157 23.648-29.127    l47.806 47.806C260.233 310.608 250.489 318.493 241.198 325.685z M455.159 104.266c-26.926 38.916-66.643 85.235-111.832 130.422    c-18.973 18.973-37.367 36.232-54.844 51.694l-50.257-50.257c15.94-18.032 33.32-36.538 51.661-54.877    c45.188-45.189 91.507-84.905 130.422-111.834c47.916-33.155 64.45-33.208 67.626-32.774    C488.371 39.813 488.313 56.353 455.159 104.266z"/>
+                                </Canvas>
+                                <Canvas>
+                                    <Path Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" Data="M119.256 414.119c-5.783-3.183-13.052-1.076-16.236 4.708c-0.322 0.585-0.711 1.132-1.158 1.626    c-0.894 0.93-3.832 3.77-6.884 5.951c-4.63 3.305-9.626 5.674-14.85 7.041c-6.387 1.671-10.209 8.203-8.538 14.59    c1.406 5.372 6.25 8.93 11.555 8.93c1.002 0 2.019-0.127 3.034-0.391c8.049-2.106 15.684-5.71 22.693-10.714    c4.499-3.213 10.471-9.095 10.512-9.14c1.777-1.927 3.319-4.069 4.583-6.366C127.149 424.57 125.04 417.301 119.256 414.119z"/>
+                                </Canvas>
                             </Canvas>
-                            <Canvas>
-                                <Path Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" Data="M119.256 414.119c-5.783-3.183-13.052-1.076-16.236 4.708c-0.322 0.585-0.711 1.132-1.158 1.626    c-0.894 0.93-3.832 3.77-6.884 5.951c-4.63 3.305-9.626 5.674-14.85 7.041c-6.387 1.671-10.209 8.203-8.538 14.59    c1.406 5.372 6.25 8.93 11.555 8.93c1.002 0 2.019-0.127 3.034-0.391c8.049-2.106 15.684-5.71 22.693-10.714    c4.499-3.213 10.471-9.095 10.512-9.14c1.777-1.927 3.319-4.069 4.583-6.366C127.149 424.57 125.04 417.301 119.256 414.119z"/>
+                        </Viewbox>
+                    </RadioButton>
+                    <RadioButton x:Name="eraser" GroupName="tool" Checked="Tool_Checked" Style="{StaticResource BrushRadioButton}" Width="40" Height="40">
+                        <Viewbox Margin="2">
+                            <Canvas Width="512" Height="512">
+                                <Canvas>
+                                    <Path Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" Data="M60.197 418.646H27.571c-6.978 0-12.634 5.657-12.634 12.634s5.656 12.634 12.634 12.634h32.627    c6.978 0 12.634-5.657 12.634-12.634C72.831 424.304 67.174 418.646 60.197 418.646z"/>
+                                </Canvas>
+                                <Canvas >
+                                    <Path Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" Data="M114.205 467.363c-4.934-4.932-12.933-4.934-17.867 0l-23.07 23.07c-4.934 4.934-4.935 12.933 0 17.868    c2.467 2.466 5.7 3.701 8.933 3.701c3.233 0 6.467-1.234 8.933-3.701l23.07-23.07C119.139 480.297 119.14 472.298 114.205 467.363    z"/>
+                                </Canvas>
+                                <Canvas >
+                                    <Path  Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" Data="M484.431 424.963H262.965l226.699-226.688c9.851-9.852 9.852-25.881 0.001-35.733L334.522 7.388    c-9.853-9.851-25.882-9.851-35.735 0l-247.99 247.99c-14.318 14.318-22.203 33.354-22.203 53.602    c0 20.247 7.885 39.284 22.203 53.602l74.701 74.699c8.351 8.351 19.455 12.951 31.266 12.951H484.43    c6.978 0 12.634-5.657 12.634-12.634C497.065 430.621 491.409 424.963 484.431 424.963z M156.765 424.963    c-5.062 0-9.82-1.972-13.401-5.551l-74.699-74.699c-19.704-19.704-19.704-51.765 0-71.468l40.557-40.557l133.335 133.336    c2.467 2.466 5.7 3.7 8.933 3.7s6.467-1.234 8.933-3.7c4.934-4.934 4.935-12.933 0.001-17.868L127.09 214.821L316.655 25.254    l155.142 155.155L227.23 424.963H156.765z"/>
+                                </Canvas>
                             </Canvas>
-                        </Canvas>
-                    </Viewbox>
-                </RadioButton>
-                <RadioButton x:Name="eraser" GroupName="brush" Style="{StaticResource BrushRadioButton}" Width="40" Height="40">
-                    <Viewbox Margin="2">
-                        <Canvas Width="512" Height="512">
-                            <Canvas>
-                                <Path Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" Data="M60.197 418.646H27.571c-6.978 0-12.634 5.657-12.634 12.634s5.656 12.634 12.634 12.634h32.627    c6.978 0 12.634-5.657 12.634-12.634C72.831 424.304 67.174 418.646 60.197 418.646z"/>
+                        </Viewbox>
+                    </RadioButton>
+                    <RadioButton x:Name="pipette" GroupName="tool" Checked="Tool_Checked" Style="{StaticResource BrushRadioButton}" Width="40" Height="40">
+                        <Viewbox Margin="2">
+                            <Canvas  Width="64" Height="64">
+                                <Path Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" Data="m9.079 40.131c-.051.122-.077.252-.077.382v8.485c0 .553.447 1 1 1h8.485c.13 0 .26-.026.382-.077.123-.051.234-.124.326-.217l17.997-17.997c.001 0 .001-.002.002-.002l2.067-2.067c.584.584 1.352.876 2.119.876.769 0 1.537-.292 2.122-.877.921-.921 1.105-2.292.577-3.406l12.567-12.567c.003-.003.006-.003.009-.006 1.513-1.512 2.345-3.521 2.345-5.658s-.832-4.146-2.344-5.656c-1.51-1.512-3.519-2.344-5.656-2.344s-4.146.832-5.657 2.344c-.003.003-.003.006-.006.009l-12.567 12.567c-1.114-.528-2.485-.344-3.407.577-1.168 1.171-1.168 3.072 0 4.241l-10.553 10.553c-.001 0-.001.002-.002.002l-9.512 9.512c-.093.091-.166.203-.217.326zm10.851-8.132h14.143l-16 15.999h-7.071v-7.071zm17.918-3.775-1.775 1.775h-14.143l8.847-8.847zm17.394-24.466c1.134 1.134 1.758 2.639 1.758 4.242 0 1.6-.622 3.104-1.752 4.236-.002.002-.005.003-.007.005l-12.445 12.446-8.482-8.482 12.445-12.446c.002-.002.003-.005.005-.007 1.132-1.13 2.636-1.752 4.236-1.752 1.603 0 3.108.624 4.242 1.758zm-24.465 13.153c.392-.391 1.025-.39 1.415 0l9.896 9.896c.39.391.39 1.024 0 1.414-.391.392-1.025.39-1.414.001l-9.897-9.897c-.389-.389-.389-1.024 0-1.414z"/>
+                                <Path Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" Data="m5 59c0 2.757 2.243 5 5 5s5-2.243 5-5c0-2.512-3.592-6.045-4.312-6.728-.387-.365-.99-.365-1.377 0-.719.683-4.311 4.216-4.311 6.728zm5-4.589c1.417 1.48 3 3.537 3 4.589 0 1.654-1.346 3-3 3s-3-1.346-3-3c0-1.049 1.584-3.106 3-4.589z"/>
                             </Canvas>
-                            <Canvas >
-                                <Path Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" Data="M114.205 467.363c-4.934-4.932-12.933-4.934-17.867 0l-23.07 23.07c-4.934 4.934-4.935 12.933 0 17.868    c2.467 2.466 5.7 3.701 8.933 3.701c3.233 0 6.467-1.234 8.933-3.701l23.07-23.07C119.139 480.297 119.14 472.298 114.205 467.363    z"/>
-                            </Canvas>
-                            <Canvas >
-                                <Path  Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" Data="M484.431 424.963H262.965l226.699-226.688c9.851-9.852 9.852-25.881 0.001-35.733L334.522 7.388    c-9.853-9.851-25.882-9.851-35.735 0l-247.99 247.99c-14.318 14.318-22.203 33.354-22.203 53.602    c0 20.247 7.885 39.284 22.203 53.602l74.701 74.699c8.351 8.351 19.455 12.951 31.266 12.951H484.43    c6.978 0 12.634-5.657 12.634-12.634C497.065 430.621 491.409 424.963 484.431 424.963z M156.765 424.963    c-5.062 0-9.82-1.972-13.401-5.551l-74.699-74.699c-19.704-19.704-19.704-51.765 0-71.468l40.557-40.557l133.335 133.336    c2.467 2.466 5.7 3.7 8.933 3.7s6.467-1.234 8.933-3.7c4.934-4.934 4.935-12.933 0.001-17.868L127.09 214.821L316.655 25.254    l155.142 155.155L227.23 424.963H156.765z"/>
-                            </Canvas>
-                        </Canvas>
-                    </Viewbox>
-                </RadioButton>
-                <RadioButton GroupName="brush" Style="{StaticResource BrushRadioButton}" Width="40" Height="40">
-                    <Viewbox Margin="2">
-                        <Canvas  Width="64" Height="64">
-                            <Path Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" Data="m9.079 40.131c-.051.122-.077.252-.077.382v8.485c0 .553.447 1 1 1h8.485c.13 0 .26-.026.382-.077.123-.051.234-.124.326-.217l17.997-17.997c.001 0 .001-.002.002-.002l2.067-2.067c.584.584 1.352.876 2.119.876.769 0 1.537-.292 2.122-.877.921-.921 1.105-2.292.577-3.406l12.567-12.567c.003-.003.006-.003.009-.006 1.513-1.512 2.345-3.521 2.345-5.658s-.832-4.146-2.344-5.656c-1.51-1.512-3.519-2.344-5.656-2.344s-4.146.832-5.657 2.344c-.003.003-.003.006-.006.009l-12.567 12.567c-1.114-.528-2.485-.344-3.407.577-1.168 1.171-1.168 3.072 0 4.241l-10.553 10.553c-.001 0-.001.002-.002.002l-9.512 9.512c-.093.091-.166.203-.217.326zm10.851-8.132h14.143l-16 15.999h-7.071v-7.071zm17.918-3.775-1.775 1.775h-14.143l8.847-8.847zm17.394-24.466c1.134 1.134 1.758 2.639 1.758 4.242 0 1.6-.622 3.104-1.752 4.236-.002.002-.005.003-.007.005l-12.445 12.446-8.482-8.482 12.445-12.446c.002-.002.003-.005.005-.007 1.132-1.13 2.636-1.752 4.236-1.752 1.603 0 3.108.624 4.242 1.758zm-24.465 13.153c.392-.391 1.025-.39 1.415 0l9.896 9.896c.39.391.39 1.024 0 1.414-.391.392-1.025.39-1.414.001l-9.897-9.897c-.389-.389-.389-1.024 0-1.414z"/>
-                            <Path Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" Data="m5 59c0 2.757 2.243 5 5 5s5-2.243 5-5c0-2.512-3.592-6.045-4.312-6.728-.387-.365-.99-.365-1.377 0-.719.683-4.311 4.216-4.311 6.728zm5-4.589c1.417 1.48 3 3.537 3 4.589 0 1.654-1.346 3-3 3s-3-1.346-3-3c0-1.049 1.584-3.106 3-4.589z"/>
-                        </Canvas>
-                    </Viewbox>
-                </RadioButton>
-                <RadioButton GroupName="brush" Style="{StaticResource BrushRadioButton}" Width="40" Height="40"></RadioButton>
-                <RadioButton GroupName="brush" Style="{StaticResource BrushRadioButton}" Width="40" Height="40"></RadioButton>
-            </WrapPanel>
-        </StackPanel>
+                        </Viewbox>
+                    </RadioButton>
+                    <RadioButton GroupName="tool" Checked="Tool_Checked" Style="{StaticResource BrushRadioButton}" Width="40" Height="40"></RadioButton>
+                    <RadioButton GroupName="tool" Checked="Tool_Checked" Style="{StaticResource BrushRadioButton}" Width="40" Height="40"></RadioButton>
+                </WrapPanel>
+
+                <StackPanel x:Name="toolProperties" Margin="0 25 0 0">
+
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <wpfTool:Zoombox x:Name="contentZoomBox" DockPanel.Dock="Left">
+            <Canvas Width="1920" Height="1080" Background="White">
+                
+            </Canvas>
+        </wpfTool:Zoombox>
     </DockPanel>
 </Window>

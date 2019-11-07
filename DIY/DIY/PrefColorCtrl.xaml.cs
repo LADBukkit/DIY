@@ -39,11 +39,21 @@ namespace DIY
             set { SetValue(ResourceProperty, value); }
         }
 
+        public static readonly DependencyProperty DefaultProperty = DependencyProperty.Register("Default", typeof(SolidColorBrush), typeof(PrefColorCtrl), new PropertyMetadata(null));
+        public SolidColorBrush Default
+        {
+            get { return (SolidColorBrush)GetValue(DefaultProperty); }
+            set { SetValue(DefaultProperty, value); }
+        }
+
         public PrefColorCtrl()
         {
             InitializeComponent();
 
             LayoutRoot.DataContext = this;
+
+            //Application.Current.Resources[Resource] = Default;
+
         }
     }
 }
