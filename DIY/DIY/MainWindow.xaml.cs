@@ -22,11 +22,16 @@ namespace DIY
     {
         private PreferencesWindow pWindow;
 
+        private Dictionary<string, DIY.Tool.Tool> tools = new Dictionary<string, DIY.Tool.Tool>();
+
         public MainWindow()
         {
             InitializeComponent();
 
+            tools.Add("brush", new DIY.Tool.Brush());
+
             brush.IsChecked = true;
+
         }
 
         private void Preferences_Click(object sender, RoutedEventArgs e)
@@ -49,11 +54,10 @@ namespace DIY
         private void Tool_Checked(object sender, RoutedEventArgs e)
         {
             if (toolProperties == null) return;
-            if(sender == brush)
-            {
-                Tool.Brush b = new Tool.Brush();
-                b.PrepareProperties(toolProperties);
-            }
+            RadioButton rb = (RadioButton)sender;
+            if (!tools.ContainsKey(rb.Name)) return;
+
+            tools[rb.Name].PrepareProperties(toolProperties);
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
