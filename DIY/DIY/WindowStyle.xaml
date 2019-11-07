@@ -39,7 +39,10 @@
                         <!-- The default window style with title -->
                         <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" LastChildFill="True">
                             <DockPanel Height="30" VerticalAlignment="Top" LastChildFill="False" DockPanel.Dock="Top">
-                                <TextBlock Margin="5,0,0,0"
+                                <Image Source="{TemplateBinding Icon}"
+                                       DockPanel.Dock="Left" />
+
+                                <TextBlock Margin="10,0,0,0"
                                            VerticalAlignment="Center"
                                            DockPanel.Dock="Left"
                                            FontSize="12"
