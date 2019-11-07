@@ -104,6 +104,19 @@
         </Border>
 
         <wpfTool:Zoombox x:Name="contentZoomBox" DockPanel.Dock="Left">
+            <wpfTool:Zoombox.DragModifiers>
+                <wpfTool:KeyModifierCollection>
+                    <wpfTool:KeyModifier>Shift</wpfTool:KeyModifier>
+                    <wpfTool:KeyModifier>Exact</wpfTool:KeyModifier>
+                </wpfTool:KeyModifierCollection>
+            </wpfTool:Zoombox.DragModifiers>
+            <wpfTool:Zoombox.ZoomModifiers>
+                <wpfTool:KeyModifierCollection>
+                    <wpfTool:KeyModifier>Ctrl</wpfTool:KeyModifier>
+                    <wpfTool:KeyModifier>Exact</wpfTool:KeyModifier>
+                </wpfTool:KeyModifierCollection>
+            </wpfTool:Zoombox.ZoomModifiers>
+            
             <Canvas Width="1920" Height="1080" Background="White">
                 
             </Canvas>
