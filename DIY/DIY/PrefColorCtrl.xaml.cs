@@ -51,9 +51,12 @@ namespace DIY
             InitializeComponent();
 
             LayoutRoot.DataContext = this;
+        }
 
-            //Application.Current.Resources[Resource] = Default;
-
+        private void Default_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Resources[Resource] = Default;
+            Text = "#" + Default.Color.R.ToString("X2") + Default.Color.G.ToString("X2") + Default.Color.B.ToString("X2");
         }
     }
 }

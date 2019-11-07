@@ -10,9 +10,11 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="70*" />
             <ColumnDefinition Width="30*" />
+            <ColumnDefinition Width="8*" />
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Column="0" Text="{Binding Path=Label}" Padding="15,0,0,0" />
         <TextBox Grid.Column="1" Text="{Binding Path=Text}" TextAlignment="Right" CharacterCasing="Upper" Background="{DynamicResource DIY_FG}" Foreground="{DynamicResource DIY_BG}" />
+        <Button Grid.Column="2" ToolTip="Reset to Default" Background="{DynamicResource DIY_MENU_BG}" BorderThickness="1" BorderBrush="{DynamicResource DIY_MENU_BG}" Click="Default_Click" />
     </Grid>
 </UserControl>
