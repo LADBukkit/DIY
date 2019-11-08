@@ -20,8 +20,8 @@ namespace DIY
     public partial class ColorWheel : UserControl
     {
         public double hue = 0D;
-        public double saturation = 0D;
-        public double lightness = 1D;
+        public double saturation = 1.0D;
+        public double lightness = 0.5D;
 
         private bool noUpdate = false;
 

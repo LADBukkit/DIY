@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace DIY
+namespace DIY.Util
 {
     [ValueConversion(typeof(string), typeof(Color))]
     public class StringColorConverter : IValueConverter

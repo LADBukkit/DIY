@@ -29,6 +29,8 @@ namespace DIY
             InitializeComponent();
 
             tools.Add("brush", new DIY.Tool.Brush());
+            tools.Add("eraser", new DIY.Tool.Eraser());
+            tools.Add("pipette", new DIY.Tool.Pipette());
 
             brush.IsChecked = true;
 

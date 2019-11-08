@@ -7,7 +7,7 @@ using Xceed.Wpf.Toolkit;
 
 namespace DIY.Tool
 {
-    class Brush : Tool
+    class Eraser : Tool
     {
         public int Size { get; set; } = 1;
         public int Opacity { get; set; } = 100;

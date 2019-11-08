@@ -3,12 +3,19 @@
                     xmlns:local="clr-namespace:DIY.Style">
 
     <!-- COLORS -->
-    <SolidColorBrush x:Key="DIY_BG" Color="#121212"/>
-    <SolidColorBrush x:Key="DIY_FG" Color="#DEE4E7"/>
-    <SolidColorBrush x:Key="DIY_BUTTON_HOVER" Color="#202020" />
-    <SolidColorBrush x:Key="DIY_MENU_BG" Color="#232323"/>
-    <SolidColorBrush x:Key="DIY_BRUSH_FG" Color="#999999"/>
-    <SolidColorBrush x:Key="DIY_BRUSH_BG" Color="#252525"/>
+    <Color x:Key="c_DIY_BG">#121212</Color>
+    <Color x:Key="c_DIY_FG">#DEE4E7</Color>
+    <Color x:Key="c_DIY_BUTTON_HOVER">#202020</Color>
+    <Color x:Key="c_DIY_MENU_BG">#232323</Color>
+    <Color x:Key="c_DIY_BRUSH_BG">#999999</Color>
+    <Color x:Key="c_DIY_BRUSH_FG">#252525</Color>
+
+    <SolidColorBrush x:Key="DIY_BG" Color="{StaticResource c_DIY_BG}"/>
+    <SolidColorBrush x:Key="DIY_FG" Color="{StaticResource c_DIY_FG}"/>
+    <SolidColorBrush x:Key="DIY_BUTTON_HOVER" Color="{StaticResource c_DIY_BUTTON_HOVER}" />
+    <SolidColorBrush x:Key="DIY_MENU_BG" Color="{StaticResource c_DIY_MENU_BG}"/>
+    <SolidColorBrush x:Key="DIY_BRUSH_FG" Color="{StaticResource c_DIY_BRUSH_BG}"/>
+    <SolidColorBrush x:Key="DIY_BRUSH_BG" Color="{StaticResource c_DIY_BRUSH_FG}"/>
 
     <!-- STYLE -->
     <Style x:Key="DefaultStyle" TargetType="Control">

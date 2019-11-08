@@ -39,10 +39,10 @@ namespace DIY
             set { SetValue(ResourceProperty, value); }
         }
 
-        public static readonly DependencyProperty DefaultProperty = DependencyProperty.Register("Default", typeof(SolidColorBrush), typeof(PrefColorCtrl), new PropertyMetadata(null));
-        public SolidColorBrush Default
+        public static readonly DependencyProperty DefaultProperty = DependencyProperty.Register("Default", typeof(Color), typeof(PrefColorCtrl), new PropertyMetadata(null));
+        public Color Default
         {
-            get { return (SolidColorBrush)GetValue(DefaultProperty); }
+            get { return (Color)GetValue(DefaultProperty); }
             set { SetValue(DefaultProperty, value); }
         }
 
@@ -56,12 +56,7 @@ namespace DIY
         private void Default_Click(object sender, RoutedEventArgs e)
         {
             // For instant update: Application.Current.Resources[Resource] = Default;
-            Text = "#" + Default.Color.R.ToString("X2") + Default.Color.G.ToString("X2") + Default.Color.B.ToString("X2");
-        }
-
-        private void Image_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-
+            Text = "#" + Default.R.ToString("X2") + Default.G.ToString("X2") + Default.B.ToString("X2");
         }
     }
 }
