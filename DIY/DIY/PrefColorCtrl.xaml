@@ -13,8 +13,13 @@
             <ColumnDefinition Width="8*" />
         </Grid.ColumnDefinitions>
 
+        <!-- The Label showing which resource -->
         <TextBlock Grid.Column="0" Text="{Binding Path=Label}" Padding="15,0,0,0" />
+        
+        <!-- The TextBox showing the new value -->
         <TextBox Grid.Column="1" Text="{Binding Path=Text}" TextAlignment="Right" CharacterCasing="Upper" Background="{DynamicResource DIY_FG}" Foreground="{DynamicResource DIY_BG}" />
+       
+        <!-- The Button for reversing to default -->
         <Button Grid.Column="2" ToolTip="Reset to Default" Background="{DynamicResource DIY_MENU_BG}" BorderThickness="1" BorderBrush="{DynamicResource DIY_MENU_BG}" Click="Default_Click" Cursor="Hand" >
             <Image  Margin="10" Source="Assets/Refresh_inverse.ico"/>
         </Button>

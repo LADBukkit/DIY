@@ -20,22 +20,36 @@ namespace DIY
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// The Preferences window. Saved so you can't open it multiple times.
+        /// </summary>
         private PreferencesWindow pWindow;
 
+        /// <summary>
+        /// Dictionary for all the tools.
+        /// </summary>
         private Dictionary<string, DIY.Tool.Tool> tools = new Dictionary<string, DIY.Tool.Tool>();
 
         public MainWindow()
         {
             InitializeComponent();
 
+            // Add the tools to the dictionary
             tools.Add("brush", new DIY.Tool.Brush());
             tools.Add("eraser", new DIY.Tool.Eraser());
             tools.Add("pipette", new DIY.Tool.Pipette());
 
+            // Select the default brush
             brush.IsChecked = true;
-
         }
 
+        /// <summary>
+        /// Handles opening the Preferences
+        /// 
+        /// If already opened than refocus
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Preferences_Click(object sender, RoutedEventArgs e)
         {
             if(pWindow == null)
@@ -53,6 +67,11 @@ namespace DIY
             }
         }
 
+        /// <summary>
+        /// Handles selecting the tools and displaying the preference controls
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Tool_Checked(object sender, RoutedEventArgs e)
         {
             if (toolProperties == null) return;
@@ -62,11 +81,21 @@ namespace DIY
             tools[rb.Name].PrepareProperties(toolProperties);
         }
 
+        /// <summary>
+        /// Fits the zoombox content
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             contentZoomBox.FitToBounds();
         }
 
+        /// <summary>
+        /// Shutdowns the application on exit
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closed(object sender, EventArgs e)
         {
             Application.Current.Shutdown();

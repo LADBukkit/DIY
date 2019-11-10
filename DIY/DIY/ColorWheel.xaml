@@ -12,8 +12,10 @@
             <RowDefinition Height="50*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" x:Name="colorWheel" MouseLeftButtonDown="colorWheel_MouseLeftButtonDown" MouseMove="colorWheel_MouseMove">
+            <!-- white background -->
             <Ellipse Stroke="{DynamicResource DIY_BG}" RenderTransformOrigin="0.5,0.5" Fill="White"/>
 
+            <!-- yellow cyan and magenta -->
             <Ellipse Stroke="{DynamicResource DIY_BG}" RenderTransformOrigin="0.5,0.5">
                 <Ellipse.RenderTransform>
                     <TransformGroup>
@@ -63,7 +65,7 @@
                 </Ellipse.Fill>
             </Ellipse>
 
-            <!-- primaries -->
+            <!-- red green and blue -->
             <Ellipse Stroke="{DynamicResource DIY_BG}" RenderTransformOrigin="0.5,0.5">
                 <Ellipse.RenderTransform>
                     <TransformGroup>
@@ -113,9 +115,11 @@
                 </Ellipse.Fill>
             </Ellipse>
 
+            <!-- The pointer -->
             <Ellipse x:Name="Pointer" Width="10" Height="10" Margin="0,0,0,0" Stroke="Gray" Fill="Black" StrokeThickness="1" VerticalAlignment="Center" HorizontalAlignment="Center"></Ellipse>
         </Grid>
         <Grid Grid.Row="1">
+            <!-- Slider and textbox -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="40*"/>
                 <RowDefinition Height="60*"/>

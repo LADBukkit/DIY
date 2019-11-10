@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 namespace DIY
 {
     /// <summary>
-    /// Interaktionslogik für PreferencesWindow.xaml
+    /// Codebehind for the preferences Window
     /// </summary>
     public partial class PreferencesWindow : Window
     {
@@ -23,6 +23,11 @@ namespace DIY
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Handles the updating
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Update_Click(object sender, RoutedEventArgs e)
         {
             foreach(PrefColorCtrl pcc in Theme.Children.OfType<PrefColorCtrl>())

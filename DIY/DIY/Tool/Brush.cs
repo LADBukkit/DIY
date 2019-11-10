@@ -7,9 +7,20 @@ using Xceed.Wpf.Toolkit;
 
 namespace DIY.Tool
 {
+    /// <summary>
+    /// The Brush Tool
+    /// Used for normal drawing
+    /// </summary>
     class Brush : Tool
     {
+        /// <summary>
+        /// The Size of the brush
+        /// </summary>
         public int Size { get; set; } = 1;
+
+        /// <summary>
+        /// The opacity of the brush
+        /// </summary>
         public int Opacity { get; set; } = 100;
 
 

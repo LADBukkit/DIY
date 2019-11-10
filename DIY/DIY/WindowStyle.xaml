@@ -4,6 +4,7 @@
                     xmlns:local="clr-namespace:DIY">
 
     <Style x:Key="WindowStyle" TargetType="{x:Type Window}">
+        <!-- Sets the custom Window Chrome -->
         <Setter Property="WindowChrome.WindowChrome">
             <Setter.Value>
                 <WindowChrome CaptionHeight="30"
@@ -15,6 +16,7 @@
             </Setter.Value>
         </Setter>
 
+        <!-- Foreground and Background color is gud -->
         <Setter Property="Foreground" Value="{DynamicResource DIY_FG}"/>
         <Setter Property="Background" Value="{DynamicResource DIY_BG}"/>
 
@@ -39,9 +41,11 @@
                         <!-- The default window style with title -->
                         <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" LastChildFill="True">
                             <DockPanel Height="30" VerticalAlignment="Top" LastChildFill="False" DockPanel.Dock="Top">
+                                <!-- The Icon s-->
                                 <Image Source="{TemplateBinding Icon}"
                                        DockPanel.Dock="Left" />
 
+                                <!-- The Window Title -->
                                 <TextBlock Margin="10,0,0,0"
                                            VerticalAlignment="Center"
                                            DockPanel.Dock="Left"
@@ -49,6 +53,7 @@
                                            Foreground="{TemplateBinding Foreground}"
                                            Text="{TemplateBinding Title}" />
 
+                                <!-- The Control buttons -->
                                 <Button x:Name="Exit_Button"
                                         Content="&#x2715;"
                                         DockPanel.Dock="Right"
@@ -63,6 +68,7 @@
                                         Click="Maximize_Button_Click">
                                     <Button.Style>
                                         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonStyle}">
+                                            <!-- Changing Content when maximized and minized. Also invisibled when NoResize -->
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}" Value="Maximized">
                                                     <Setter Property="Content" Value="&#x1f5d7;" />
@@ -86,6 +92,7 @@
                                         Click="Minimize_Button_Click">
                                     <Button.Style>
                                         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonStyle}">
+                                            <!-- Invisible when no Resize -->
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding ResizeMode, RelativeSource={RelativeSource AncestorType=Window}}" Value="NoResize">
                                                     <Setter Property="Visibility" Value="Hidden" />
@@ -95,7 +102,7 @@
                                     </Button.Style>
                                 </Button>
                             </DockPanel>
-                            <!-- TODO -->
+                            <!-- The Content -->
                             <AdornerDecorator DockPanel.Dock="Top">
                                 <ContentPresenter />
                             </AdornerDecorator>

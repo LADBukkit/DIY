@@ -10,6 +10,7 @@
         ContentRendered="Window_ContentRendered" Closed="Window_Closed" Icon="Assets/icon.ico">
 
     <DockPanel LastChildFill="True">
+        <!-- The Menu -->
         <Menu DockPanel.Dock="Top" BorderBrush="{DynamicResource DIY_MENU_BG}" BorderThickness="0 0 0 1">
             <MenuItem Header="_File">
                 <MenuItem Header="_New" InputGestureText="Ctrl+N"/>
@@ -42,15 +43,19 @@
             </MenuItem>
         </Menu>
 
+        <!-- Right side -->
         <Border BorderBrush="{DynamicResource DIY_MENU_BG}" BorderThickness="1 0 0 0" DockPanel.Dock="Right" Width="250" Padding="25">
             <StackPanel DockPanel.Dock="Right">
+                <!-- The Color Wheel -->
                 <local:ColorWheel Height="250" Width="200">
 
                 </local:ColorWheel>
             </StackPanel>
         </Border>
         
+        <!-- The Left side-->
         <Border BorderBrush="{DynamicResource DIY_MENU_BG}" BorderThickness="0 0 1 0" DockPanel.Dock="Left" Width="182" Padding="10">
+            <!-- The Brushes to choose -->
             <StackPanel>
                 <!--
                 Icons made by 
@@ -97,13 +102,16 @@
                     <RadioButton GroupName="tool" Checked="Tool_Checked" Style="{StaticResource BrushRadioButton}" Width="40" Height="40"></RadioButton>
                 </WrapPanel>
 
+                <!-- The Properties -->
                 <StackPanel x:Name="toolProperties" Margin="0 25 0 0">
 
                 </StackPanel>
             </StackPanel>
         </Border>
 
+        <!-- The Content aka the drawing platform -->
         <wpfTool:Zoombox x:Name="contentZoomBox" DockPanel.Dock="Left">
+            <!-- changing zoom and drag keys -->
             <wpfTool:Zoombox.DragModifiers>
                 <wpfTool:KeyModifierCollection>
                     <wpfTool:KeyModifier>Shift</wpfTool:KeyModifier>

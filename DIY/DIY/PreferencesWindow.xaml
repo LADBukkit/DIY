@@ -31,12 +31,16 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
+            
+            <!-- The Properties -->
             <local:PrefColorCtrl Grid.Row="0" Default="{StaticResource c_DIY_BG}" Resource="DIY_BG" Label="Background" Text="{Binding Source={StaticResource DIY_BG}, Path=Color, Converter={StaticResource StringColorConverter}}" FontSize="20" VerticalAlignment="Center"/>
             <local:PrefColorCtrl Grid.Row="1" Default ="{StaticResource c_DIY_FG}" Resource="DIY_FG" Label="Foreground" Text="{Binding Source={StaticResource DIY_FG}, Path=Color, Converter={StaticResource StringColorConverter}}" FontSize="20" VerticalAlignment="Center"/>
             <local:PrefColorCtrl Grid.Row="2" Default ="{StaticResource c_DIY_BUTTON_HOVER}" Resource="DIY_BUTTON_HOVER" Label="Button Hover" Text="{Binding Source={StaticResource DIY_BUTTON_HOVER}, Path=Color, Converter={StaticResource StringColorConverter}}" FontSize="20" VerticalAlignment="Center"/>
             <local:PrefColorCtrl Grid.Row="3" Default ="{StaticResource c_DIY_MENU_BG}" Resource="DIY_MENU_BG" Label="Menu Background" Text="{Binding Source={StaticResource DIY_MENU_BG}, Path=Color, Converter={StaticResource StringColorConverter}}" FontSize="20" VerticalAlignment="Center"/>
             <local:PrefColorCtrl Grid.Row="4" Default ="{StaticResource c_DIY_BRUSH_BG}" Resource="DIY_BRUSH_BG" Label="Brush Background" Text="{Binding Source={StaticResource DIY_BRUSH_BG}, Path=Color, Converter={StaticResource StringColorConverter}}" FontSize="20" VerticalAlignment="Center"/>
             <local:PrefColorCtrl Grid.Row="5" Default ="{StaticResource c_DIY_BRUSH_FG}" Resource="DIY_BRUSH_FG" Label="Brush Foreground" Text="{Binding Source={StaticResource DIY_BRUSH_FG}, Path=Color, Converter={StaticResource StringColorConverter}}" FontSize="20" VerticalAlignment="Center"/>
+            
+            <!-- The Updated button -->
             <Grid Grid.Row="6">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="70*"/>

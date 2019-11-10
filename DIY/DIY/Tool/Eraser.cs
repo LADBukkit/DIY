@@ -7,11 +7,21 @@ using Xceed.Wpf.Toolkit;
 
 namespace DIY.Tool
 {
+    /// <summary>
+    /// The Eraser Tool
+    /// Used for erasing color
+    /// </summary>
     class Eraser : Tool
     {
+        /// <summary>
+        /// The Size of the eraser
+        /// </summary>
         public int Size { get; set; } = 1;
-        public int Opacity { get; set; } = 100;
 
+        /// <summary>
+        /// The opacity of the eraser
+        /// </summary>
+        public int Opacity { get; set; } = 100;
 
         public override void PrepareProperties(StackPanel parent)
         {

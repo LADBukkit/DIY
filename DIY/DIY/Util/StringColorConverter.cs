@@ -7,6 +7,9 @@ using System.Windows.Media;
 
 namespace DIY.Util
 {
+    /// <summary>
+    /// Used for Conversion between strings and Colors
+    /// </summary>
     [ValueConversion(typeof(string), typeof(Color))]
     public class StringColorConverter : IValueConverter
     {

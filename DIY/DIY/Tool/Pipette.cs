@@ -7,6 +7,10 @@ using Xceed.Wpf.Toolkit;
 
 namespace DIY.Tool
 {
+    /// <summary>
+    /// The Pipette Tool
+    /// Used for grabbing a color
+    /// </summary>
     class Pipette : Tool
     {
         public override void PrepareProperties(StackPanel parent)

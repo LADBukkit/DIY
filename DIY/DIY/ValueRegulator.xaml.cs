@@ -15,10 +15,13 @@ using Xceed.Wpf.Toolkit;
 namespace DIY
 {
     /// <summary>
-    /// Interaktionslogik für ValueRegulator.xaml
+    /// Codebehind for the value regulator
     /// </summary>
     public partial class ValueRegulator : UserControl
     {
+        /// <summary>
+        /// The Label of this value
+        /// </summary>
         public static readonly DependencyProperty LabelProperty = DependencyProperty.Register("Label", typeof(string), typeof(ValueRegulator), new PropertyMetadata(""));
         public string Label
         {
@@ -26,6 +29,9 @@ namespace DIY
             set { SetValue(LabelProperty, value); }
         }
 
+        /// <summary>
+        /// The Minimum value
+        /// </summary>
         public static readonly DependencyProperty MinimumProperty = DependencyProperty.Register("Minimum", typeof(int), typeof(ValueRegulator), new PropertyMetadata(0));
         public int Minimum
         {
@@ -33,6 +39,9 @@ namespace DIY
             set { SetValue(MinimumProperty, value); }
         }
 
+        /// <summary>
+        /// The Maximum value
+        /// </summary>
         public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register("Maximum", typeof(int), typeof(ValueRegulator), new PropertyMetadata(0));
         public int Maximum
         {
@@ -40,6 +49,9 @@ namespace DIY
             set { SetValue(MaximumProperty, value); }
         }
 
+        /// <summary>
+        /// The current value
+        /// </summary>
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(int), typeof(ValueRegulator), new PropertyMetadata(0));
         public int Value
         {

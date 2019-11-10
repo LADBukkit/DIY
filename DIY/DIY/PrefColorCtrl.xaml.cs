@@ -14,10 +14,13 @@ using System.Windows.Shapes;
 namespace DIY
 {
     /// <summary>
-    /// Interaktionslogik für PrefColorCtrl.xaml
+    /// Codebehind of the control for the preferences
     /// </summary>
     public partial class PrefColorCtrl : UserControl
     {
+        /// <summary>
+        /// The Label value
+        /// </summary>
         public static readonly DependencyProperty LabelProperty = DependencyProperty.Register("Label", typeof(string), typeof(PrefColorCtrl), new PropertyMetadata(""));
         public string Label
         {
@@ -25,6 +28,9 @@ namespace DIY
             set { SetValue(LabelProperty, value); }
         }
 
+        /// <summary>
+        /// The content of the textbox
+        /// </summary>
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(PrefColorCtrl), new PropertyMetadata(""));
         public string Text
         {
@@ -32,6 +38,9 @@ namespace DIY
             set { SetValue(TextProperty, value); }
         }
 
+        /// <summary>
+        /// The targeted resource
+        /// </summary>
         public static readonly DependencyProperty ResourceProperty = DependencyProperty.Register("Resource", typeof(string), typeof(PrefColorCtrl), new PropertyMetadata(""));
         public string Resource
         {
@@ -39,6 +48,9 @@ namespace DIY
             set { SetValue(ResourceProperty, value); }
         }
 
+        /// <summary>
+        /// The default value
+        /// </summary>
         public static readonly DependencyProperty DefaultProperty = DependencyProperty.Register("Default", typeof(Color), typeof(PrefColorCtrl), new PropertyMetadata(null));
         public Color Default
         {
@@ -53,6 +65,11 @@ namespace DIY
             LayoutRoot.DataContext = this;
         }
 
+        /// <summary>
+        /// Handles clicking on the default button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Default_Click(object sender, RoutedEventArgs e)
         {
             // For instant update: Application.Current.Resources[Resource] = Default;
