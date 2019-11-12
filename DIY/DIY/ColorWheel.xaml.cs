@@ -1,17 +1,10 @@
 ﻿using DIY.Util;
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace DIY
 {
@@ -80,6 +73,11 @@ namespace DIY
             noUpdate = true;
             colorView.Text = "#" + r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
             noUpdate = false;
+
+            // Updates the lightness in the colorwheel-drawing
+            // Comment if you don't want that
+            colorDrawing.Lightness = lightness;
+            colorDrawing.InvalidateVisual();
         }
 
         /// <summary>
@@ -159,6 +157,7 @@ namespace DIY
         private void colorView_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (noUpdate) return;
+            if (colorView.Text.StartsWith("#") && colorView.Text.Length != 7) return;
             try
             {
                 Color c = (Color) ColorConverter.ConvertFromString(colorView.Text);
@@ -179,6 +178,46 @@ namespace DIY
         {
             ColorUtil.ToRGB(hue, saturation, lightness, out byte r, out byte g, out byte b);
             return Color.FromRgb(r, g, b);
+        }
+    }
+
+    class WheelDrawing : Canvas
+    {
+        public double Lightness { get; set; } = 0.5;
+
+        protected override void OnRender(DrawingContext dc)
+        {
+            DirectBitmap db = new DirectBitmap((int) ActualWidth, (int) ActualHeight);
+
+            int half = (int) ActualWidth / 2;
+            for(int px = 0; px < ActualWidth; px++)
+            {
+                for(int py = 0; py < ActualHeight; py++)
+                {
+                    double x = px - half;
+                    double y = py - half;
+
+                    double radius = Math.Sqrt(x * x + y * y);
+                    radius /= half - 1;
+                    if (radius > 1) continue;
+
+                    double alpha = Math.Atan2(y, x);
+                    double grad = alpha * 180.0 / Math.PI;
+                    grad += 90;
+                    if (grad < 0)
+                    {
+                        grad = 360 + grad;
+                    }
+                    double hue = grad;
+                    double saturation = radius;
+
+                    ColorUtil.ToRGB(hue, saturation, Lightness, out byte red, out byte green, out byte blue);
+                    db.SetPixel(px, py, red, green, blue);
+                }
+            }
+
+            ImageSource iso = ColorUtil.ImageSourceFromBitmap(db.Bitmap);
+            dc.DrawImage(iso, new Rect(0, 0, ActualWidth, ActualHeight));
         }
     }
 }

@@ -61,8 +61,9 @@ namespace DIY.Project
         /// </summary>
         /// <param name="c1">Color one</param>
         /// <param name="c2">Color two</param>
+        /// <param name="opacity">The Opacity of c2</param>
         /// <returns>Color One and Two blended together</returns>
-        public delegate Color DelBlendColors(Color c1, Color c2);
+        public delegate Color DelBlendColors(Color c1, Color c2, double opacity);
     }
 
     /// <summary>
@@ -70,7 +71,7 @@ namespace DIY.Project
     /// </summary>
     static class BlendModeFunctions
     {
-        public static Color BM_Normal(Color c1, Color c2)
+        public static Color BM_Normal(Color c1, Color c2, double opacity)
         {
             return c2;
         }
