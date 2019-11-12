@@ -159,7 +159,6 @@ namespace DIY
         private void colorView_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (noUpdate) return;
-            if (colorView.Text.Length != 7) return;
             try
             {
                 Color c = (Color) ColorConverter.ConvertFromString(colorView.Text);

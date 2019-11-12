@@ -9,7 +9,7 @@
     <!-- COLORS -->
     <Color x:Key="c_DIY_BG">#121212</Color>
     <Color x:Key="c_DIY_FG">#DEE4E7</Color>
-    <Color x:Key="c_DIY_BUTTON_HOVER">#202020</Color>
+    <Color x:Key="c_DIY_BUTTON_HOVER">#303030</Color>
     <Color x:Key="c_DIY_MENU_BG">#232323</Color>
     <Color x:Key="c_DIY_BRUSH_BG">#999999</Color>
     <Color x:Key="c_DIY_BRUSH_FG">#252525</Color>
