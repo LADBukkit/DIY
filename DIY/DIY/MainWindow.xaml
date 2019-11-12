@@ -64,9 +64,7 @@
                         </Grid.RowDefinitions>
                         
                         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" TextAlignment="Center">BlendMode</TextBlock>
-                        <ComboBox x:Name="LayerBlendMode" Grid.Row="0" Grid.Column="1">
-                            <ComboBoxItem IsSelected="True">Normal</ComboBoxItem>
-                        </ComboBox>
+                        <ComboBox x:Name="LayerBlendMode" Grid.Row="0" Grid.Column="1" />
                         <TextBlock Margin="0 10 0 0" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" TextAlignment="Center">Opacity</TextBlock>
                         <Slider Name="LayerOpacity" Margin="0 10 0 0" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="100"/>
                         <wpfTool:IntegerUpDown Grid.Row="2" Grid.Column="1" Value="{Binding Source={x:Reference Name=LayerOpacity}, Path=Value}"/>
@@ -121,9 +119,8 @@
                     </StackPanel>
 
                     <!-- Layer List -->
-                    <ScrollViewer DockPanel.Dock="Top">
-                        <StackPanel ScrollViewer.VerticalScrollBarVisibility="Visible">
-
+                    <ScrollViewer DockPanel.Dock="Top" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto">
+                        <StackPanel x:Name="LayerList">
                         </StackPanel>
                     </ScrollViewer>
                 </DockPanel>

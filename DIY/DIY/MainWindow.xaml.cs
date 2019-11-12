@@ -41,6 +41,11 @@ namespace DIY
 
             // Select the default brush
             brush.IsChecked = true;
+
+            // BlendModes binding
+            LayerBlendMode.ItemsSource = Project.BlendMode.Values;
+            LayerBlendMode.DisplayMemberPath = "Name";
+            LayerBlendMode.SelectedIndex = 0;
         }
 
         /// <summary>
