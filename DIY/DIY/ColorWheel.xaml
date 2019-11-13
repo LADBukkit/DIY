@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DIY"
+             xmlns:wpfTool="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="250" d:DesignWidth="200">
     <Grid>
@@ -25,7 +26,14 @@
                 <RowDefinition Height="40*"/>
                 <RowDefinition Height="60*"/>
             </Grid.RowDefinitions>
-            <Slider ValueChanged="lightSlider_ValueChanged" x:Name="lightSlider" Grid.Row="0" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Stretch" Maximum="100"/>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="75*"/>
+                    <ColumnDefinition Width="25*"/>
+                </Grid.ColumnDefinitions>
+                <Slider ValueChanged="lightSlider_ValueChanged" x:Name="lightSlider" Grid.Column="0" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Stretch" Maximum="100"/>
+                <wpfTool:IntegerUpDown Grid.Column="1" Margin="0 0 5 0" Value="{Binding Source={x:Reference Name=lightSlider}, Path=Value}" />
+            </Grid>
             <TextBox TextChanged="colorView_TextChanged" Text="000000" Padding="0 0 10 0" x:Name="colorView" Grid.Row="1" Margin="5" TextAlignment="Right" CharacterCasing="Upper" FontStretch="Normal" FontWeight="Bold" FontSize="15" AcceptsReturn="False"/>
         </Grid>
     </Grid>
