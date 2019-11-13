@@ -61,13 +61,17 @@ namespace DIY
 
             ColorUtil.ToRGB(hue, saturation, lightness, out byte r, out byte g, out byte b);
 
-            colorView.Background = new SolidColorBrush(Color.FromRgb(r, g, b));
-            if(lightness > 0.5)
+            Color white = Color.FromRgb(240, 240, 240);
+            Color black = Color.FromRgb(16, 16, 16);
+            Color bg = Color.FromRgb(r, g, b);
+            colorView.Background = new SolidColorBrush(bg);
+
+            if (ColorUtil.calculateContrast(white, bg) > ColorUtil.calculateContrast(black, bg))
             {
-                colorView.Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+                colorView.Foreground = new SolidColorBrush(white);
             } else
             {
-                colorView.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                colorView.Foreground = new SolidColorBrush(black);
             }
 
             noUpdate = true;

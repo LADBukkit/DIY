@@ -129,6 +129,11 @@ namespace DIY.Util
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool DeleteObject([In] IntPtr hObject);
 
+        /// <summary>
+        /// Converts a bitmap to an ImageSource
+        /// </summary>
+        /// <param name="bmp">The bitmap</param>
+        /// <returns></returns>
         public static ImageSource ImageSourceFromBitmap(Bitmap bmp)
         {
             var handle = bmp.GetHbitmap();
@@ -137,6 +142,22 @@ namespace DIY.Util
                 return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
             }
             finally { DeleteObject(handle); }
+        }
+
+        public static double CalculateRelativeLuminance(System.Windows.Media.Color color)
+        {
+            double rg = color.R <= 10 ? color.R / 3294D : Math.Pow((color.R / 269D + 0.0513), 2.4);
+            double gg = color.G <= 10 ? color.G / 3294D : Math.Pow((color.G / 269D + 0.0513), 2.4);
+            double bg = color.B <= 10 ? color.B / 3294D : Math.Pow((color.B / 269D + 0.0513), 2.4);
+
+            return 0.2126 * rg + 0.7152 * gg + 0.0722 * bg;
+        }
+
+        public static double calculateContrast(System.Windows.Media.Color c1, System.Windows.Media.Color c2)
+        {
+            double l1 = CalculateRelativeLuminance(c1);
+            double l2 = CalculateRelativeLuminance(c2);
+            return (Math.Max(l1, l2) + 0.05D) / (Math.Min(l1, l2) + 0.05D);
         }
     }
 }
