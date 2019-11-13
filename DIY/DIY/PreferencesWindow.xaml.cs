@@ -18,9 +18,16 @@ namespace DIY
     /// </summary>
     public partial class PreferencesWindow : Window
     {
-        public PreferencesWindow()
+        /// <summary>
+        /// The settings to save to.
+        /// </summary>
+        private Settings settings;
+
+        public PreferencesWindow(Settings set)
         {
             InitializeComponent();
+
+            settings = set;
         }
 
         /// <summary>
@@ -36,9 +43,12 @@ namespace DIY
                 {
                     Color c = (Color)ColorConverter.ConvertFromString(pcc.Text);
                     Application.Current.Resources[pcc.Resource] = new SolidColorBrush(c);
+                    settings["c_" + pcc.Resource] = pcc.Text;
                 }
                 catch (FormatException) { }
             }
+
+            settings.Save();
         }
     }
 }

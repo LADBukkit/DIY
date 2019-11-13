@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,7 +29,12 @@ namespace DIY
         /// <summary>
         /// Dictionary for all the tools.
         /// </summary>
-        private Dictionary<string, DIY.Tool.Tool> tools = new Dictionary<string, DIY.Tool.Tool>();
+        private readonly Dictionary<string, DIY.Tool.Tool> tools = new Dictionary<string, DIY.Tool.Tool>();
+
+        /// <summary>
+        /// The settings handler.
+        /// </summary>
+        private readonly Settings settings = new Settings();
 
         public MainWindow()
         {
@@ -46,6 +52,20 @@ namespace DIY
             LayerBlendMode.ItemsSource = Project.BlendMode.Values;
             LayerBlendMode.DisplayMemberPath = "Name";
             LayerBlendMode.SelectedIndex = 0;
+
+            // Settings
+            foreach (string key in Application.Current.Resources.MergedDictionaries[0].Keys)
+            {
+                if (key.StartsWith("c_"))
+                {
+                    if(settings[key] == null)
+                    {
+                        settings[key] = Application.Current.Resources[key].ToString();
+                    }
+                    Application.Current.Resources[key.Substring(2)] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(settings[key].ToString()));
+                }
+            }
+            settings.Save();
         }
 
         /// <summary>
@@ -59,7 +79,7 @@ namespace DIY
         {
             if(pWindow == null)
             {
-                pWindow = new PreferencesWindow();
+                pWindow = new PreferencesWindow(settings);
             }
             if(pWindow.IsVisible)
             {
@@ -67,7 +87,7 @@ namespace DIY
             } else
             {
                 pWindow.Close();
-                pWindow = new PreferencesWindow();
+                pWindow = new PreferencesWindow(settings);
                 pWindow.Show();
             }
         }
