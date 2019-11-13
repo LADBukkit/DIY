@@ -144,6 +144,11 @@ namespace DIY.Util
             finally { DeleteObject(handle); }
         }
 
+        /// <summary>
+        /// Calculates the luminance of the color in relation to a standard monitor
+        /// </summary>
+        /// <param name="color">The Color</param>
+        /// <returns></returns>
         public static double CalculateRelativeLuminance(System.Windows.Media.Color color)
         {
             double rg = color.R <= 10 ? color.R / 3294D : Math.Pow((color.R / 269D + 0.0513), 2.4);
@@ -153,6 +158,12 @@ namespace DIY.Util
             return 0.2126 * rg + 0.7152 * gg + 0.0722 * bg;
         }
 
+        /// <summary>
+        /// Calculates the contrast between two colors
+        /// </summary>
+        /// <param name="c1">The first color</param>
+        /// <param name="c2">The second color</param>
+        /// <returns></returns>
         public static double calculateContrast(System.Windows.Media.Color c1, System.Windows.Media.Color c2)
         {
             double l1 = CalculateRelativeLuminance(c1);

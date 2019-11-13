@@ -61,6 +61,7 @@ namespace DIY
 
             ColorUtil.ToRGB(hue, saturation, lightness, out byte r, out byte g, out byte b);
 
+            // calculate which is the best foreground color
             Color white = Color.FromRgb(240, 240, 240);
             Color black = Color.FromRgb(16, 16, 16);
             Color bg = Color.FromRgb(r, g, b);
