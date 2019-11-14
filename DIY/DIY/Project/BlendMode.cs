@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Media;
+using DIY.Util;
 
 namespace DIY.Project
 {
@@ -14,6 +15,7 @@ namespace DIY.Project
         /// The Normal BlendMode it applies: (c1, c2) -> c2
         /// </summary>
         public static readonly BlendMode NORMAL = new BlendMode("Normal", BlendModeFunctions.BM_Normal);
+        public static readonly BlendMode MULTIPLY = new BlendMode("Multiply", BlendModeFunctions.BM_Multiply);
 
         /// <summary>
         /// Contains alle Values of the enum
@@ -23,6 +25,7 @@ namespace DIY.Project
             get
             {
                 yield return NORMAL;
+                yield return MULTIPLY;
             }
         }
 
@@ -73,7 +76,12 @@ namespace DIY.Project
     {
         public static Color BM_Normal(Color c1, Color c2, double opacity)
         {
-            return c2;
+            return c2.multiply(opacity).add(c1.multiply(1 - opacity));
+        }
+
+        public static Color BM_Multiply(Color c1, Color c2, double opacity)
+        {
+            return c2.multiply(opacity).multiply(c1.multiply(1 - opacity));
         }
     }
 }

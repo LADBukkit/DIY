@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Bitmap = System.Drawing.Bitmap;
 
 namespace DIY.Util
 {
     /// <summary>
     /// Some Utils for colors and images.
     /// </summary>
-    static class ColorUtil
+    public static class ColorUtil
     {
         /// <summary>
         /// Converts hsl to rgb.
@@ -170,5 +170,94 @@ namespace DIY.Util
             double l2 = CalculateRelativeLuminance(c2);
             return (Math.Max(l1, l2) + 0.05D) / (Math.Min(l1, l2) + 0.05D);
         }
+
+        #region Extensions
+        public static Color add(this Color c1, Color c2)
+        {
+            int r = c1.R + c2.R;
+            int g = c1.R + c2.R;
+            int b = c1.R + c2.R;
+            r = r > 255 ? 255 : r < 0 ? 0 : r;
+            g = g > 255 ? 255 : g < 0 ? 0 : g;
+            b = b > 255 ? 255 : b < 0 ? 0 : b;
+            return Color.FromRgb((byte) r, (byte) g, (byte) b);
+        }
+        public static Color substract(this Color c1, Color c2)
+        {
+            int r = c1.R - c2.R;
+            int g = c1.R - c2.R;
+            int b = c1.R - c2.R;
+            r = r > 255 ? 255 : r < 0 ? 0 : r;
+            g = g > 255 ? 255 : g < 0 ? 0 : g;
+            b = b > 255 ? 255 : b < 0 ? 0 : b;
+            return Color.FromRgb((byte)r, (byte)g, (byte)b);
+        }
+
+        public static Color multiply(this Color c1, Color c2)
+        {
+            int r = c1.R * c2.R;
+            int g = c1.R * c2.R;
+            int b = c1.R * c2.R;
+            r = r > 255 ? 255 : r < 0 ? 0 : r;
+            g = g > 255 ? 255 : g < 0 ? 0 : g;
+            b = b > 255 ? 255 : b < 0 ? 0 : b;
+            return Color.FromRgb((byte)r, (byte)g, (byte)b);
+        }
+
+        public static Color divide(this Color c1, Color c2)
+        {
+            int r = c1.R / c2.R;
+            int g = c1.R / c2.R;
+            int b = c1.R / c2.R;
+            r = r > 255 ? 255 : r < 0 ? 0 : r;
+            g = g > 255 ? 255 : g < 0 ? 0 : g;
+            b = b > 255 ? 255 : b < 0 ? 0 : b;
+            return Color.FromRgb((byte)r, (byte)g, (byte)b);
+        }
+
+        public static Color add(this Color c1, double d)
+        {
+            int r = Convert.ToInt32(c1.R + d);
+            int g = Convert.ToInt32(c1.R + d);
+            int b = Convert.ToInt32(c1.R + d);
+            r = r > 255 ? 255 : r < 0 ? 0 : r;
+            g = g > 255 ? 255 : g < 0 ? 0 : g;
+            b = b > 255 ? 255 : b < 0 ? 0 : b;
+            return Color.FromRgb((byte)r, (byte)g, (byte)b);
+        }
+
+        public static Color substract(this Color c1, double d)
+        {
+            int r = Convert.ToInt32(c1.R - d);
+            int g = Convert.ToInt32(c1.R - d);
+            int b = Convert.ToInt32(c1.R - d);
+            r = r > 255 ? 255 : r < 0 ? 0 : r;
+            g = g > 255 ? 255 : g < 0 ? 0 : g;
+            b = b > 255 ? 255 : b < 0 ? 0 : b;
+            return Color.FromRgb((byte)r, (byte)g, (byte)b);
+        }
+
+        public static Color multiply(this Color c1, double d)
+        {
+            int r = Convert.ToInt32(c1.R * d);
+            int g = Convert.ToInt32(c1.R * d);
+            int b = Convert.ToInt32(c1.R * d);
+            r = r > 255 ? 255 : r < 0 ? 0 : r;
+            g = g > 255 ? 255 : g < 0 ? 0 : g;
+            b = b > 255 ? 255 : b < 0 ? 0 : b;
+            return Color.FromRgb((byte)r, (byte)g, (byte)b);
+        }
+
+        public static Color divide(this Color c1, double d)
+        {
+            int r = Convert.ToInt32(c1.R / d);
+            int g = Convert.ToInt32(c1.R / d);
+            int b = Convert.ToInt32(c1.R / d);
+            r = r > 255 ? 255 : r < 0 ? 0 : r;
+            g = g > 255 ? 255 : g < 0 ? 0 : g;
+            b = b > 255 ? 255 : b < 0 ? 0 : b;
+            return Color.FromRgb((byte)r, (byte)g, (byte)b);
+        }
+        #endregion
     }
 }
