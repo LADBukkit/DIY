@@ -1,0 +1,39 @@
+﻿<Window x:Class="DIY.NewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wpfTool="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:DIY"
+        mc:Ignorable="d"
+        Title="New" Height="257" Width="597" Style="{StaticResource WindowStyle}" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    
+    <Grid Margin="25 25 5 5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock FontSize="20" Grid.Row="0">New Canvas</TextBlock>
+
+        <TextBlock VerticalAlignment="Center" FontSize="17" Grid.Row="1" Grid.Column="0">Width:</TextBlock>
+        <wpfTool:IntegerUpDown x:Name="UDWidth" Margin="0 2 0 2" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1" Minimum="1" Maximum="16384" />
+
+        <TextBlock VerticalAlignment="Center"  FontSize="17" Grid.Row="2" Grid.Column="0">Height:</TextBlock>
+        <wpfTool:IntegerUpDown x:Name="UDHeight" Margin="0 2 0 2" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="1" Minimum="1" Maximum="16384" />
+
+        <ComboBox Margin="0 2 0 2" x:Name="Layout" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="1" SelectionChanged="Layout_Selected"></ComboBox>
+
+        <Button x:Name="New" Margin="0 2 0 2" Grid.Row="4" Grid.Column="3" Click="New_Click">Create New</Button>
+        <Button x:Name="Abort" Margin="0 2 0 2" Grid.Row="4" Grid.Column="2" Click="Abort_Click">Abort</Button>
+    </Grid>
+</Window>

@@ -9,11 +9,20 @@
         Title="DrawItYourself" Height="674" Width="700" Style="{StaticResource WindowStyle}" WindowState="Maximized"
         ContentRendered="Window_ContentRendered" Closed="Window_Closed" Icon="Assets/icon.ico">
 
+    <!-- The Shortcuts -->
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.New" Executed="New_Executed" />
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Command="ApplicationCommands.New" Gesture="Ctrl+N"/>
+    </Window.InputBindings>
+    
+    
     <DockPanel LastChildFill="True">
         <!-- The Menu -->
         <Menu DockPanel.Dock="Top" BorderBrush="{DynamicResource DIY_MENU_BG}" BorderThickness="0 0 0 1">
             <MenuItem Header="_File">
-                <MenuItem Header="_New" InputGestureText="Ctrl+N"/>
+                <MenuItem Header="_New" Command="ApplicationCommands.New" InputGestureText="Ctrl+N"/>
                 <MenuItem Header="_Open" InputGestureText="Ctrl+O"/>
                 <MenuItem Header="_Save" InputGestureText="Ctrl+S"/>
                 <MenuItem Header="Sa_ve as ..." InputGestureText="Ctrl+SHIFT+S"/>
@@ -189,7 +198,7 @@
                 </wpfTool:KeyModifierCollection>
             </wpfTool:Zoombox.ZoomModifiers>
             
-            <Canvas Width="1920" Height="1080" Background="White">
+            <Canvas Width="0" Height="0" Background="White">
                 
             </Canvas>
         </wpfTool:Zoombox>

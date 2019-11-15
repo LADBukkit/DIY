@@ -39,6 +39,7 @@ namespace DIY
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
 
             // Add the tools to the dictionary
             tools.Add("brush", new DIY.Tool.Brush());
@@ -124,6 +125,17 @@ namespace DIY
         private void Window_Closed(object sender, EventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        private void New_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            NewWindow nw = new NewWindow();
+            nw.ShowDialog();
+
+            if(nw.Success)
+            {
+                // handle new
+            }
         }
     }
 }
