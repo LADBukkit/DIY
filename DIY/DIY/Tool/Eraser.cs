@@ -1,6 +1,9 @@
-﻿using System;
+﻿using DIY.Project;
+using DIY.Util;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Xceed.Wpf.Toolkit;
@@ -22,6 +25,21 @@ namespace DIY.Tool
         /// The opacity of the eraser
         /// </summary>
         public int Opacity { get; set; } = 100;
+
+        public override void MouseDown(DIYProject project, Point p, DIYColor c)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void MouseMove(DIYProject project, Point p, DIYColor c)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void MouseUp(DIYProject project, Point p, DIYColor c)
+        {
+            throw new NotImplementedException();
+        }
 
         public override void PrepareProperties(StackPanel parent)
         {

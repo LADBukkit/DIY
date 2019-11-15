@@ -1,6 +1,9 @@
-﻿using System;
+﻿using DIY.Project;
+using DIY.Util;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Xceed.Wpf.Toolkit;
@@ -23,6 +26,44 @@ namespace DIY.Tool
         /// </summary>
         public int Opacity { get; set; } = 100;
 
+        public override void MouseDown(DIYProject project, Point p, DIYColor c)
+        {
+            c = new DIYColor(c.Argb);
+            c.A = (int) (Opacity / 100D * 255D);
+            Layer lay = project.Layers[project.SelectedLayer];
+            if(lay is ImageLayer)
+            {
+                ImageLayer ilay = (ImageLayer)lay;
+                List<int> pos = ilay.Img.DrawFilledCircle((int)p.X, (int)p.Y, (int) Math.Round(Size / 2D), c);
+                foreach(int i in pos)
+                {
+                    if (i < 0 || i >= project.PixelCache.Length) continue;
+                    project.PixelCache[i] = false;
+                }
+            }
+        }
+
+        public override void MouseMove(DIYProject project, Point p, DIYColor c)
+        {
+            c = new DIYColor(c.Argb);
+            c.A = (int)(Opacity / 100D * 255D);
+            Layer lay = project.Layers[project.SelectedLayer];
+            if (lay is ImageLayer)
+            {
+                ImageLayer ilay = (ImageLayer)lay;
+                List<int> pos = ilay.Img.DrawFilledCircle((int)p.X, (int)p.Y, (int) Math.Round(Size / 2D), c);
+                foreach (int i in pos)
+                {
+                    if (i < 0 || i >= project.PixelCache.Length) continue;
+                    project.PixelCache[i] = false;
+                }
+            }
+        }
+
+        public override void MouseUp(DIYProject project, Point p, DIYColor c)
+        {
+            //throw new NotImplementedException();
+        }
 
         public override void PrepareProperties(StackPanel parent)
         {

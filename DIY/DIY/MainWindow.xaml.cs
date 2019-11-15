@@ -1,11 +1,13 @@
 ﻿using DIY.Project;
 using DIY.Util;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -15,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace DIY
 {
@@ -37,6 +40,21 @@ namespace DIY
         /// The settings handler.
         /// </summary>
         private readonly Settings settings = new Settings();
+
+        /// <summary>
+        /// The Current brush selected
+        /// </summary>
+        private Tool.Tool CurrentBrush;
+
+        /// <summary>
+        /// The Action queue
+        /// </summary>
+        private ConcurrentQueue<Action> ActionQueue = new ConcurrentQueue<Action>();
+
+        /// <summary>
+        /// Timer for the queue
+        /// </summary>
+        private Timer Timer;
 
         /// <summary>
         /// The underlying Project
@@ -74,21 +92,34 @@ namespace DIY
                 }
             }
             settings.Save();
+
+            Timer = new Timer();
+            Timer.Interval = 1;
+            Timer.Elapsed += (source, e) => HandleQueue();
+            Timer.Enabled = true;
+
+            DispatcherTimer t2 = new DispatcherTimer();
+            t2.Tick += (sender, e) => {
+                if (Project == null) return;
+                Project.CalcBitmap();
+                drawingPanel.InvalidateVisual();
+            };
+            t2.Interval = new TimeSpan(0, 0, 0, 0, 25);
+            t2.Start();
         }
 
         /// <summary>
-        /// Updates the canvas
+        /// Handles the next element in the queue.
         /// </summary>
-        public void UpdateCanvas()
+        private void HandleQueue()
         {
-            if (Project == null) return;
-
-            drawingPanel.Width = Project.Width;
-            drawingPanel.Height = Project.Height;
-            Project.CalcBitmap();
-            drawingPanel.Img = Project.Render;
-            drawingPanel.InvalidateVisual();
-            drawingPanel.UpdateLayout();
+            while(ActionQueue.Count > 0)
+            {
+                if(ActionQueue.TryDequeue(out Action a) && a != null)
+                {
+                    a();
+                }
+            }
         }
 
         /// <summary>
@@ -124,19 +155,14 @@ namespace DIY
         {
             if (toolProperties == null) return;
             RadioButton rb = (RadioButton)sender;
-            if (!tools.ContainsKey(rb.Name)) return;
+            if (!tools.ContainsKey(rb.Name))
+            {
+                CurrentBrush = null;
+                return;
+            }
 
-            tools[rb.Name].PrepareProperties(toolProperties);
-        }
-
-        /// <summary>
-        /// Fits the zoombox content
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Window_ContentRendered(object sender, EventArgs e)
-        {
-            contentZoomBox.FitToBounds();
+            CurrentBrush = tools[rb.Name];
+            CurrentBrush.PrepareProperties(toolProperties);
         }
 
         /// <summary>
@@ -162,33 +188,57 @@ namespace DIY
             if(nw.Success)
             {
                 Project = new DIYProject((int) nw.UDWidth.Value, (int) nw.UDHeight.Value);
-                UpdateCanvas();
+                drawingPanel.Width = Project.Width;
+                drawingPanel.Height = Project.Height;
+                drawingPanel.Img = Project.Render;
                 contentZoomBox.FitToBounds();
             }
         }
 
-        /// <summary>
-        /// Clicking on the drawing panel
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void drawingPanel_MouseDown(object sender, MouseEventArgs e)
+        private void contentZoomBox_MouseMove(object sender, MouseEventArgs e)
         {
-            if(e.LeftButton == MouseButtonState.Pressed)
+            if(e.LeftButton == MouseButtonState.Pressed && CurrentBrush != null && Project != null)
             {
                 Point p = e.GetPosition(drawingPanel);
-                if(p.X > 0 && p.X < Project.Width && p.Y > 0 && p.Y < Project.Height)
+                if(p.X >= 0 && p.X < Project.Width && p.Y >= 0 && p.Y < Project.Height)
                 {
-                    // test drawing code
-                    int x = (int)p.X;
-                    int y = (int)p.Y;
-                    //MessageBox.Show(p.X + " " + p.Y);
                     Color c = ColorPicker.GetColor();
                     DIYColor dc = new DIYColor(255, c.R, c.G, c.B);
-                    ((ImageLayer)Project.Layers[0]).Img.SetPixel(x, y, dc);
-                    int pos = x + (y * Project.Width);
-                    Project.PixelCache[pos] = false;
-                    UpdateCanvas();
+                    ActionQueue.Enqueue(() => {
+                        CurrentBrush.MouseMove(Project, p, dc);
+                    }); 
+                }
+            }
+        }
+
+        private void contentZoomBox_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left && CurrentBrush != null && Project != null)
+            {
+                Point p = e.GetPosition(drawingPanel);
+                if (p.X >= 0 && p.X < Project.Width && p.Y >= 0 && p.Y < Project.Height)
+                {
+                    Color c = ColorPicker.GetColor();
+                    DIYColor dc = new DIYColor(255, c.R, c.G, c.B);
+                    ActionQueue.Enqueue(() => {
+                        CurrentBrush.MouseDown(Project, p, dc);
+                    });
+                }
+            }
+        }
+
+        private void contentZoomBox_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left && CurrentBrush != null && Project != null)
+            {
+                Point p = e.GetPosition(drawingPanel);
+                if (p.X >= 0 && p.X < Project.Width && p.Y >= 0 && p.Y < Project.Height)
+                {
+                    Color c = ColorPicker.GetColor();
+                    DIYColor dc = new DIYColor(255, c.R, c.G, c.B);
+                    ActionQueue.Enqueue(() => {
+                        CurrentBrush.MouseUp(Project, p, dc);
+                    });
                 }
             }
         }

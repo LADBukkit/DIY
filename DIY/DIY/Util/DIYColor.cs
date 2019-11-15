@@ -114,5 +114,20 @@ namespace DIY.Util
         {
             return new DIYColor((int) (c1.A / i), (int) (c1.R / i), (int) (c1.G * i), (int) (c1.B / i));
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return true;
+            if(obj is DIYColor)
+            {
+                return Argb == ((DIYColor)obj).Argb;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Argb;
+        }
     }
 }

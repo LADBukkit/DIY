@@ -7,7 +7,7 @@
         xmlns:wpfTool="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="DrawItYourself" Height="674" Width="700" Style="{StaticResource WindowStyle}" WindowState="Maximized"
-        ContentRendered="Window_ContentRendered" Closed="Window_Closed" Icon="Assets/icon.ico">
+        Closed="Window_Closed" Icon="Assets/icon.ico">
 
     <!-- The Shortcuts -->
     <Window.CommandBindings>
@@ -183,7 +183,7 @@
         </Border>
 
         <!-- The Content aka the drawing platform -->
-        <wpfTool:Zoombox x:Name="contentZoomBox" DockPanel.Dock="Left" RenderOptions.BitmapScalingMode="NearestNeighbor" MouseDown="drawingPanel_MouseDown" MouseMove="drawingPanel_MouseDown" >
+        <wpfTool:Zoombox x:Name="contentZoomBox" DockPanel.Dock="Left" RenderOptions.BitmapScalingMode="NearestNeighbor" MouseDown="contentZoomBox_MouseDown" MouseMove="contentZoomBox_MouseMove" MouseUp="contentZoomBox_MouseUp">
             <!-- changing zoom and drag keys -->
             <wpfTool:Zoombox.DragModifiers>
                 <wpfTool:KeyModifierCollection>
