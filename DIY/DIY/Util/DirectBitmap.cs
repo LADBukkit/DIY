@@ -14,7 +14,7 @@ namespace DIY.Util
     public class DirectBitmap : IDisposable
     {
         public Bitmap Bitmap { get; private set; }
-        public Int32[] Bits { get; private set; }
+        public int[] Bits { get; private set; }
         public bool Disposed { get; private set; }
         public int Height { get; private set; }
         public int Width { get; private set; }
@@ -25,28 +25,35 @@ namespace DIY.Util
         {
             Width = width;
             Height = height;
-            Bits = new Int32[width * height];
+            Bits = new int[width * height];
             BitsHandle = GCHandle.Alloc(Bits, GCHandleType.Pinned);
-            Bitmap = new Bitmap(width, height, width * 4, PixelFormat.Format32bppPArgb, BitsHandle.AddrOfPinnedObject());
+            Bitmap = new Bitmap(width, height, width * 4, PixelFormat.Format32bppArgb, BitsHandle.AddrOfPinnedObject());
+
+            for(int x = 0; x < width; x++)
+            {
+                for(int y = 0; y < height; y++)
+                {
+                    SetPixel(x, y, new DIYColor());
+                }
+            }
         }
 
-        public void SetPixel(int x, int y, byte r, byte g, byte b)
+        public void SetPixel(int x, int y, DIYColor c)
         {
             // better handling of different color types
             int index = x + (y * Width);
-            int col = Color.FromArgb(r, g, b).ToArgb();
+            int col = c.Argb;
 
             Bits[index] = col;
         }
 
-        public System.Windows.Media.Color GetPixel(int x, int y)
+        public DIYColor GetPixel(int x, int y)
         {
             // better handling of different color types
             int index = x + (y * Width);
             int col = Bits[index];
-            Color result = Color.FromArgb(col);
-            System.Windows.Media.Color r = System.Windows.Media.Color.FromArgb(result.A, result.R, result.G, result.B);
-            return r;
+            DIYColor c = new DIYColor(col);
+            return c;
         }
 
         public void Dispose()

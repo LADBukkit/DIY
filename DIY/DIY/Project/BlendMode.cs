@@ -9,7 +9,7 @@ namespace DIY.Project
     /// <summary>
     /// Blendmode 'Enum'
     /// </summary>
-    class BlendMode
+    public class BlendMode
     {
         /// <summary>
         /// The Normal BlendMode it applies: (c1, c2) -> c2
@@ -66,7 +66,7 @@ namespace DIY.Project
         /// <param name="c2">Color two</param>
         /// <param name="opacity">The Opacity of c2</param>
         /// <returns>Color One and Two blended together</returns>
-        public delegate Color DelBlendColors(Color c1, Color c2, double opacity);
+        public delegate DIYColor DelBlendColors(DIYColor c1, DIYColor c2, double opacity);
     }
 
     /// <summary>
@@ -74,14 +74,16 @@ namespace DIY.Project
     /// </summary>
     static class BlendModeFunctions
     {
-        public static Color BM_Normal(Color c1, Color c2, double opacity)
+        public static DIYColor BM_Normal(DIYColor c1, DIYColor c2, double opacity)
         {
-            return c2.multiply(opacity).add(c1.multiply(1 - opacity));
+            opacity = (c2.A * 0.0039215686D) * opacity;
+            return (c2 * opacity) + (c1 * (1D - opacity));
         }
 
-        public static Color BM_Multiply(Color c1, Color c2, double opacity)
+        public static DIYColor BM_Multiply(DIYColor c1, DIYColor c2, double opacity)
         {
-            return c2.multiply(opacity).multiply(c1.multiply(1 - opacity));
+            opacity = (c2.A * 0.0039215686) * opacity;
+            return (c2 * opacity) * (c1 * (1D - opacity));
         }
     }
 }

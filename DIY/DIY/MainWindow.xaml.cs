@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DIY.Project;
+using DIY.Util;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -36,6 +38,11 @@ namespace DIY
         /// </summary>
         private readonly Settings settings = new Settings();
 
+        /// <summary>
+        /// The underlying Project
+        /// </summary>
+        private DIYProject Project { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -50,7 +57,7 @@ namespace DIY
             brush.IsChecked = true;
 
             // BlendModes binding
-            LayerBlendMode.ItemsSource = Project.BlendMode.Values;
+            LayerBlendMode.ItemsSource = BlendMode.Values;
             LayerBlendMode.DisplayMemberPath = "Name";
             LayerBlendMode.SelectedIndex = 0;
 
@@ -67,6 +74,21 @@ namespace DIY
                 }
             }
             settings.Save();
+        }
+
+        /// <summary>
+        /// Updates the canvas
+        /// </summary>
+        public void UpdateCanvas()
+        {
+            if (Project == null) return;
+
+            drawingPanel.Width = Project.Width;
+            drawingPanel.Height = Project.Height;
+            Project.CalcBitmap();
+            drawingPanel.Img = Project.Render;
+            drawingPanel.InvalidateVisual();
+            drawingPanel.UpdateLayout();
         }
 
         /// <summary>
@@ -127,6 +149,11 @@ namespace DIY
             Application.Current.Shutdown();
         }
 
+        /// <summary>
+        /// When the new button is pressed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void New_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             NewWindow nw = new NewWindow();
@@ -134,7 +161,48 @@ namespace DIY
 
             if(nw.Success)
             {
-                // handle new
+                Project = new DIYProject((int) nw.UDWidth.Value, (int) nw.UDHeight.Value);
+                UpdateCanvas();
+                contentZoomBox.FitToBounds();
+            }
+        }
+
+        /// <summary>
+        /// Clicking on the drawing panel
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void drawingPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            if(e.LeftButton == MouseButtonState.Pressed)
+            {
+                Point p = e.GetPosition(drawingPanel);
+                if(p.X > 0 && p.X < Project.Width && p.Y > 0 && p.Y < Project.Height)
+                {
+                    // test drawing code
+                    int x = (int)p.X;
+                    int y = (int)p.Y;
+                    //MessageBox.Show(p.X + " " + p.Y);
+                    Color c = ColorPicker.GetColor();
+                    DIYColor dc = new DIYColor(255, c.R, c.G, c.B);
+                    ((ImageLayer)Project.Layers[0]).Img.SetPixel(x, y, dc);
+                    int pos = x + (y * Project.Width);
+                    Project.PixelCache[pos] = false;
+                    UpdateCanvas();
+                }
+            }
+        }
+    }
+
+    public class ImgCanvas : Canvas
+    {
+        public DirectBitmap Img { get; set; }
+
+        protected override void OnRender(DrawingContext dc)
+        {
+            if(Img != null)
+            {
+                dc.DrawImage(ColorUtil.ImageSourceFromBitmap(Img.Bitmap), new Rect(0, 0, Img.Width, Img.Height));
             }
         }
     }

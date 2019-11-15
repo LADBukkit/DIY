@@ -217,12 +217,13 @@ namespace DIY
                     double saturation = radius;
 
                     ColorUtil.ToRGB(hue, saturation, Lightness, out byte red, out byte green, out byte blue);
-                    db.SetPixel(px, py, red, green, blue);
+                    db.SetPixel(px, py, new DIYColor(255, red, green, blue));
                 }
             }
 
             ImageSource iso = ColorUtil.ImageSourceFromBitmap(db.Bitmap);
             dc.DrawImage(iso, new Rect(0, 0, ActualWidth, ActualHeight));
+            db.Dispose();
         }
     }
 }

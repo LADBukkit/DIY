@@ -56,7 +56,7 @@
         <Border BorderBrush="{DynamicResource DIY_MENU_BG}" BorderThickness="1 0 0 0" DockPanel.Dock="Right" Width="250" Padding="25">
             <DockPanel DockPanel.Dock="Right" LastChildFill="True">
                 <!-- The Color Wheel -->
-                <local:ColorWheel Height="250" Width="200" DockPanel.Dock="Top">
+                <local:ColorWheel x:Name="ColorPicker" Height="250" Width="200" DockPanel.Dock="Top">
 
                 </local:ColorWheel>
                 <DockPanel DockPanel.Dock="Top" LastChildFill="True">
@@ -183,7 +183,7 @@
         </Border>
 
         <!-- The Content aka the drawing platform -->
-        <wpfTool:Zoombox x:Name="contentZoomBox" DockPanel.Dock="Left">
+        <wpfTool:Zoombox x:Name="contentZoomBox" DockPanel.Dock="Left" RenderOptions.BitmapScalingMode="NearestNeighbor" MouseDown="drawingPanel_MouseDown" MouseMove="drawingPanel_MouseDown" >
             <!-- changing zoom and drag keys -->
             <wpfTool:Zoombox.DragModifiers>
                 <wpfTool:KeyModifierCollection>
@@ -197,10 +197,8 @@
                     <wpfTool:KeyModifier>Exact</wpfTool:KeyModifier>
                 </wpfTool:KeyModifierCollection>
             </wpfTool:Zoombox.ZoomModifiers>
-            
-            <Canvas Width="0" Height="0" Background="White">
-                
-            </Canvas>
+
+            <local:ImgCanvas x:Name="drawingPanel" Width="0" Height="0"/>
         </wpfTool:Zoombox>
     </DockPanel>
 </Window>

@@ -29,7 +29,7 @@ namespace DIY
         {
             get
             {
-                yield return new LayoutC("720p (1920x1080)", new Size(1280, 720));
+                yield return new LayoutC("720p (1280x720)", new Size(1280, 720));
                 yield return new LayoutC("1080p (1920x1080)", new Size(1920, 1080));
             }
         }
