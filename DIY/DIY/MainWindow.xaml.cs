@@ -127,7 +127,7 @@ namespace DIY
             drawingPanel.InvalidateVisual();
 
             LayerList.Children.Clear();
-            for(int i = 0; i < Project.Layers.Count; i++)
+            for(int i = Project.Layers.Count - 1; i >= 0 ; i--)
             {
                 Layer l = Project.Layers[i];
                 LayerCtrl layerCtrl = new LayerCtrl();
@@ -135,9 +135,18 @@ namespace DIY
                 layerCtrl.Image = ColorUtil.ImageSourceFromBitmap(l.GetBitmap().Bitmap);
                 layerCtrl.Height = 75;
                 layerCtrl.Selected = i == Project.SelectedLayer;
+                int layerNumber = i;
+                layerCtrl.MouseDown += (sender, e) =>
+                {
+                    Project.SelectedLayer = layerNumber;
+                };
+                
                 LayerList.Children.Add(layerCtrl);
             }
-            LayerList.UpdateLayout();
+
+            Layer sel = Project.Layers[Project.SelectedLayer];
+            LayerBlendMode.SelectedItem = sel.Mode;
+            LayerOpacity.Value = (int) (sel.Opacity * 100);
         }
 
         /// <summary>
@@ -286,6 +295,41 @@ namespace DIY
                 });
                 while (!ActionQueue.IsEmpty) { }
             }
+        }
+
+        private void NewLayer_Click(object sender, RoutedEventArgs e)
+        {
+            if (Project == null) return;
+
+            Project.Layers.Add(new ImageLayer(Project.Width, Project.Height));
+
+            // add to undo
+        }
+
+        private void LayerOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (Project == null) return;
+
+            Project.Layers[Project.SelectedLayer].Opacity = e.NewValue / 100D;
+            for(int i = 0; i < Project.Width * Project.Height; i++)
+            {
+                Project.PixelCache[i] = false;
+            }
+
+            // add to undo
+        }
+
+        private void LayerBlendMode_Selected(object sender, RoutedEventArgs e)
+        {
+            if (Project == null) return;
+
+            Project.Layers[Project.SelectedLayer].Mode = (BlendMode) LayerBlendMode.SelectedItem;
+            for (int i = 0; i < Project.Width * Project.Height; i++)
+            {
+                Project.PixelCache[i] = false;
+            }
+
+            // add to undo
         }
     }
 

@@ -82,8 +82,9 @@ namespace DIY.Project
 
         public static DIYColor BM_Multiply(DIYColor c1, DIYColor c2, double opacity)
         {
-            opacity = (c2.A / 255D) * opacity;
-            return (c2 * opacity) * (c1 * (1D - opacity));
+            c2 = new DIYColor(c2.A * c1.A / 255, c2.R * c1.R / 255, c2.G * c1.G / 255, c2.B * c1.B / 255);
+
+            return (c2 * opacity) + (c1 * (1D - opacity));
         }
     }
 }

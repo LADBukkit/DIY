@@ -40,7 +40,7 @@ namespace DIY.Util
             R = r;
             G = g;
             B = b;
-            //Clamp();
+            Clamp();
         }
 
         public DIYColor(int argb)

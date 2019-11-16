@@ -58,6 +58,7 @@ namespace DIY.Tool
                     foreach (int i in pos)
                     {
                         if (i < 0) continue;
+                        if (action == null) continue;
                         project.PixelCache[i] = false;
                     }
                 });
@@ -80,6 +81,7 @@ namespace DIY.Tool
                 foreach (int i in pos)
                 {
                     if (i < 0) continue;
+                    if (action == null) continue;
                     action.ChangedPixels.Add(i);
                 }
 

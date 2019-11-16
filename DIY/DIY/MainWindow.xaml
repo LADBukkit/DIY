@@ -77,9 +77,9 @@
                         </Grid.RowDefinitions>
                         
                         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" TextAlignment="Center">BlendMode</TextBlock>
-                        <ComboBox x:Name="LayerBlendMode" Grid.Row="0" Grid.Column="1" />
+                        <ComboBox x:Name="LayerBlendMode" Grid.Row="0" Grid.Column="1" SelectionChanged="LayerBlendMode_Selected"/>
                         <TextBlock Margin="0 10 0 0" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" TextAlignment="Center">Opacity</TextBlock>
-                        <Slider Name="LayerOpacity" Margin="0 10 0 0" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="100"/>
+                        <Slider Name="LayerOpacity" Margin="0 10 0 0" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="100" ValueChanged="LayerOpacity_ValueChanged"/>
                         <wpfTool:IntegerUpDown Grid.Row="2" Grid.Column="1" Value="{Binding Source={x:Reference Name=LayerOpacity}, Path=Value}"/>
                     </Grid>
 
@@ -92,7 +92,7 @@
                         https://www.flaticon.com/authors/freepik
                     -->
                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
-                        <Button ToolTip="New Layer" Height="32" Width="32">
+                        <Button ToolTip="New Layer" Height="32" Width="32" Click="NewLayer_Click">
                             <Viewbox Margin="5">
                                 <Canvas Width="488.3" Height="488.3">
                                     <Path Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Data="M314.25 85.4h-227c-21.3 0-38.6 17.3-38.6 38.6v325.7c0 21.3 17.3 38.6 38.6 38.6h227c21.3 0 38.6-17.3 38.6-38.6V124    C352.75 102.7 335.45 85.4 314.25 85.4z M325.75 449.6c0 6.4-5.2 11.6-11.6 11.6h-227c-6.4 0-11.6-5.2-11.6-11.6V124    c0-6.4 5.2-11.6 11.6-11.6h227c6.4 0 11.6 5.2 11.6 11.6V449.6z"/>
