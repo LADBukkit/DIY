@@ -1,11 +1,14 @@
 ﻿using DIY.Project;
+using DIY.Project.Action;
 using DIY.Util;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -51,10 +54,8 @@ namespace DIY
         /// </summary>
         public ConcurrentQueue<Action> ActionQueue = new ConcurrentQueue<Action>();
 
-        /// <summary>
-        /// Timer for the queue
-        /// </summary>
-        private Timer Timer;
+        public Thread Updater;
+        public bool Running = true;
 
         /// <summary>
         /// The underlying Project
@@ -95,14 +96,12 @@ namespace DIY
             }
             settings.Save();
 
-            Timer = new Timer();
-            Timer.Interval = 1;
-            Timer.Elapsed += (source, e) => HandleQueue();
-            Timer.Enabled = true;
+            Updater = new Thread(() => HandleQueue());
+            Updater.Start();
 
             DispatcherTimer t2 = new DispatcherTimer();
             t2.Tick += (sender, e) => UpdateProject();
-            t2.Interval = new TimeSpan(0, 0, 0, 0, 25);
+            t2.Interval = new TimeSpan(0, 0, 0, 0, 50);
             t2.Start();
         }
 
@@ -111,7 +110,7 @@ namespace DIY
         /// </summary>
         private void HandleQueue()
         {
-            while (ActionQueue.Count > 0)
+            while (Running)
             {
                 if (ActionQueue.TryDequeue(out Action a) && a != null)
                 {
@@ -123,6 +122,8 @@ namespace DIY
         private void UpdateProject()
         {
             if (Project == null) return;
+
+            Stopwatch sw = Stopwatch.StartNew();
             Project.CalcBitmap();
             drawingPanel.InvalidateVisual();
 
@@ -138,6 +139,11 @@ namespace DIY
                 int layerNumber = i;
                 layerCtrl.MouseDown += (sender, e) =>
                 {
+                    LayerSelectionAction ac = new LayerSelectionAction();
+                    ac.Old = Project.SelectedLayer;
+                    ac.New = layerNumber;
+                    Project.PushUndo(this, ac);
+
                     Project.SelectedLayer = layerNumber;
                 };
                 
@@ -200,6 +206,7 @@ namespace DIY
         /// <param name="e"></param>
         private void Window_Closed(object sender, EventArgs e)
         {
+            Running = false;
             Application.Current.Shutdown();
         }
 
@@ -301,9 +308,12 @@ namespace DIY
         {
             if (Project == null) return;
 
-            Project.Layers.Add(new ImageLayer(Project.Width, Project.Height));
+            Layer lay = new ImageLayer(Project.Width, Project.Height);
+            Project.Layers.Add(lay);
 
-            // add to undo
+            NewLayerAction ac = new NewLayerAction();
+            ac.Layer = lay;
+            Project.PushUndo(this, ac);
         }
 
         private void LayerOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -322,8 +332,13 @@ namespace DIY
         private void LayerBlendMode_Selected(object sender, RoutedEventArgs e)
         {
             if (Project == null) return;
+            LayerBlendModeAction ac = new LayerBlendModeAction();
+            ac.Layer = Project.Layers[Project.SelectedLayer];
+            ac.Old = ac.Layer.Mode;
+            ac.New = (BlendMode)LayerBlendMode.SelectedItem;
+            Project.PushUndo(this, ac);
 
-            Project.Layers[Project.SelectedLayer].Mode = (BlendMode) LayerBlendMode.SelectedItem;
+            ac.Layer.Mode = ac.New;
             for (int i = 0; i < Project.Width * Project.Height; i++)
             {
                 Project.PixelCache[i] = false;
