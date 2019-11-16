@@ -19,9 +19,9 @@ namespace DIY.Tool
         /// <param name="parent">The StackPanel to put the Controls in</param>
         public abstract void PrepareProperties(StackPanel parent);
 
-        public abstract void MouseDown(DIYProject project, Point p, DIYColor c);
-        public abstract void MouseMove(DIYProject project, Point p, DIYColor c);
-        public abstract void MouseUp(DIYProject project, Point p, DIYColor c);
+        public abstract void MouseDown(MainWindow mw, Point p);
+        public abstract void MouseMove(MainWindow mw, Point p);
+        public abstract void MouseUp(MainWindow mw, Point p);
 
     }
 }

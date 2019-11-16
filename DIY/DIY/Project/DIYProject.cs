@@ -1,5 +1,7 @@
-﻿using DIY.Util;
+﻿using DIY.Project.Action;
+using DIY.Util;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -18,7 +20,10 @@ namespace DIY.Project
         public int Height { get; set; }
 
         public DirectBitmap Render { get; private set; }
-        public bool[] PixelCache { get; set; }
+        public ConcurrentDictionary<int, bool> PixelCache { get; set; }
+
+        public FixedStack<DIYAction> UndoCache = new FixedStack<DIYAction>(50);
+        public FixedStack<DIYAction> RedoCache = new FixedStack<DIYAction>(50);
 
         public DIYProject(int width, int height)
         {
@@ -30,7 +35,11 @@ namespace DIY.Project
             SelectedLayer = 0;
 
             Render = new DirectBitmap(width, height);
-            PixelCache = new bool[width * height];
+            PixelCache = new ConcurrentDictionary<int, bool>();
+            for(int i = 0; i < width * height; i++)
+            {
+                PixelCache[i] = false;
+            }
         }
 
         private void DrawPixel(int x, int y)
@@ -56,26 +65,6 @@ namespace DIY.Project
             Render.SetPixel(x, y, pxl);
         }
 
-        /*private void DrawToBitmap(DirectBitmap bottom, DirectBitmap top, int offX, int offY, BlendMode mode, double opacity)
-        {
-            //Stopwatch sw = Stopwatch.StartNew();
-            for (int x = 0; x < Width; x++)
-            {
-                if (x < offX) continue;
-                for (int y = 0; y < Height; y++)
-                {
-                    if (y < offY) continue;
-
-                    DIYColor c1 = bottom.GetPixel(x, y);
-                    DIYColor c2 = top.GetPixel(x - offX, y - offY);
-                    DIYColor c3 = BlendMode.NORMAL.BlendColors(c1, c2, opacity);
-                    bottom.SetPixel(x, y, c3);
-                }
-            }
-            //sw.Stop();
-            //MessageBox.Show(sw.ElapsedMilliseconds.ToString());
-        }*/
-
         public void CalcBitmap() {
             for (int x = 0; x < Width; x++)
             {
@@ -89,6 +78,49 @@ namespace DIY.Project
                     }
                 }
             }
+        }
+
+        public void PushUndo(MainWindow mw, DIYAction action)
+        {
+            UndoCache.Push(action);
+            RedoCache.Clear();
+
+            mw.Dispatcher.Invoke(() =>
+            {
+                mw.UndoMenu.Header = "_Undo" + (UndoCache.Count > 0 ? "   -   " + UndoCache.Peek().Name : "");
+                mw.RedoMenu.Header = "_Redo" + (RedoCache.Count > 0 ? "   -   " + RedoCache.Peek().Name : "");
+            });
+        }
+
+        public void Undo(MainWindow mw)
+        {
+            if (UndoCache.Count < 1) return;
+
+            DIYAction a = UndoCache.Pop();
+            if (a == null) return;
+            a.Undo(this);
+            RedoCache.Push(a);
+
+            mw.Dispatcher.Invoke(() =>
+            {
+                mw.UndoMenu.Header = "_Undo" + (UndoCache.Count > 0 ? "   -   " + UndoCache.Peek().Name : "");
+                mw.RedoMenu.Header = "_Redo" + (RedoCache.Count > 0 ? "   -   " + RedoCache.Peek().Name : "");
+            });
+        }
+
+        public void Redo(MainWindow mw)
+        {
+            if (RedoCache.Count < 1) return;
+
+            DIYAction a = RedoCache.Pop();
+            a.Redo(this);
+            UndoCache.Push(a);
+
+            mw.Dispatcher.Invoke(() =>
+            {
+                mw.UndoMenu.Header = "_Undo" + (UndoCache.Count > 0 ? "   -   " + UndoCache.Peek().Name : "");
+                mw.RedoMenu.Header = "_Redo" + (RedoCache.Count > 0 ? "   -   " + RedoCache.Peek().Name : "");
+            });
         }
     }
 }

@@ -49,7 +49,7 @@ namespace DIY
         /// <summary>
         /// The Action queue
         /// </summary>
-        private ConcurrentQueue<Action> ActionQueue = new ConcurrentQueue<Action>();
+        public ConcurrentQueue<Action> ActionQueue = new ConcurrentQueue<Action>();
 
         /// <summary>
         /// Timer for the queue
@@ -59,7 +59,9 @@ namespace DIY
         /// <summary>
         /// The underlying Project
         /// </summary>
-        private DIYProject Project { get; set; }
+        public DIYProject Project { get; set; }
+
+        private bool BlockMouse = false;
 
         public MainWindow()
         {
@@ -84,7 +86,7 @@ namespace DIY
             {
                 if (key.StartsWith("c_"))
                 {
-                    if(settings[key] == null)
+                    if (settings[key] == null)
                     {
                         settings[key] = Application.Current.Resources[key].ToString();
                     }
@@ -99,7 +101,8 @@ namespace DIY
             Timer.Enabled = true;
 
             DispatcherTimer t2 = new DispatcherTimer();
-            t2.Tick += (sender, e) => {
+            t2.Tick += (sender, e) =>
+            {
                 if (Project == null) return;
                 Project.CalcBitmap();
                 drawingPanel.InvalidateVisual();
@@ -113,9 +116,9 @@ namespace DIY
         /// </summary>
         private void HandleQueue()
         {
-            while(ActionQueue.Count > 0)
+            while (ActionQueue.Count > 0)
             {
-                if(ActionQueue.TryDequeue(out Action a) && a != null)
+                if (ActionQueue.TryDequeue(out Action a) && a != null)
                 {
                     a();
                 }
@@ -131,14 +134,15 @@ namespace DIY
         /// <param name="e"></param>
         private void Preferences_Click(object sender, RoutedEventArgs e)
         {
-            if(pWindow == null)
+            if (pWindow == null)
             {
                 pWindow = new PreferencesWindow(settings);
             }
-            if(pWindow.IsVisible)
+            if (pWindow.IsVisible)
             {
                 pWindow.Focus();
-            } else
+            }
+            else
             {
                 pWindow.Close();
                 pWindow = new PreferencesWindow(settings);
@@ -185,9 +189,9 @@ namespace DIY
             NewWindow nw = new NewWindow();
             nw.ShowDialog();
 
-            if(nw.Success)
+            if (nw.Success)
             {
-                Project = new DIYProject((int) nw.UDWidth.Value, (int) nw.UDHeight.Value);
+                Project = new DIYProject((int)nw.UDWidth.Value, (int)nw.UDHeight.Value);
                 drawingPanel.Width = Project.Width;
                 drawingPanel.Height = Project.Height;
                 drawingPanel.Img = Project.Render;
@@ -197,49 +201,75 @@ namespace DIY
 
         private void contentZoomBox_MouseMove(object sender, MouseEventArgs e)
         {
-            if(e.LeftButton == MouseButtonState.Pressed && CurrentBrush != null && Project != null)
+            if (BlockMouse) return;
+
+            if (e.LeftButton == MouseButtonState.Pressed && CurrentBrush != null && Project != null)
             {
                 Point p = e.GetPosition(drawingPanel);
-                if(p.X >= 0 && p.X < Project.Width && p.Y >= 0 && p.Y < Project.Height)
+                if (p.X >= 0 && p.X < Project.Width && p.Y >= 0 && p.Y < Project.Height)
                 {
-                    Color c = ColorPicker.GetColor();
-                    DIYColor dc = new DIYColor(255, c.R, c.G, c.B);
-                    ActionQueue.Enqueue(() => {
-                        CurrentBrush.MouseMove(Project, p, dc);
-                    }); 
+                    ActionQueue.Enqueue(() => CurrentBrush.MouseMove(this, p));
                 }
             }
         }
 
         private void contentZoomBox_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (BlockMouse) return;
+
             if (e.ChangedButton == MouseButton.Left && CurrentBrush != null && Project != null)
             {
                 Point p = e.GetPosition(drawingPanel);
                 if (p.X >= 0 && p.X < Project.Width && p.Y >= 0 && p.Y < Project.Height)
                 {
-                    Color c = ColorPicker.GetColor();
-                    DIYColor dc = new DIYColor(255, c.R, c.G, c.B);
-                    ActionQueue.Enqueue(() => {
-                        CurrentBrush.MouseDown(Project, p, dc);
-                    });
+                    ActionQueue.Enqueue(() => CurrentBrush.MouseDown(this, p));
                 }
             }
         }
 
         private void contentZoomBox_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            if (BlockMouse) return;
+
             if (e.ChangedButton == MouseButton.Left && CurrentBrush != null && Project != null)
             {
                 Point p = e.GetPosition(drawingPanel);
                 if (p.X >= 0 && p.X < Project.Width && p.Y >= 0 && p.Y < Project.Height)
                 {
-                    Color c = ColorPicker.GetColor();
-                    DIYColor dc = new DIYColor(255, c.R, c.G, c.B);
-                    ActionQueue.Enqueue(() => {
-                        CurrentBrush.MouseUp(Project, p, dc);
-                    });
+                    ActionQueue.Enqueue(() => CurrentBrush.MouseUp(this, p));
                 }
+            }
+        }
+
+        private void Undo_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if(Project != null)
+            {
+                if(CurrentBrush != null)
+                {
+                    ActionQueue.Enqueue(() => { BlockMouse = true; CurrentBrush.MouseUp(this, new Point(-1, -1)); });
+                }
+                ActionQueue.Enqueue(() => {
+                    Project.Undo(this);
+                    BlockMouse = false;
+                });
+                while (!ActionQueue.IsEmpty) { }
+            }
+        }
+
+        private void Redo_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (Project != null)
+            {
+                if (CurrentBrush != null)
+                {
+                    ActionQueue.Enqueue(() => { BlockMouse = true; CurrentBrush.MouseUp(this, new Point(-1, -1)); });
+                }
+                ActionQueue.Enqueue(() => {
+                    Project.Redo(this);
+                    BlockMouse = false;
+                });
+                while (!ActionQueue.IsEmpty) { }
             }
         }
     }

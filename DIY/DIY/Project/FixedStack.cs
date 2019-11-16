@@ -50,6 +50,11 @@ namespace DIY.Project
             return Underlying[0];
         }
 
+        public void Clear()
+        {
+            Underlying.Clear();
+        }
+
         #region Implementations of ICollection
         public int Count => Underlying.Count;
 

@@ -12,9 +12,13 @@
     <!-- The Shortcuts -->
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.New" Executed="New_Executed" />
+        <CommandBinding Command="ApplicationCommands.Undo" Executed="Undo_Executed" />
+        <CommandBinding Command="ApplicationCommands.Redo" Executed="Redo_Executed" />
     </Window.CommandBindings>
     <Window.InputBindings>
-        <KeyBinding Command="ApplicationCommands.New" Gesture="Ctrl+N"/>
+        <KeyBinding Command="ApplicationCommands.New" Gesture="Ctrl+N" />
+        <KeyBinding Command="ApplicationCommands.Undo" Gesture="Ctrl+Z" />
+        <KeyBinding Command="ApplicationCommands.Redo" Gesture="Ctrl+SHIFT+Z" />
     </Window.InputBindings>
     
     
@@ -33,8 +37,8 @@
                 <MenuItem Header="E_xit" InputGestureText="Alt+F4"/>
             </MenuItem>
             <MenuItem Header="_Edit">
-                <MenuItem Header="_Undo" InputGestureText="Ctrl+Z"/>
-                <MenuItem Header="_Redo" InputGestureText="Ctrl+SHIFT+Z"/>
+                <MenuItem Header="_Undo" Name="UndoMenu" Command="ApplicationCommands.Undo" InputGestureText="Ctrl+Z"/>
+                <MenuItem Header="_Redo" Name="RedoMenu" Command="ApplicationCommands.Redo" InputGestureText="Ctrl+SHIFT+Z"/>
                 <Separator/>
                 <MenuItem Header="_Preferences" Click="Preferences_Click"/>
             </MenuItem>

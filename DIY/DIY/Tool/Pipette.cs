@@ -16,17 +16,17 @@ namespace DIY.Tool
     /// </summary>
     class Pipette : Tool
     {
-        public override void MouseDown(DIYProject project, Point p, DIYColor c)
+        public override void MouseDown(MainWindow mw, Point p)
         {
             throw new NotImplementedException();
         }
 
-        public override void MouseMove(DIYProject project, Point p, DIYColor c)
+        public override void MouseMove(MainWindow mw, Point p)
         {
             throw new NotImplementedException();
         }
 
-        public override void MouseUp(DIYProject project, Point p, DIYColor c)
+        public override void MouseUp(MainWindow mw, Point p)
         {
             throw new NotImplementedException();
         }

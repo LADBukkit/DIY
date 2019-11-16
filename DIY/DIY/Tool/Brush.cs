@@ -1,11 +1,14 @@
 ﻿using DIY.Project;
+using DIY.Project.Action;
 using DIY.Util;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 using Xceed.Wpf.Toolkit;
 
 namespace DIY.Tool
@@ -26,43 +29,87 @@ namespace DIY.Tool
         /// </summary>
         public int Opacity { get; set; } = 100;
 
-        public override void MouseDown(DIYProject project, Point p, DIYColor c)
+        private ImageAction action { get; set; }
+
+        public override void MouseDown(MainWindow mw, Point p)
         {
-            c = new DIYColor(c.Argb);
-            c.A = (int) (Opacity / 100D * 255D);
+            DIYProject project = mw.Project;
+            Color co = mw.ColorPicker.GetColor();
+            DIYColor c = new DIYColor((int)(Opacity / 100D * 255D), co.R, co.G, co.B);
+
             Layer lay = project.Layers[project.SelectedLayer];
             if(lay is ImageLayer)
             {
                 ImageLayer ilay = (ImageLayer)lay;
+                action = new ImageAction("Draw");
+                action.Layer = project.SelectedLayer;
+                action.Old = ilay.Img.Clone();
+
                 List<int> pos = ilay.Img.DrawFilledCircle((int)p.X, (int)p.Y, (int) Math.Round(Size / 2D), c);
-                foreach(int i in pos)
+
+                foreach (int i in pos)
                 {
-                    if (i < 0 || i >= project.PixelCache.Length) continue;
-                    project.PixelCache[i] = false;
+                    if (i < 0) continue;
+                    action.ChangedPixels.Add(i);
                 }
+
+                mw.ActionQueue.Enqueue(() =>
+                {
+                    foreach (int i in pos)
+                    {
+                        if (i < 0) continue;
+                        project.PixelCache[i] = false;
+                    }
+                });
             }
         }
 
-        public override void MouseMove(DIYProject project, Point p, DIYColor c)
+        public override void MouseMove(MainWindow mw, Point p)
         {
-            c = new DIYColor(c.Argb);
-            c.A = (int)(Opacity / 100D * 255D);
+            if (action == null) return;
+            DIYProject project = mw.Project;
+            Color co = mw.ColorPicker.GetColor();
+            DIYColor c = new DIYColor((int)(Opacity / 100D * 255D), co.R, co.G, co.B);
+
             Layer lay = project.Layers[project.SelectedLayer];
             if (lay is ImageLayer)
             {
                 ImageLayer ilay = (ImageLayer)lay;
-                List<int> pos = ilay.Img.DrawFilledCircle((int)p.X, (int)p.Y, (int) Math.Round(Size / 2D), c);
+                List<int> pos = ilay.Img.DrawFilledCircle((int)p.X, (int)p.Y, (int)Math.Round(Size / 2D), c);
+
                 foreach (int i in pos)
                 {
-                    if (i < 0 || i >= project.PixelCache.Length) continue;
-                    project.PixelCache[i] = false;
+                    if (i < 0) continue;
+                    action.ChangedPixels.Add(i);
                 }
+
+                mw.ActionQueue.Enqueue(() =>
+                {
+                    foreach (int i in pos)
+                    {
+                        if (i < 0) continue;
+                        project.PixelCache[i] = false;
+                    }
+                });
             }
         }
 
-        public override void MouseUp(DIYProject project, Point p, DIYColor c)
+        public override void MouseUp(MainWindow mw, Point p)
         {
-            //throw new NotImplementedException();
+            if (action == null) return;
+            DIYProject project = mw.Project;
+            Color co = mw.ColorPicker.GetColor();
+            DIYColor c = new DIYColor((int)(Opacity / 100D * 255D), co.R, co.G, co.B);
+
+            Layer lay = project.Layers[project.SelectedLayer];
+            if (lay is ImageLayer)
+            {
+                ImageLayer ilay = (ImageLayer)lay;
+
+                action.New = ilay.Img.Clone();
+                mw.Project.PushUndo(mw, action);
+                action = null;
+            }
         }
 
         public override void PrepareProperties(StackPanel parent)

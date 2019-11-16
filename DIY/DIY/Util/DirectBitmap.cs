@@ -30,6 +30,20 @@ namespace DIY.Util
             Bitmap = new Bitmap(width, height, width * 4, PixelFormat.Format32bppArgb, BitsHandle.AddrOfPinnedObject());
         }
 
+        public DirectBitmap Clone()
+        {
+            DirectBitmap db = new DirectBitmap(Width, Height);
+            db.Disposed = Disposed;
+            if(!Disposed)
+            {
+                for (int i = 0; i < Bits.Length; i++)
+                {
+                    db.Bits[i] = Bits[i];
+                }
+            }
+            return db;
+        }
+
         private int ToIndex(int x, int y)
         {
             if (x < 0 || x >= Width || y < 0 || y >= Height) return -1;
