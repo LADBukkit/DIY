@@ -32,7 +32,7 @@ namespace DIY
                 yield return new LayoutC("32x32", new Size(32, 32));
                 yield return new LayoutC("64x64", new Size(64, 64));
                 yield return new LayoutC("128x128", new Size(128, 128));
-                yield return new LayoutC("128x256", new Size(128, 256));
+                yield return new LayoutC("256x128", new Size(256, 128));
             }
         }
 

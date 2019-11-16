@@ -101,12 +101,7 @@ namespace DIY
             Timer.Enabled = true;
 
             DispatcherTimer t2 = new DispatcherTimer();
-            t2.Tick += (sender, e) =>
-            {
-                if (Project == null) return;
-                Project.CalcBitmap();
-                drawingPanel.InvalidateVisual();
-            };
+            t2.Tick += (sender, e) => UpdateProject();
             t2.Interval = new TimeSpan(0, 0, 0, 0, 25);
             t2.Start();
         }
@@ -123,6 +118,26 @@ namespace DIY
                     a();
                 }
             }
+        }
+
+        private void UpdateProject()
+        {
+            if (Project == null) return;
+            Project.CalcBitmap();
+            drawingPanel.InvalidateVisual();
+
+            LayerList.Children.Clear();
+            for(int i = 0; i < Project.Layers.Count; i++)
+            {
+                Layer l = Project.Layers[i];
+                LayerCtrl layerCtrl = new LayerCtrl();
+                layerCtrl.LayerName = l.Name;
+                layerCtrl.Image = ColorUtil.ImageSourceFromBitmap(l.GetBitmap().Bitmap);
+                layerCtrl.Height = 75;
+                layerCtrl.Selected = i == Project.SelectedLayer;
+                LayerList.Children.Add(layerCtrl);
+            }
+            LayerList.UpdateLayout();
         }
 
         /// <summary>
