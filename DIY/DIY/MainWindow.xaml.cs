@@ -1,26 +1,20 @@
 ﻿using DIY.Project;
 using DIY.Project.Action;
 using DIY.Util;
+using SharpGL;
+using SharpGL.Enumerations;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
+using System.Drawing.Imaging;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace DIY
 {
@@ -125,7 +119,7 @@ namespace DIY
 
             Stopwatch sw = Stopwatch.StartNew();
             Project.CalcBitmap();
-            drawingPanel.InvalidateVisual();
+            //drawingPanel.InvalidateVisual();
 
             LayerList.Children.Clear();
             for(int i = Project.Layers.Count - 1; i >= 0 ; i--)
@@ -223,9 +217,11 @@ namespace DIY
             if (nw.Success)
             {
                 Project = new DIYProject((int)nw.UDWidth.Value, (int)nw.UDHeight.Value);
-                drawingPanel.Width = Project.Width;
+                /*drawingPanel.Width = Project.Width;
                 drawingPanel.Height = Project.Height;
-                drawingPanel.Img = Project.Render;
+                drawingPanel.Img = Project.Render;*/
+                opglDraw.Height = Project.Height;
+                opglDraw.Width = Project.Width;
                 contentZoomBox.FitToBounds();
             }
         }
@@ -236,7 +232,7 @@ namespace DIY
 
             if (e.LeftButton == MouseButtonState.Pressed && CurrentBrush != null && Project != null)
             {
-                Point p = e.GetPosition(drawingPanel);
+                Point p = e.GetPosition(opglDraw);
                 if (p.X >= 0 && p.X < Project.Width && p.Y >= 0 && p.Y < Project.Height)
                 {
                     ActionQueue.Enqueue(() => CurrentBrush.MouseMove(this, p));
@@ -250,7 +246,7 @@ namespace DIY
 
             if (e.ChangedButton == MouseButton.Left && CurrentBrush != null && Project != null)
             {
-                Point p = e.GetPosition(drawingPanel);
+                Point p = e.GetPosition(opglDraw);
                 if (p.X >= 0 && p.X < Project.Width && p.Y >= 0 && p.Y < Project.Height)
                 {
                     ActionQueue.Enqueue(() => CurrentBrush.MouseDown(this, p));
@@ -264,7 +260,7 @@ namespace DIY
 
             if (e.ChangedButton == MouseButton.Left && CurrentBrush != null && Project != null)
             {
-                Point p = e.GetPosition(drawingPanel);
+                Point p = e.GetPosition(opglDraw);
                 if (p.X >= 0 && p.X < Project.Width && p.Y >= 0 && p.Y < Project.Height)
                 {
                     ActionQueue.Enqueue(() => CurrentBrush.MouseUp(this, p));
@@ -325,8 +321,6 @@ namespace DIY
             {
                 Project.PixelCache[i] = false;
             }
-
-            // add to undo
         }
 
         private void LayerBlendMode_Selected(object sender, RoutedEventArgs e)
@@ -343,8 +337,95 @@ namespace DIY
             {
                 Project.PixelCache[i] = false;
             }
+        }
 
-            // add to undo
+
+        private static readonly int TEXTURE_SIZE = 32;
+
+        private void opglDraw_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs e)
+        {
+            // On Bigger resolutions white screen
+            if (Project == null) return;
+            OpenGL gl = opglDraw.OpenGL;
+
+            int wtex = (int)(Math.Ceiling(Project.Width / (double)TEXTURE_SIZE));
+            int htex = (int)(Math.Ceiling(Project.Height / (double)TEXTURE_SIZE));
+            uint[] textures = new uint[wtex * htex];
+
+            gl.GenTextures(textures.Length, textures);
+
+            uint mode = OpenGL.GL_TEXTURE_2D;
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
+
+            for (int px = 0; px < Project.Width; px += TEXTURE_SIZE)
+            {
+                for(int py = 0; py < Project.Height; py += TEXTURE_SIZE)
+                {
+                    DirectBitmap db = new DirectBitmap(TEXTURE_SIZE, TEXTURE_SIZE);
+                    for(int x = 0; x < TEXTURE_SIZE; x++)
+                    {
+                        for(int y = 0; y < TEXTURE_SIZE; y++)
+                        {
+                            if (x + px >= Project.Width || y + py >= Project.Height) continue;
+                            db.SetPixel(x, y, Project.Render.GetPixel(px + x, py + y), false);
+                        }
+                    }
+                    System.Drawing.Bitmap gImage1 = db.Bitmap;
+                    int index = px / TEXTURE_SIZE + ((py / TEXTURE_SIZE) * wtex);
+
+                    Rectangle rect = new Rectangle(0, 0, gImage1.Width, gImage1.Height);
+                    BitmapData gbitmapdata = gImage1.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                    gImage1.UnlockBits(gbitmapdata);
+                    gl.BindTexture(mode, textures[index]);
+                    gl.TexImage2D(mode, 0, (int)OpenGL.GL_RGBA8, TEXTURE_SIZE, TEXTURE_SIZE, 0, OpenGL.GL_BGRA_EXT, OpenGL.GL_UNSIGNED_BYTE, gbitmapdata.Scan0);
+                    uint[] array = new uint[] { OpenGL.GL_NEAREST };
+                    gl.TexParameter(mode, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
+                    gl.TexParameter(mode, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
+                    db.Dispose();
+                }
+            }
+            //  Load the identity matrix.
+            gl.LoadIdentity();
+
+            
+            for (int i = 0; i < textures.Length; i++)
+            {
+                int x = i % wtex * TEXTURE_SIZE;
+                int y = i / wtex * TEXTURE_SIZE;
+                gl.BindTexture(mode, textures[i]);
+                gl.Enable(mode);
+                gl.Begin(OpenGL.GL_QUADS);
+                gl.TexCoord(1.0f, 1.0f);
+                gl.Vertex(TEXTURE_SIZE + x, TEXTURE_SIZE + y, 1.0f);
+                gl.TexCoord(0.0f, 1.0f);
+                gl.Vertex(0.0f + x, TEXTURE_SIZE + y, 1.0f);
+                gl.TexCoord(0.0f, 0.0f);
+                gl.Vertex(0.0f + x, 0.0f + y, 1.0f);
+                gl.TexCoord(1.0f, 0.0f);
+                gl.Vertex(TEXTURE_SIZE + x, 0.0f + y, 1.0f);
+                gl.End();
+                gl.Disable(mode);
+            }
+
+            
+            
+            gl.DeleteTextures(textures.Length, textures);
+        }
+
+        private void opglDraw_Resized(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
+        {
+            OpenGL gl = opglDraw.OpenGL;
+            //gl.Viewport(0, 0, (int)opglDraw.Width, (int)opglDraw.Height);
+            gl.MatrixMode(OpenGL.GL_PROJECTION);
+            gl.LoadIdentity();
+            gl.Ortho(0, opglDraw.Width, opglDraw.Height, 0, -1, 1);
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);
+        }
+
+        private void opglDraw_OpenGLInitialized(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
+        {
+            OpenGL gl = opglDraw.OpenGL;
+            gl.ClearColor(0, 0, 0, 0);
         }
     }
 

@@ -28,6 +28,9 @@
 
   <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.6.0" />
+    <PackageReference Include="SharpGL" Version="2.4.1.2" />
+    <PackageReference Include="SharpGL.SceneGraph" Version="2.4.1.2" />
+    <PackageReference Include="SharpGL.WPF" Version="2.4.1.2" />
     <PackageReference Include="System.Drawing.Common" Version="4.6.0" />
   </ItemGroup>
 

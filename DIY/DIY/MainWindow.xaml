@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DIY"
         xmlns:wpfTool="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:SharpGl="clr-namespace:SharpGL.WPF;assembly=SharpGL.WPF"
         mc:Ignorable="d"
         Title="DrawItYourself" Height="674" Width="700" Style="{StaticResource WindowStyle}" WindowState="Maximized"
         Closed="Window_Closed" Icon="Assets/icon.ico">
@@ -202,7 +203,8 @@
                 </wpfTool:KeyModifierCollection>
             </wpfTool:Zoombox.ZoomModifiers>
 
-            <local:ImgCanvas x:Name="drawingPanel" Width="0" Height="0"/>
+            <!-- <local:ImgCanvas x:Name="drawingPanel" Width="0" Height="0" /> -->
+            <SharpGl:OpenGLControl x:Name="opglDraw" Height="0" Width="0" OpenGLDraw="opglDraw_OpenGLDraw" Resized="opglDraw_Resized" OpenGLInitialized="opglDraw_OpenGLInitialized"/>
         </wpfTool:Zoombox>
     </DockPanel>
 </Window>
