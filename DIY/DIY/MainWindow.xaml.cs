@@ -117,8 +117,7 @@ namespace DIY
         {
             if (Project == null) return;
 
-            Stopwatch sw = Stopwatch.StartNew();
-            Project.CalcBitmap();
+            //Project.CalcBitmap();
             //drawingPanel.InvalidateVisual();
 
             LayerList.Children.Clear();
@@ -339,106 +338,38 @@ namespace DIY
             }
         }
 
-
-        private static readonly int TEXTURE_SIZE = 32;
-
         private void opglDraw_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs e)
         {
-            // On Bigger resolutions white screen
             if (Project == null) return;
             OpenGL gl = opglDraw.OpenGL;
 
-            int wtex = (int)(Math.Ceiling(Project.Width / (double)TEXTURE_SIZE));
-            int htex = (int)(Math.Ceiling(Project.Height / (double)TEXTURE_SIZE));
-            uint[] textures = new uint[wtex * htex];
+            gl.Clear(OpenGL.GL_DEPTH_BUFFER_BIT);
+            gl.Color(0f, 0f, 0f);
+            gl.PointSize(1f);
+            gl.Begin(BeginMode.Points);
 
-            gl.GenTextures(textures.Length, textures);
+            Project.CalcBitmap((x, y, c) => {
+                gl.Color((byte)c.R, (byte)c.G, (byte)c.B);
+                gl.Vertex(x + 0.5, y + 0.5, -1);
+            });
 
-            uint mode = OpenGL.GL_TEXTURE_2D;
-            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
-
-            for (int px = 0; px < Project.Width; px += TEXTURE_SIZE)
-            {
-                for(int py = 0; py < Project.Height; py += TEXTURE_SIZE)
-                {
-                    DirectBitmap db = new DirectBitmap(TEXTURE_SIZE, TEXTURE_SIZE);
-                    for(int x = 0; x < TEXTURE_SIZE; x++)
-                    {
-                        for(int y = 0; y < TEXTURE_SIZE; y++)
-                        {
-                            if (x + px >= Project.Width || y + py >= Project.Height) continue;
-                            db.SetPixel(x, y, Project.Render.GetPixel(px + x, py + y), false);
-                        }
-                    }
-                    System.Drawing.Bitmap gImage1 = db.Bitmap;
-                    int index = px / TEXTURE_SIZE + ((py / TEXTURE_SIZE) * wtex);
-
-                    Rectangle rect = new Rectangle(0, 0, gImage1.Width, gImage1.Height);
-                    BitmapData gbitmapdata = gImage1.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-                    gImage1.UnlockBits(gbitmapdata);
-                    gl.BindTexture(mode, textures[index]);
-                    gl.TexImage2D(mode, 0, (int)OpenGL.GL_RGBA8, TEXTURE_SIZE, TEXTURE_SIZE, 0, OpenGL.GL_BGRA_EXT, OpenGL.GL_UNSIGNED_BYTE, gbitmapdata.Scan0);
-                    uint[] array = new uint[] { OpenGL.GL_NEAREST };
-                    gl.TexParameter(mode, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
-                    gl.TexParameter(mode, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
-                    db.Dispose();
-                }
-            }
-            //  Load the identity matrix.
-            gl.LoadIdentity();
-
-            
-            for (int i = 0; i < textures.Length; i++)
-            {
-                int x = i % wtex * TEXTURE_SIZE;
-                int y = i / wtex * TEXTURE_SIZE;
-                gl.BindTexture(mode, textures[i]);
-                gl.Enable(mode);
-                gl.Begin(OpenGL.GL_QUADS);
-                gl.TexCoord(1.0f, 1.0f);
-                gl.Vertex(TEXTURE_SIZE + x, TEXTURE_SIZE + y, 1.0f);
-                gl.TexCoord(0.0f, 1.0f);
-                gl.Vertex(0.0f + x, TEXTURE_SIZE + y, 1.0f);
-                gl.TexCoord(0.0f, 0.0f);
-                gl.Vertex(0.0f + x, 0.0f + y, 1.0f);
-                gl.TexCoord(1.0f, 0.0f);
-                gl.Vertex(TEXTURE_SIZE + x, 0.0f + y, 1.0f);
-                gl.End();
-                gl.Disable(mode);
-            }
-
-            
-            
-            gl.DeleteTextures(textures.Length, textures);
+            gl.End();
         }
 
         private void opglDraw_Resized(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
             OpenGL gl = opglDraw.OpenGL;
             //gl.Viewport(0, 0, (int)opglDraw.Width, (int)opglDraw.Height);
-            gl.MatrixMode(OpenGL.GL_PROJECTION);
+            gl.MatrixMode(MatrixMode.Projection);
             gl.LoadIdentity();
-            gl.Ortho(0, opglDraw.Width, opglDraw.Height, 0, -1, 1);
-            gl.MatrixMode(OpenGL.GL_MODELVIEW);
+            gl.Ortho(0, opglDraw.Width, opglDraw.Height, 0, 1, 2);
+            gl.MatrixMode(MatrixMode.Modelview);
         }
 
         private void opglDraw_OpenGLInitialized(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
             OpenGL gl = opglDraw.OpenGL;
             gl.ClearColor(0, 0, 0, 0);
-        }
-    }
-
-    public class ImgCanvas : Canvas
-    {
-        public DirectBitmap Img { get; set; }
-
-        protected override void OnRender(DrawingContext dc)
-        {
-            if(Img != null)
-            {
-                dc.DrawImage(ColorUtil.ImageSourceFromBitmap(Img.Bitmap), new Rect(0, 0, Img.Width, Img.Height));
-            }
         }
     }
 }

@@ -19,7 +19,6 @@ namespace DIY.Project
         public int Width { get; set; }
         public int Height { get; set; }
 
-        public DirectBitmap Render { get; private set; }
         public ConcurrentDictionary<int, bool> PixelCache { get; set; }
 
         public FixedStack<DIYAction> UndoCache = new FixedStack<DIYAction>(50);
@@ -34,7 +33,6 @@ namespace DIY.Project
             Layers.Add(lay);
             SelectedLayer = 0;
 
-            Render = new DirectBitmap(width, height);
             PixelCache = new ConcurrentDictionary<int, bool>();
             for(int i = 0; i < width * height; i++)
             {
@@ -42,7 +40,7 @@ namespace DIY.Project
             }
         }
 
-        private void DrawPixel(int x, int y)
+        private void DrawPixel(int x, int y, Action<int, int, DIYColor> action)
         {
             DIYColor pxl = ((x % 2) == (y % 2)) ? new DIYColor(255, 64, 64, 64) : new DIYColor(255, 16, 16, 16);
 
@@ -62,10 +60,10 @@ namespace DIY.Project
                     pxl = lay.Mode.BlendColors(pxl, lay.GetBitmap().GetPixel(x - lay.OffsetX, y - lay.OffsetY), lay.Opacity);
                 }
             }
-            Render.SetPixel(x, y, pxl);
+            action(x, y, pxl);
         }
 
-        public void CalcBitmap() {
+        public void CalcBitmap(Action<int, int, DIYColor> action) {
             for (int x = 0; x < Width; x++)
             {
                 for (int y = 0; y < Height; y++)
@@ -73,7 +71,7 @@ namespace DIY.Project
                     int pos = x + (y * Width);
                     if (!PixelCache[pos])
                     {
-                        DrawPixel(x, y);
+                        DrawPixel(x, y, action);
                         PixelCache[pos] = true;
                     }
                 }
