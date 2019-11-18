@@ -188,7 +188,7 @@
         </Border>
 
         <!-- The Content aka the drawing platform -->
-        <wpfTool:Zoombox x:Name="contentZoomBox" DockPanel.Dock="Left" RenderOptions.BitmapScalingMode="NearestNeighbor" MouseDown="contentZoomBox_MouseDown" MouseMove="contentZoomBox_MouseMove" MouseUp="contentZoomBox_MouseUp">
+        <wpfTool:Zoombox x:Name="contentZoomBox" DockPanel.Dock="Left" RenderOptions.BitmapScalingMode="NearestNeighbor" MouseDown="contentZoomBox_MouseDown" MouseMove="contentZoomBox_MouseMove" MouseUp="contentZoomBox_MouseUp" KeepContentInBounds="True">
             <!-- changing zoom and drag keys -->
             <wpfTool:Zoombox.DragModifiers>
                 <wpfTool:KeyModifierCollection>

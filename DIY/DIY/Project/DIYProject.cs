@@ -64,17 +64,14 @@ namespace DIY.Project
         }
 
         public void CalcBitmap(Action<int, int, DIYColor> action) {
-            for (int x = 0; x < Width; x++)
+            var en = PixelCache.GetEnumerator();
+            while(en.MoveNext())
             {
-                for (int y = 0; y < Height; y++)
-                {
-                    int pos = x + (y * Width);
-                    if (!PixelCache[pos])
-                    {
-                        DrawPixel(x, y, action);
-                        PixelCache[pos] = true;
-                    }
-                }
+                int pos = en.Current.Key;
+                int x = pos % Width;
+                int y = pos / Width;
+                DrawPixel(x, y, action);
+                PixelCache.TryRemove(pos, out bool val);
             }
         }
 
