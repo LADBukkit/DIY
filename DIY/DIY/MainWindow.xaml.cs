@@ -325,6 +325,8 @@ namespace DIY
         private void LayerBlendMode_Selected(object sender, RoutedEventArgs e)
         {
             if (Project == null) return;
+            if ((BlendMode)LayerBlendMode.SelectedItem == Project.Layers[Project.SelectedLayer].Mode) return;
+
             LayerBlendModeAction ac = new LayerBlendModeAction();
             ac.Layer = Project.Layers[Project.SelectedLayer];
             ac.Old = ac.Layer.Mode;
@@ -359,7 +361,6 @@ namespace DIY
         private void opglDraw_Resized(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
             OpenGL gl = opglDraw.OpenGL;
-            //gl.Viewport(0, 0, (int)opglDraw.Width, (int)opglDraw.Height);
             gl.MatrixMode(MatrixMode.Projection);
             gl.LoadIdentity();
             gl.Ortho(0, opglDraw.Width, opglDraw.Height, 0, 1, 2);
@@ -370,6 +371,32 @@ namespace DIY
         {
             OpenGL gl = opglDraw.OpenGL;
             gl.ClearColor(0, 0, 0, 0);
+        }
+
+        private void LayerDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (Project == null || Project.SelectedLayer <= 0) return;
+            int pold = Project.SelectedLayer;
+            int pnew = Project.SelectedLayer - 1;
+
+            SwitchLayerAction ac = new SwitchLayerAction();
+            ac.PNew = pnew;
+            ac.POld = pold;
+            ac.Redo(Project);
+            Project.PushUndo(this, ac);
+        }
+
+        private void LayerUp_Click(object sender, RoutedEventArgs e)
+        {
+            if (Project == null || Project.SelectedLayer >= Project.Layers.Count - 1) return;
+            int pold = Project.SelectedLayer;
+            int pnew = Project.SelectedLayer + 1;
+
+            SwitchLayerAction ac = new SwitchLayerAction();
+            ac.PNew = pnew;
+            ac.POld = pold;
+            ac.Redo(Project);
+            Project.PushUndo(this, ac);
         }
     }
 }
