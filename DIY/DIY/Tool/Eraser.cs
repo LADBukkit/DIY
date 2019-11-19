@@ -1,4 +1,5 @@
 ﻿using DIY.Project;
+using DIY.Project.Action;
 using DIY.Util;
 using System;
 using System.Collections.Generic;
@@ -26,19 +27,82 @@ namespace DIY.Tool
         /// </summary>
         public int Opacity { get; set; } = 100;
 
+        private ImageAction action { get; set; }
+
         public override void MouseDown(MainWindow mw, Point p)
         {
-            throw new NotImplementedException();
+            DIYProject project = mw.Project;
+
+            Layer lay = project.Layers[project.SelectedLayer];
+            if (lay is ImageLayer)
+            {
+                ImageLayer ilay = (ImageLayer)lay;
+                action = new ImageAction("Erase");
+                action.Layer = project.SelectedLayer;
+                action.Old = ilay.Img.Clone();
+
+                List<int> pos = ilay.Img.RemoveFilledCircle((int)p.X, (int)p.Y, (int)Math.Round(Size / 2D), Opacity / 100D);
+
+                foreach (int i in pos)
+                {
+                    if (i < 0) continue;
+                    action.ChangedPixels.Add(i);
+                }
+
+                mw.ActionQueue.Enqueue(() =>
+                {
+                    foreach (int i in pos)
+                    {
+                        if (i < 0) continue;
+                        project.PixelCache[i] = false;
+                    }
+                });
+            }
         }
 
         public override void MouseMove(MainWindow mw, Point p)
         {
-            throw new NotImplementedException();
+            if (action == null) return;
+            DIYProject project = mw.Project;
+
+            Layer lay = project.Layers[project.SelectedLayer];
+            if (lay is ImageLayer)
+            {
+                ImageLayer ilay = (ImageLayer)lay;
+                List<int> pos = ilay.Img.RemoveFilledCircle((int)p.X, (int)p.Y, (int)Math.Round(Size / 2D), Opacity / 100D);
+
+                foreach (int i in pos)
+                {
+                    if (i < 0) continue;
+                    if (action == null) continue;
+                    action.ChangedPixels.Add(i);
+                }
+
+                mw.ActionQueue.Enqueue(() =>
+                {
+                    foreach (int i in pos)
+                    {
+                        if (i < 0) continue;
+                        project.PixelCache[i] = false;
+                    }
+                });
+            }
         }
 
         public override void MouseUp(MainWindow mw, Point p)
         {
-            throw new NotImplementedException();
+            if (action == null) return;
+            DIYProject project = mw.Project;
+
+            Layer lay = project.Layers[project.SelectedLayer];
+            if (lay is ImageLayer)
+            {
+                ImageLayer ilay = (ImageLayer)lay;
+
+                action.New = ilay.Img.Clone();
+                mw.Project.PushUndo(mw, action);
+                action = null;
+            }
         }
 
         public override void PrepareProperties(StackPanel parent)

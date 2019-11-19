@@ -18,17 +18,26 @@ namespace DIY.Tool
     {
         public override void MouseDown(MainWindow mw, Point p)
         {
-            throw new NotImplementedException();
+            DIYProject project = mw.Project;
+
+            Layer lay = project.Layers[project.SelectedLayer];
+
+            DIYColor c = lay.GetBitmap().GetPixel((int) p.X, (int) p.Y);
+            ColorUtil.ToHSL((byte) c.R, (byte) c.G, (byte) c.B, out double h, out double s, out double l);
+            mw.ColorPicker.hue = h;
+            mw.ColorPicker.saturation = s;
+            mw.ColorPicker.lightness = l;
+            mw.ColorPicker.Dispatcher.Invoke(() => mw.ColorPicker.UpdatePointer());
         }
 
         public override void MouseMove(MainWindow mw, Point p)
         {
-            throw new NotImplementedException();
+            // nothing
         }
 
         public override void MouseUp(MainWindow mw, Point p)
         {
-            throw new NotImplementedException();
+            // nothing
         }
 
         public override void PrepareProperties(StackPanel parent)

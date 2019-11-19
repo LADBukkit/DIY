@@ -99,8 +99,6 @@ namespace DIY.Tool
         {
             if (action == null) return;
             DIYProject project = mw.Project;
-            Color co = mw.ColorPicker.GetColor();
-            DIYColor c = new DIYColor((int)(Opacity / 100D * 255D), co.R, co.G, co.B);
 
             Layer lay = project.Layers[project.SelectedLayer];
             if (lay is ImageLayer)

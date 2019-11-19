@@ -196,7 +196,7 @@ namespace DIY.Util
             return points;
         }
 
-        private List<int> hLine(int x0, int y0, int w, DIYColor c)
+        private List<int> hLine(int x0, int y0, int w)
         {
             List<int> points = new List<int>();
             for(int i = 0; i < w; i++)
@@ -206,7 +206,7 @@ namespace DIY.Util
             return points;
         }
 
-        public List<int> DrawFilledCircle(int x0, int y0, int radius, DIYColor c)
+        public List<int> PointsFilledCircle(int x0, int y0, int radius)
         {
             List<int> points = new List<int>();
 
@@ -224,7 +224,7 @@ namespace DIY.Util
 
             points.Add(ToIndex(x0 - radius, y0));
 
-            points.AddRange(hLine(x0 - radius, y0 , radius * 2, c));
+            points.AddRange(hLine(x0 - radius, y0 , radius * 2));
 
             while (x < y)
             {
@@ -238,11 +238,11 @@ namespace DIY.Util
                 ddF_x += 2;
                 f += ddF_x + 1;
 
-                points.AddRange(hLine(x0 - x, y0 + y, x * 2, c));
-                points.AddRange(hLine(x0 - x, y0 - y, x * 2, c));
+                points.AddRange(hLine(x0 - x, y0 + y, x * 2));
+                points.AddRange(hLine(x0 - x, y0 - y, x * 2));
 
-                points.AddRange(hLine(x0 - y, y0 + x, y * 2, c));
-                points.AddRange(hLine(x0 - y, y0 - x, y * 2, c));
+                points.AddRange(hLine(x0 - y, y0 + x, y * 2));
+                points.AddRange(hLine(x0 - y, y0 - x, y * 2));
 
 
                 points.Add(ToIndex(x0 + x, y0 + y));
@@ -259,11 +259,35 @@ namespace DIY.Util
             
             foreach(int i in points)
             {
-                if (set.Contains(i)) continue;
-                set.Add(i);
+                set.Add(i);              
+            }
+            return new List<int>(set);
+        }
+
+        public List<int> DrawFilledCircle(int x0, int y0, int radius, DIYColor c)
+        {
+            List<int> points = PointsFilledCircle(x0, y0, radius);
+            foreach (int i in points)
+            {
                 int nx = i % Width;
                 int ny = i / Width;
                 SetPixel(nx, ny, c);
+            }
+            return points;
+        }
+
+        public List<int> RemoveFilledCircle(int x0, int y0, int radius, double percent)
+        {
+            List<int> points = PointsFilledCircle(x0, y0, radius);
+            foreach (int i in points)
+            {
+                int nx = i % Width;
+                int ny = i / Width;
+
+                DIYColor c = GetPixel(nx, ny);
+                if (c == null) continue;
+                c.A = (int) (c.A * (1 - percent));
+                SetPixel(nx, ny, c, false);
             }
             return points;
         }
