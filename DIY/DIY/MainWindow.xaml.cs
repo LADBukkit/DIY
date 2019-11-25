@@ -345,7 +345,7 @@ namespace DIY
             if (Project == null) return;
             OpenGL gl = opglDraw.OpenGL;
 
-            gl.Clear(OpenGL.GL_DEPTH_BUFFER_BIT);
+            //gl.Clear(OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.Color(0f, 0f, 0f);
             gl.PointSize(1f);
             gl.Begin(BeginMode.Points);
