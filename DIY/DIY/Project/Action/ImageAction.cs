@@ -21,7 +21,7 @@ namespace DIY.Project.Action
             lay.Img = New;
             foreach(int i in ChangedPixels)
             {
-                pr.PixelCache[i] = false;
+                pr.PixelCache.Add(i);
             }
         }
 
@@ -31,7 +31,7 @@ namespace DIY.Project.Action
             lay.Img = Old;
             foreach (int i in ChangedPixels)
             {
-                pr.PixelCache[i] = false;
+                pr.PixelCache.Add(i);
             }
         }
     }

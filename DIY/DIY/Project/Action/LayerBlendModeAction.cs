@@ -17,7 +17,7 @@ namespace DIY.Project.Action
             Layer.Mode = New;
             for (int i = 0; i < pr.Width * pr.Height; i++)
             {
-                pr.PixelCache[i] = false;
+                pr.PixelCache.Add(i);
             }
         }
 
@@ -26,7 +26,7 @@ namespace DIY.Project.Action
             Layer.Mode = Old;
             for (int i = 0; i < pr.Width * pr.Height; i++)
             {
-                pr.PixelCache[i] = false;
+                pr.PixelCache.Add(i);
             }
         }
     }

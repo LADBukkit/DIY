@@ -78,7 +78,26 @@
                         </Grid.RowDefinitions>
                         
                         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" TextAlignment="Center">BlendMode</TextBlock>
-                        <ComboBox x:Name="LayerBlendMode" Grid.Row="0" Grid.Column="1" SelectionChanged="LayerBlendMode_Selected"/>
+                        <ComboBox x:Name="LayerBlendMode" Grid.Row="0" Grid.Column="1" SelectionChanged="LayerBlendMode_Selected">
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Margin" Value="5 0 5 0"/>
+
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Name}" Value="{x:Null}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ComboBoxItem">
+                                                        <Separator HorizontalAlignment="Stretch" VerticalAlignment="Center" IsEnabled="False" Margin="0 2 0 2" />
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                        </ComboBox>
                         <TextBlock Margin="0 10 0 0" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" TextAlignment="Center">Opacity</TextBlock>
                         <Slider Name="LayerOpacity" Margin="0 10 0 0" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="100" ValueChanged="LayerOpacity_ValueChanged"/>
                         <wpfTool:IntegerUpDown Grid.Row="2" Grid.Column="1" Value="{Binding Source={x:Reference Name=LayerOpacity}, Path=Value}"/>

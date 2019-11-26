@@ -318,7 +318,7 @@ namespace DIY
             Project.Layers[Project.SelectedLayer].Opacity = e.NewValue / 100D;
             for(int i = 0; i < Project.Width * Project.Height; i++)
             {
-                Project.PixelCache[i] = false;
+                Project.PixelCache.Add(i);
             }
         }
 
@@ -336,16 +336,16 @@ namespace DIY
             ac.Layer.Mode = ac.New;
             for (int i = 0; i < Project.Width * Project.Height; i++)
             {
-                Project.PixelCache[i] = false;
+                Project.PixelCache.Add(i);
             }
         }
 
+        [Obsolete]
         private void opglDraw_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs e)
         {
             if (Project == null) return;
             OpenGL gl = opglDraw.OpenGL;
 
-            //gl.Clear(OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.Color(0f, 0f, 0f);
             gl.PointSize(1f);
             gl.Begin(BeginMode.Points);

@@ -18,7 +18,7 @@ namespace DIY.Project.Action
             pr.Layers[PNew] = help;
             for (int i = 0; i < pr.Width * pr.Height; i++)
             {
-                pr.PixelCache[i] = false;
+                pr.PixelCache.Add(i);
             }
         }
 

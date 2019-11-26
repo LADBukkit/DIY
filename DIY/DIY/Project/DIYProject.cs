@@ -19,7 +19,7 @@ namespace DIY.Project
         public int Width { get; set; }
         public int Height { get; set; }
 
-        public ConcurrentDictionary<int, bool> PixelCache { get; set; }
+        public ConcurrentHashSet<int> PixelCache { get; set; }
 
         public FixedStack<DIYAction> UndoCache = new FixedStack<DIYAction>(50);
         public FixedStack<DIYAction> RedoCache = new FixedStack<DIYAction>(50);
@@ -33,17 +33,18 @@ namespace DIY.Project
             Layers.Add(lay);
             SelectedLayer = 0;
 
-            PixelCache = new ConcurrentDictionary<int, bool>();
+            PixelCache = new ConcurrentHashSet<int>();
             for(int i = 0; i < width * height; i++)
             {
-                PixelCache[i] = false;
+                PixelCache.Add(i);
             }
         }
 
         private void DrawPixel(int x, int y, Action<int, int, DIYColor> action)
         {
-            DIYColor pxl = ((x % 2) == (y % 2)) ? new DIYColor(255, 64, 64, 64) : new DIYColor(255, 16, 16, 16);
+            DIYColor under = ((x % 2) == (y % 2)) ? new DIYColor(255, 64, 64, 64) : new DIYColor(255, 16, 16, 16);
 
+            DIYColor pxl = new DIYColor(0, 0, 0, 0);
             if(Layers.Count > 0)
             {
                 Layer lay = Layers[0];
@@ -60,18 +61,20 @@ namespace DIY.Project
                     pxl = lay.Mode.BlendColors(pxl, lay.GetBitmap().GetPixel(x - lay.OffsetX, y - lay.OffsetY), lay.Opacity);
                 }
             }
-            action(x, y, pxl);
+            action(x, y, BlendMode.NORMAL.BlendColors(under, pxl, 1));
         }
 
         public void CalcBitmap(Action<int, int, DIYColor> action) {
-            var en = PixelCache.GetEnumerator();
-            while(en.MoveNext())
-            {
-                int pos = en.Current.Key;
+            HashSet<int> hsI = new HashSet<int>();
+            PixelCache.ForEach(pos => {
                 int x = pos % Width;
                 int y = pos / Width;
                 DrawPixel(x, y, action);
-                PixelCache.TryRemove(pos, out bool val);
+                hsI.Add(pos);
+            });
+            foreach(int pos in hsI)
+            {
+                PixelCache.Remove(pos);
             }
         }
 

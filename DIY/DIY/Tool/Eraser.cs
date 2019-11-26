@@ -49,14 +49,7 @@ namespace DIY.Tool
                     action.ChangedPixels.Add(i);
                 }
 
-                mw.ActionQueue.Enqueue(() =>
-                {
-                    foreach (int i in pos)
-                    {
-                        if (i < 0) continue;
-                        project.PixelCache[i] = false;
-                    }
-                });
+                mw.ActionQueue.Enqueue(() => project.PixelCache.AddAll(pos));
             }
         }
 
@@ -78,14 +71,7 @@ namespace DIY.Tool
                     action.ChangedPixels.Add(i);
                 }
 
-                mw.ActionQueue.Enqueue(() =>
-                {
-                    foreach (int i in pos)
-                    {
-                        if (i < 0) continue;
-                        project.PixelCache[i] = false;
-                    }
-                });
+                mw.ActionQueue.Enqueue(() => project.PixelCache.AddAll(pos));
             }
         }
 
@@ -112,7 +98,7 @@ namespace DIY.Tool
             // Size Regulator
             ValueRegulator sReg = new ValueRegulator();
             sReg.Minimum = 1;
-            sReg.Maximum = 256;
+            sReg.Maximum = 100;
             sReg.Label = "Size";
             Binding sBind = new Binding("Size");
             sBind.Source = this;
