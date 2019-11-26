@@ -43,12 +43,33 @@ namespace DIY
                 {
                     Color c = (Color)ColorConverter.ConvertFromString(pcc.Text);
                     Application.Current.Resources[pcc.Resource] = new SolidColorBrush(c);
-                    settings["c_" + pcc.Resource] = pcc.Text;
                 }
                 catch (FormatException) { }
             }
-
+        }
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (PrefColorCtrl pcc in Theme.Children.OfType<PrefColorCtrl>())
+            {
+                settings["c_" + pcc.Resource] = pcc.Text;
+            }
             settings.Save();
+            this.Close();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            foreach (string key in Application.Current.Resources.MergedDictionaries[0].Keys)
+            {
+                if (key.StartsWith("c_"))
+                {
+                    if (settings[key] == null)
+                    {
+                        settings[key] = Application.Current.Resources[key].ToString();
+                    }
+                    Application.Current.Resources[key.Substring(2)] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(settings[key].ToString()));
+                }
+            }
         }
     }
 }
