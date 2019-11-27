@@ -278,7 +278,7 @@ namespace DIY.Project
             return BM_Normal(c1, c2, opacity);
         }
 
-        public static DIYColor BM_DarkenOnly(DIYColor c1, DIYColor c2, double opacity)
+        public static DIYColor BM_DarkenOnly(DIYColor c1, DIYColor c2, double opacity) 
         {
             static int f(int a, int b) => Math.Min(a, b);
 
