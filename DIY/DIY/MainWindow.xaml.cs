@@ -398,5 +398,18 @@ namespace DIY
             ac.Redo(Project);
             Project.PushUndo(this, ac);
         }
+
+        private void Rename_Click(object sender, RoutedEventArgs e)
+        {
+            if (Project == null) return;
+            Layer lay = Project.Layers[Project.SelectedLayer];
+            RenameWindow rn = new RenameWindow(lay.Name);
+            rn.ShowDialog();
+
+            if(rn.Okay)
+            {
+                lay.Name = rn.Oldname;
+            }
+        }
     }
 }
