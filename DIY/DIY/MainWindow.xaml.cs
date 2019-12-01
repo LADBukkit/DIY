@@ -233,7 +233,13 @@ namespace DIY
 
             if (e.LeftButton == MouseButtonState.Pressed && CurrentBrush != null && Project != null)
             {
+                Layer lay = Project.Layers[Project.SelectedLayer];
                 Point p = e.GetPosition(opglDraw);
+                if(!(CurrentBrush is DIY.Tool.Move))
+                {
+                    p.X -= lay.OffsetX;
+                    p.Y -= lay.OffsetY;
+                }
                 if (p.X >= 0 && p.X < Project.Width && p.Y >= 0 && p.Y < Project.Height)
                 {
                     ActionQueue.Enqueue(() => CurrentBrush.MouseMove(this, p));
@@ -247,7 +253,13 @@ namespace DIY
 
             if (e.ChangedButton == MouseButton.Left && CurrentBrush != null && Project != null)
             {
+                Layer lay = Project.Layers[Project.SelectedLayer];
                 Point p = e.GetPosition(opglDraw);
+                if (!(CurrentBrush is DIY.Tool.Move))
+                {
+                    p.X -= lay.OffsetX;
+                    p.Y -= lay.OffsetY;
+                }
                 if (p.X >= 0 && p.X < Project.Width && p.Y >= 0 && p.Y < Project.Height)
                 {
                     ActionQueue.Enqueue(() => CurrentBrush.MouseDown(this, p));
@@ -261,7 +273,13 @@ namespace DIY
 
             if (e.ChangedButton == MouseButton.Left && CurrentBrush != null && Project != null)
             {
+                Layer lay = Project.Layers[Project.SelectedLayer];
                 Point p = e.GetPosition(opglDraw);
+                if (!(CurrentBrush is DIY.Tool.Move))
+                {
+                    p.X -= lay.OffsetX;
+                    p.Y -= lay.OffsetY;
+                }
                 if (p.X >= 0 && p.X < Project.Width && p.Y >= 0 && p.Y < Project.Height)
                 {
                     ActionQueue.Enqueue(() => CurrentBrush.MouseUp(this, p));

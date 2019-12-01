@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Xceed.Wpf.Toolkit;
+using System.Linq;
 
 namespace DIY.Tool
 {
@@ -41,11 +42,11 @@ namespace DIY.Tool
                 action.Layer = project.SelectedLayer;
                 action.Old = ilay.Img.Clone();
 
-                List<int> pos = ilay.Img.RemoveFilledCircle((int)p.X, (int)p.Y, (int)Math.Round(Size / 2D), Opacity / 100D);
+                List<Point> ppos = ilay.Img.RemoveFilledCircle((int)p.X, (int)p.Y, (int)Math.Round(Size / 2D), Opacity / 100D);
+                List<int> pos = new List<int>(ppos.Select(i => (int)((i.X + ilay.OffsetX) + ((i.Y + lay.OffsetY) * ilay.Img.Width))));
 
                 foreach (int i in pos)
                 {
-                    if (i < 0) continue;
                     action.ChangedPixels.Add(i);
                 }
 
@@ -62,7 +63,8 @@ namespace DIY.Tool
             if (lay is ImageLayer)
             {
                 ImageLayer ilay = (ImageLayer)lay;
-                List<int> pos = ilay.Img.RemoveFilledCircle((int)p.X, (int)p.Y, (int)Math.Round(Size / 2D), Opacity / 100D);
+                List<Point> ppos = ilay.Img.RemoveFilledCircle((int)p.X, (int)p.Y, (int)Math.Round(Size / 2D), Opacity / 100D);
+                List<int> pos = new List<int>(ppos.Select(i => (int)((i.X + ilay.OffsetX) + ((i.Y + lay.OffsetY) * ilay.Img.Width))));
 
                 foreach (int i in pos)
                 {

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Text;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using Point = System.Windows.Point;
 
 namespace DIY.Util
 {
@@ -111,9 +112,9 @@ namespace DIY.Util
             BitsHandle.Free();
         }
 
-        public List<int> DrawLine(int x0, int y0, int x1, int y1, DIYColor c)
+        public List<Point> DrawLine(int x0, int y0, int x1, int y1, DIYColor c)
         {
-            List<int> points = new List<int>();
+            List<Point> points = new List<Point>();
 
             int dx = Math.Abs(x1 - x0);
             int sx = x0 < x1 ? 1 : -1;
@@ -123,7 +124,7 @@ namespace DIY.Util
             int e2 = 0;
             while(true)
             {
-                points.Add(ToIndex(x0, y0));
+                points.Add(new Point(x0, y0));
                 SetPixel(x0, y0, c);
                 if (x0 == x1 && y0 == y1) break;
                 e2 = 2 * err;
@@ -141,9 +142,9 @@ namespace DIY.Util
             return points;
         }
 
-        public List<int> DrawCircle(int x0, int y0, int radius, DIYColor c)
+        public List<Point> DrawCircle(int x0, int y0, int radius, DIYColor c)
         {
-            List<int> points = new List<int>();
+            List<Point> points = new List<Point>();
 
             int f = 1 - radius;
             int ddF_x = 0;
@@ -151,16 +152,16 @@ namespace DIY.Util
             int x = 0;
             int y = radius;
 
-            points.Add(ToIndex(x0, y0 + radius));
+            points.Add(new Point(x0, y0 + radius));
             SetPixel(x0, y0 + radius, c);
 
-            points.Add(ToIndex(x0, y0 - radius));
+            points.Add(new Point(x0, y0 - radius));
             SetPixel(x0, y0 - radius, c);
 
-            points.Add(ToIndex(x0 + radius, y0));
+            points.Add(new Point(x0 + radius, y0));
             SetPixel(x0 + radius, y0, c);
 
-            points.Add(ToIndex(x0 - radius, y0));
+            points.Add(new Point(x0 - radius, y0));
             SetPixel(x0 - radius, y0, c);
 
             while(x < y)
@@ -184,31 +185,31 @@ namespace DIY.Util
                 SetPixel(x0 + y, y0 - x, c);
                 SetPixel(x0 - y, y0 - x, c);
 
-                points.Add(ToIndex(x0 + x, y0 + y));
-                points.Add(ToIndex(x0 - x, y0 + y));
-                points.Add(ToIndex(x0 + x, y0 - y));
-                points.Add(ToIndex(x0 - x, y0 - y));
-                points.Add(ToIndex(x0 + y, y0 + x));
-                points.Add(ToIndex(x0 - y, y0 + x));
-                points.Add(ToIndex(x0 + y, y0 - x));
-                points.Add(ToIndex(x0 - y, y0 - x));
+                points.Add(new Point(x0 + x, y0 + y));
+                points.Add(new Point(x0 - x, y0 + y));
+                points.Add(new Point(x0 + x, y0 - y));
+                points.Add(new Point(x0 - x, y0 - y));
+                points.Add(new Point(x0 + y, y0 + x));
+                points.Add(new Point(x0 - y, y0 + x));
+                points.Add(new Point(x0 + y, y0 - x));
+                points.Add(new Point(x0 - y, y0 - x));
             }
             return points;
         }
 
-        private List<int> hLine(int x0, int y0, int w)
+        private List<Point> hLine(int x0, int y0, int w)
         {
-            List<int> points = new List<int>();
+            List<Point> points = new List<Point>();
             for(int i = 0; i < w; i++)
             {
-                points.Add(ToIndex(x0 + i, y0));
+                points.Add(new Point(x0 + i, y0));
             }
             return points;
         }
 
-        public List<int> PointsFilledCircle(int x0, int y0, int radius)
+        public List<Point> PointsFilledCircle(int x0, int y0, int radius)
         {
-            List<int> points = new List<int>();
+            List<Point> points = new List<Point>();
 
             int f = 1 - radius;
             int ddF_x = 0;
@@ -216,13 +217,13 @@ namespace DIY.Util
             int x = 0;
             int y = radius;
 
-            points.Add(ToIndex(x0, y0 + radius));
+            points.Add(new Point(x0, y0 + radius));
 
-            points.Add(ToIndex(x0, y0 - radius));
+            points.Add(new Point(x0, y0 - radius));
 
-            points.Add(ToIndex(x0 + radius, y0));
+            points.Add(new Point(x0 + radius, y0));
 
-            points.Add(ToIndex(x0 - radius, y0));
+            points.Add(new Point(x0 - radius, y0));
 
             points.AddRange(hLine(x0 - radius, y0 , radius * 2));
 
@@ -245,83 +246,79 @@ namespace DIY.Util
                 points.AddRange(hLine(x0 - y, y0 - x, y * 2));
 
 
-                points.Add(ToIndex(x0 + x, y0 + y));
-                points.Add(ToIndex(x0 - x, y0 + y));
-                points.Add(ToIndex(x0 + x, y0 - y));
-                points.Add(ToIndex(x0 - x, y0 - y));
-                points.Add(ToIndex(x0 + y, y0 + x));
-                points.Add(ToIndex(x0 - y, y0 + x));
-                points.Add(ToIndex(x0 + y, y0 - x));
-                points.Add(ToIndex(x0 - y, y0 - x));
+                points.Add(new Point(x0 + x, y0 + y));
+                points.Add(new Point(x0 - x, y0 + y));
+                points.Add(new Point(x0 + x, y0 - y));
+                points.Add(new Point(x0 - x, y0 - y));
+                points.Add(new Point(x0 + y, y0 + x));
+                points.Add(new Point(x0 - y, y0 + x));
+                points.Add(new Point(x0 + y, y0 - x));
+                points.Add(new Point(x0 - y, y0 - x));
             }
 
-            HashSet<int> set = new HashSet<int>();
+            HashSet<Point> set = new HashSet<Point>();
             
-            foreach(int i in points)
+            foreach(Point i in points)
             {
                 set.Add(i);              
             }
-            return new List<int>(set);
+            return new List<Point>(set);
         }
 
-        public List<int> DrawFilledCircle(int x0, int y0, int radius, DIYColor c)
+        public List<Point> DrawFilledCircle(int x0, int y0, int radius, DIYColor c)
         {
-            List<int> points = PointsFilledCircle(x0, y0, radius);
-            foreach (int i in points)
+            List<Point> points = PointsFilledCircle(x0, y0, radius);
+            foreach (Point i in points)
             {
-                int nx = i % Width;
-                int ny = i / Width;
-                SetPixel(nx, ny, c);
+                SetPixel((int) i.X, (int) i.Y, c);
             }
             return points;
         }
 
-        public List<int> RemoveFilledCircle(int x0, int y0, int radius, double percent)
+        public List<Point> RemoveFilledCircle(int x0, int y0, int radius, double percent)
         {
-            List<int> points = PointsFilledCircle(x0, y0, radius);
-            foreach (int i in points)
+            List<Point> points = PointsFilledCircle(x0, y0, radius);
+            foreach (Point i in points)
             {
-                int nx = i % Width;
-                int ny = i / Width;
-
-                DIYColor c = GetPixel(nx, ny);
+                DIYColor c = GetPixel((int) i.X, (int)i.Y);
                 if (c == null) continue;
                 c.A = (int) (c.A * (1 - percent));
-                SetPixel(nx, ny, c, false);
+                SetPixel((int) i.X, (int)i.Y, c, false);
             }
             return points;
         }
 
-        private static double FF_MAX_DIS = ColorUtil.DistanceSquared(new DIYColor(0, 0, 0, 0), new DIYColor(255, 255, 255, 255));
+        private static double FF_MAX_DIS = 1D / ColorUtil.DistanceSquared(new DIYColor(0, 0, 0, 0), new DIYColor(255, 255, 255, 255)) * 100;
 
-        public List<int> FloodFill(int x0, int y0, int threshold, DIYColor cOld, DIYColor cNew)
+        public List<Point> FloodFill(int x0, int y0, int threshold, DIYColor cOld, DIYColor cNew)
         {
-            List<int> points = new List<int>();
-            Stack<Point> stack = new Stack<Point>();
+            // Performance Problems on Bigger pictures
+            HashSet<Point> points = new HashSet<Point>();
+            Queue<Point> queue = new Queue<Point>();
 
-            stack.Push(new Point(x0, y0));
-            while(stack.Count > 0)
+            queue.Enqueue(new Point(x0, y0));
+            while(queue.Count > 0)
             {
-                Point p = stack.Pop();
-                if (points.Contains(ToIndex(p.X, p.Y))) continue;
+                Point p = queue.Dequeue();
+                if (points.Contains(new Point(p.X, p.Y))) continue;
                 if (p.X < 0 || p.X >= Width || p.Y < 0 || p.Y >= Height) continue;
 
-                DIYColor c = GetPixel(p.X, p.Y);
+                DIYColor c = GetPixel((int) p.X, (int) p.Y);
 
-                double dis = ColorUtil.DistanceSquared(c, cOld) / FF_MAX_DIS * 100D;
+                double dis = ColorUtil.DistanceSquared(c, cOld) * FF_MAX_DIS;
                 if(dis <= threshold)
                 {
-                    points.Add(ToIndex(p.X, p.Y));
-                    SetPixel(p.X, p.Y, cNew, false);
+                    points.Add(new Point(p.X, p.Y));
+                    SetPixel((int) p.X, (int) p.Y, cNew, false);
 
-                    stack.Push(new Point(p.X, p.Y + 1));
-                    stack.Push(new Point(p.X, p.Y - 1));
-                    stack.Push(new Point(p.X + 1, p.Y));
-                    stack.Push(new Point(p.X - 1, p.Y));
+                    queue.Enqueue(new Point(p.X, p.Y + 1));
+                    queue.Enqueue(new Point(p.X, p.Y - 1));
+                    queue.Enqueue(new Point(p.X + 1, p.Y));
+                    queue.Enqueue(new Point(p.X - 1, p.Y));
                 }
             }
 
-            return points;
+            return new List<Point>(points);
         }
     }
 }

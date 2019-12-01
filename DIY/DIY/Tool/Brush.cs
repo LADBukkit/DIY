@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using Xceed.Wpf.Toolkit;
+using System.Linq;
 
 namespace DIY.Tool
 {
@@ -45,7 +46,8 @@ namespace DIY.Tool
                 action.Layer = project.SelectedLayer;
                 action.Old = ilay.Img.Clone();
 
-                List<int> pos = ilay.Img.DrawFilledCircle((int)p.X, (int)p.Y, (int) Math.Round(Size / 2D), c);
+                List<Point> ppos = ilay.Img.DrawFilledCircle((int)p.X, (int)p.Y, (int) Math.Round(Size / 2D), c);
+                List<int> pos = new List<int>(ppos.Select(i => (int)((i.X + ilay.OffsetX) + ((i.Y + lay.OffsetY) * ilay.Img.Width))));
 
                 foreach (int i in pos)
                 {
@@ -67,7 +69,8 @@ namespace DIY.Tool
             if (lay is ImageLayer)
             {
                 ImageLayer ilay = (ImageLayer)lay;
-                List<int> pos = ilay.Img.DrawFilledCircle((int)p.X, (int)p.Y, (int)Math.Round(Size / 2D), c);
+                List<Point> ppos = ilay.Img.DrawFilledCircle((int)p.X, (int)p.Y, (int)Math.Round(Size / 2D), c);
+                List<int> pos = new List<int>(ppos.Select(i => (int)((i.X + ilay.OffsetX) + ((i.Y + lay.OffsetY) * ilay.Img.Width))));
 
                 foreach (int i in pos)
                 {
