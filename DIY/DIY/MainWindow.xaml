@@ -204,7 +204,13 @@
                             </Canvas>
                         </Viewbox>
                     </RadioButton>
-                    <RadioButton GroupName="tool" Checked="Tool_Checked" Style="{StaticResource BrushRadioButton}" Width="40" Height="40"></RadioButton>
+                    <RadioButton x:Name="move" GroupName="tool" Checked="Tool_Checked" Style="{StaticResource BrushRadioButton}" Width="40" Height="40">
+                        <Viewbox Margin="2">
+                            <Canvas Width="180" Height="180">
+                                <Path Fill="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" Data="M38.937 128.936L0 89.999l38.935-38.936l0.001 29.982h42.11V38.937l-29.982 0L90.001 0l38.935 38.936l-29.982 0v42.109  h42.109l-0.001-29.982L180 90.001l-38.936 38.935l-0.001-29.982h-42.11v42.109l29.982 0L89.999 180l-38.936-38.936l29.982 0V98.954  H38.937L38.937 128.936z"/>
+                            </Canvas>
+                        </Viewbox>
+                    </RadioButton>
                 </WrapPanel>
 
                 <!-- The Properties -->

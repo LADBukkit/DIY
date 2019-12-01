@@ -68,6 +68,7 @@ namespace DIY
             tools.Add("eraser", new DIY.Tool.Eraser());
             tools.Add("pipette", new DIY.Tool.Pipette());
             tools.Add("fill", new DIY.Tool.Fill());
+            tools.Add("move", new DIY.Tool.Move());
 
             // Select the default brush
             brush.IsChecked = true;
