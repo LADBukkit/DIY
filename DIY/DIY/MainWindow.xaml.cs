@@ -340,7 +340,6 @@ namespace DIY
             }
         }
 
-        [Obsolete]
         private void opglDraw_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs e)
         {
             if (Project == null) return;
@@ -408,6 +407,13 @@ namespace DIY
 
             if(rn.Okay)
             {
+
+                RenameAction ra = new RenameAction();
+                ra.Oldname = lay.Name;
+                ra.Newname = rn.Oldname;
+                ra.Layer = lay;
+                Project.PushUndo(this, ra);
+
                 lay.Name = rn.Oldname;
             }
         }

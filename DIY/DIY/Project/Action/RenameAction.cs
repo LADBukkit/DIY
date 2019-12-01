@@ -4,8 +4,22 @@ using System.Text;
 
 namespace DIY.Project.Action
 {
-    class RenameAction
+    public class RenameAction : DIYAction
     {
-        /// TODO
+        public string Oldname { get; set; }
+        public string Newname { get; set; }
+        public Layer Layer { get; set; }
+
+        public RenameAction() : base("Rename") { }
+
+        public override void Redo(DIYProject pr)
+        {
+            Layer.Name = Newname;
+        }
+
+        public override void Undo(DIYProject pr)
+        {
+            Layer.Name = Oldname;
+        }
     }
 }
