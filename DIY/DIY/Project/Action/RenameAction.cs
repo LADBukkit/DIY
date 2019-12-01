@@ -10,7 +10,7 @@ namespace DIY.Project.Action
         public string Newname { get; set; }
         public Layer Layer { get; set; }
 
-        public RenameAction() : base("Rename") { }
+        public RenameAction() : base("Rename Layer") { }
 
         public override void Redo(DIYProject pr)
         {

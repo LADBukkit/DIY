@@ -417,5 +417,25 @@ namespace DIY
                 lay.Name = rn.Oldname;
             }
         }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            if (Project == null) return;
+            if (Project.Layers.Count <= 1) return;
+
+            Layer lay = Project.Layers[Project.SelectedLayer];
+
+            DeleteAction da = new DeleteAction();
+            da.Layer = lay;
+            da.Position = Project.SelectedLayer;
+            Project.PushUndo(this, da);
+
+            Project.Layers.RemoveAt(Project.SelectedLayer);
+            
+            if(Project.SelectedLayer > 0)
+            {
+                Project.SelectedLayer--;
+            }
+        }
     }
 }
