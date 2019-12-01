@@ -291,5 +291,37 @@ namespace DIY.Util
             }
             return points;
         }
+
+        private static double FF_MAX_DIS = ColorUtil.DistanceSquared(new DIYColor(0, 0, 0, 0), new DIYColor(255, 255, 255, 255));
+
+        public List<int> FloodFill(int x0, int y0, int threshold, DIYColor cOld, DIYColor cNew)
+        {
+            List<int> points = new List<int>();
+            Stack<Point> stack = new Stack<Point>();
+
+            stack.Push(new Point(x0, y0));
+            while(stack.Count > 0)
+            {
+                Point p = stack.Pop();
+                if (points.Contains(ToIndex(p.X, p.Y))) continue;
+                if (p.X < 0 || p.X >= Width || p.Y < 0 || p.Y >= Height) continue;
+
+                DIYColor c = GetPixel(p.X, p.Y);
+
+                double dis = ColorUtil.DistanceSquared(c, cOld) / FF_MAX_DIS * 100D;
+                if(dis <= threshold)
+                {
+                    points.Add(ToIndex(p.X, p.Y));
+                    SetPixel(p.X, p.Y, cNew, false);
+
+                    stack.Push(new Point(p.X, p.Y + 1));
+                    stack.Push(new Point(p.X, p.Y - 1));
+                    stack.Push(new Point(p.X + 1, p.Y));
+                    stack.Push(new Point(p.X - 1, p.Y));
+                }
+            }
+
+            return points;
+        }
     }
 }

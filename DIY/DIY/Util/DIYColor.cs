@@ -6,7 +6,7 @@ using System.Text;
 namespace DIY.Util
 {
     /// <summary>
-    /// A Custom Color Class as the C# native classes are highly in efficient
+    /// A Custom Color Class as the C# native classes are highly in efficient -- not
     /// </summary>
     public class DIYColor
     {

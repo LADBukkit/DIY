@@ -164,11 +164,21 @@ namespace DIY.Util
         /// <param name="c1">The first color</param>
         /// <param name="c2">The second color</param>
         /// <returns></returns>
-        public static double calculateContrast(System.Windows.Media.Color c1, System.Windows.Media.Color c2)
+        public static double CalculateContrast(System.Windows.Media.Color c1, System.Windows.Media.Color c2)
         {
             double l1 = CalculateRelativeLuminance(c1);
             double l2 = CalculateRelativeLuminance(c2);
             return (Math.Max(l1, l2) + 0.05D) / (Math.Min(l1, l2) + 0.05D);
+        }
+
+        public static double DistanceSquared(DIYColor c1, DIYColor c2)
+        {
+            double da = (c1.A - c2.A) * (c1.A - c2.A);
+            double dr = (c1.R - c2.R) * (c1.R - c2.R);
+            double dg = (c1.G - c2.G) * (c1.G - c2.G);
+            double db = (c1.B - c2.B) * (c1.B - c2.B);
+
+            return da + dr + dg + db;
         }
     }
 }

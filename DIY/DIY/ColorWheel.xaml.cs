@@ -67,7 +67,7 @@ namespace DIY
             Color bg = Color.FromRgb(r, g, b);
             colorView.Background = new SolidColorBrush(bg);
 
-            if (ColorUtil.calculateContrast(white, bg) > ColorUtil.calculateContrast(black, bg))
+            if (ColorUtil.CalculateContrast(white, bg) > ColorUtil.CalculateContrast(black, bg))
             {
                 colorView.Foreground = new SolidColorBrush(white);
             } else
