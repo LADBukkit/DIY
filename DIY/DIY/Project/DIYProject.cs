@@ -50,7 +50,7 @@ namespace DIY.Project
                 Layer lay = Layers[0];
                 if(x >= lay.OffsetX && x < lay.GetBitmap().Width + lay.OffsetX && y >= lay.OffsetY && y < lay.GetBitmap().Height + lay.OffsetY)
                 {
-                    pxl = BlendMode.NORMAL.BlendColors(pxl, lay.GetBitmap().GetPixel(x - lay.OffsetX, y - lay.OffsetY), lay.Opacity);
+                    pxl = lay.GetBitmap().GetPixel(x - lay.OffsetX, y - lay.OffsetY);
                 }
             }
             for(int i = 1; i < Layers.Count; i++)

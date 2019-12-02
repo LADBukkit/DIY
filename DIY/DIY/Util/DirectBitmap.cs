@@ -292,35 +292,55 @@ namespace DIY.Util
 
         public List<Point> FloodFill(int x0, int y0, int threshold, DIYColor cOld, DIYColor cNew)
         {
-            // Performance Problems on Bigger pictures
-            bool[] points = new bool[Width * Height];
-            List<Point> ps = new List<Point>();
-            Queue<Point> queue = new Queue<Point>();
-
-            queue.Enqueue(new Point(x0, y0));
-            while(queue.Count > 0)
+            bool IsEqual(DIYColor c1, DIYColor c2)
             {
-                Point p = queue.Dequeue();
-                int ind = ToIndex((int)p.X, (int)p.Y);
-                if (ind == -1) continue;
-                if (points[ind]) continue;
+                double dis = ColorUtil.DistanceSquared(c1, c2) * FF_MAX_DIS;
+                return dis <= threshold;
+            }
 
-                DIYColor c = GetPixel((int) p.X, (int) p.Y);
+            List<Point> points = new List<Point>();
+            int x1;
+            bool spanAbove, spanBelow;
+            Stack<Point> stack = new Stack<Point>();
+            stack.Push(new Point(x0, y0));
+            while(stack.TryPop(out Point p))
+            {
+                x0 = (int) p.X;
+                y0 = (int) p.Y;
 
-                double dis = ColorUtil.DistanceSquared(c, cOld) * FF_MAX_DIS;
-                if(dis <= threshold)
+                x1 = x0;
+                while (x1 >= 0 && IsEqual(GetPixel(x1, y0), cOld)) x1--;
+                x1++;
+                spanAbove = spanBelow = false;
+                while(x1 < Width && IsEqual(GetPixel(x1, y0), cOld))
                 {
-                    points[ind] = true;
-                    SetPixel((int) p.X, (int) p.Y, cNew, false);
-                    ps.Add(p);
+                    SetPixel(x1, y0, cNew, false);
+                    points.Add(new Point(x1, y0));
 
-                    queue.Enqueue(new Point(p.X, p.Y + 1));
-                    queue.Enqueue(new Point(p.X, p.Y - 1));
-                    queue.Enqueue(new Point(p.X + 1, p.Y));
-                    queue.Enqueue(new Point(p.X - 1, p.Y));
+                    if(!spanAbove && y0 > 0 && IsEqual(GetPixel(x1, y0 - 1), cOld))
+                    {
+                        stack.Push(new Point(x1, y0 - 1));
+                        spanAbove = true;
+                    }
+                    else if (spanAbove && y0 > 0 && !IsEqual(GetPixel(x1, y0 - 1), cOld))
+                    {
+                        spanAbove = false;
+                    }
+
+                    if (!spanBelow && y0 < Height - 1 && IsEqual(GetPixel(x1, y0 + 1), cOld))
+                    {
+                        stack.Push(new Point(x1, y0 + 1));
+                        spanBelow = true;
+                    }
+                    else if (spanBelow && y0 < Height - 1 && !IsEqual(GetPixel(x1, y0 + 1), cOld))
+                    {
+                        spanBelow = false;
+                    }
+                    x1++;
                 }
             }
-            return ps;
+
+            return points;
         }
     }
 }

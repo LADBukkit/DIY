@@ -19,12 +19,22 @@ namespace DIY.Project.Action
             {
                 pr.SelectedLayer = Position - 1;
             }
+
+            for (int i = 0; i < pr.Width * pr.Height; i++)
+            {
+                pr.PixelCache.Add(i);
+            }
         }
 
         public override void Undo(DIYProject pr)
         {
             pr.Layers.Insert(Position, Layer);
             pr.SelectedLayer = Position;
+
+            for (int i = 0; i < pr.Width * pr.Height; i++)
+            {
+                pr.PixelCache.Add(i);
+            }
         }
     }
 }

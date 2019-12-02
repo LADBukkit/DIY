@@ -52,7 +52,7 @@ namespace DIY.Tool
 
         public override void MouseUp(MainWindow mw, Point p)
         {
-            // Undo state
+            // TODO Undo state
         }
 
         public override void PrepareProperties(StackPanel parent)

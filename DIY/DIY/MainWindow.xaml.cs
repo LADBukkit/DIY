@@ -369,10 +369,17 @@ namespace DIY
             gl.PointSize(1f);
             gl.Begin(BeginMode.Points);
 
+            //Stopwatch sw = Stopwatch.StartNew();
             Project.CalcBitmap((x, y, c) => {
                 gl.Color((byte)c.R, (byte)c.G, (byte)c.B);
                 gl.Vertex(x + 0.5, y + 0.5, -1);
             });
+           /* sw.Stop();
+
+            if(sw.ElapsedMilliseconds > 1000)
+            {
+                MessageBox.Show(sw.ElapsedMilliseconds.ToString());
+            }*/
 
             gl.End();
         }
@@ -455,6 +462,11 @@ namespace DIY
             if(Project.SelectedLayer > 0)
             {
                 Project.SelectedLayer--;
+            }
+
+            for (int i = 0; i < Project.Width * Project.Height; i++)
+            {
+                Project.PixelCache.Add(i);
             }
         }
     }
