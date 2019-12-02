@@ -293,23 +293,26 @@ namespace DIY.Util
         public List<Point> FloodFill(int x0, int y0, int threshold, DIYColor cOld, DIYColor cNew)
         {
             // Performance Problems on Bigger pictures
-            HashSet<Point> points = new HashSet<Point>();
+            bool[] points = new bool[Width * Height];
+            List<Point> ps = new List<Point>();
             Queue<Point> queue = new Queue<Point>();
 
             queue.Enqueue(new Point(x0, y0));
             while(queue.Count > 0)
             {
                 Point p = queue.Dequeue();
-                if (points.Contains(new Point(p.X, p.Y))) continue;
-                if (p.X < 0 || p.X >= Width || p.Y < 0 || p.Y >= Height) continue;
+                int ind = ToIndex((int)p.X, (int)p.Y);
+                if (ind == -1) continue;
+                if (points[ind]) continue;
 
                 DIYColor c = GetPixel((int) p.X, (int) p.Y);
 
                 double dis = ColorUtil.DistanceSquared(c, cOld) * FF_MAX_DIS;
                 if(dis <= threshold)
                 {
-                    points.Add(new Point(p.X, p.Y));
+                    points[ind] = true;
                     SetPixel((int) p.X, (int) p.Y, cNew, false);
+                    ps.Add(p);
 
                     queue.Enqueue(new Point(p.X, p.Y + 1));
                     queue.Enqueue(new Point(p.X, p.Y - 1));
@@ -317,8 +320,7 @@ namespace DIY.Util
                     queue.Enqueue(new Point(p.X - 1, p.Y));
                 }
             }
-
-            return new List<Point>(points);
+            return ps;
         }
     }
 }
