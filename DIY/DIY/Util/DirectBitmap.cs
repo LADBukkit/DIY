@@ -250,6 +250,7 @@ namespace DIY.Util
             List<Point> points = PointsFilledCircle(x0, y0, radius);
             foreach (Point i in points)
             {
+                if (c == null) continue;
                 SetPixel((int) i.X, (int) i.Y, c);
             }
             return points;

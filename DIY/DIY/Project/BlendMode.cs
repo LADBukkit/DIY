@@ -145,6 +145,15 @@ namespace DIY.Project
         public static DIYColor BM_Normal(DIYColor c1, DIYColor c2, double opacity)
         {
             double aa = c2.A / 255D * opacity;
+            if (aa == 0)
+            {
+                return c1;
+            }
+            if(aa == 1)
+            {
+                return c2;
+            }
+
             double ab = c1.A / 255D;
             double ac = aa + (1 - aa) * ab;
 
