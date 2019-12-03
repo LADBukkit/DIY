@@ -150,6 +150,12 @@ namespace DIY
             Layer sel = Project.Layers[Project.SelectedLayer];
             LayerBlendMode.SelectedItem = sel.Mode;
             LayerOpacity.Value = (int) (sel.Opacity * 100);
+
+            this.Title = "DrawItYourself";
+            if(Project.PATH != null)
+            {
+                this.Title += " - " + Project.PATH;
+            }
         }
 
         /// <summary>
@@ -486,12 +492,28 @@ namespace DIY
         {
             if (Project == null) return;
 
+            if (Project.PATH == null)
+            {
+                Save_As_Executed(sender, e);
+
+            }
+            else
+            {
+                Project.Save(Project.PATH);
+            }
+        }
+
+        private void Save_As_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (Project == null) return;
+
             Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog();
             sfd.Filter = "DIY Project File(*.diy)|*.diy";
             sfd.Title = "Save File...";
             
             sfd.FileOk += (sender, e) => {
                 Project.Save(sfd.FileName);
+                Project.PATH = sfd.FileName;
             };
 
             sfd.ShowDialog();
@@ -507,6 +529,7 @@ namespace DIY
                 Project = new DIYProject();
 
                 Project.Open(ofd.FileName);
+                Project.PATH = ofd.FileName;
 
                 opglDraw.Height = Project.Height;
                 opglDraw.Width = Project.Width;

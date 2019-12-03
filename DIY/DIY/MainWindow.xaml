@@ -16,6 +16,7 @@
         <CommandBinding Command="ApplicationCommands.Undo" Executed="Undo_Executed" />
         <CommandBinding Command="ApplicationCommands.Redo" Executed="Redo_Executed" />
         <CommandBinding Command="ApplicationCommands.Save" Executed="Save_Executed" />
+        <CommandBinding Command="ApplicationCommands.SaveAs" Executed="Save_As_Executed" />
         <CommandBinding Command="ApplicationCommands.Open" Executed="Open_Executed" />
     </Window.CommandBindings>
     <Window.InputBindings>
@@ -23,6 +24,7 @@
         <KeyBinding Command="ApplicationCommands.Undo" Gesture="Ctrl+Z" />
         <KeyBinding Command="ApplicationCommands.Redo" Gesture="Ctrl+SHIFT+Z" />
         <KeyBinding Command="ApplicationCommands.Save" Gesture="Ctrl+S" />
+        <KeyBinding Command="ApplicationCommands.SaveAs" Gesture="Ctrl+SHIFT+S" />
         <KeyBinding Command="ApplicationCommands.Open" Gesture="Ctrl+O" />
     </Window.InputBindings>
     
@@ -34,7 +36,7 @@
                 <MenuItem Header="_New" Command="ApplicationCommands.New" InputGestureText="Ctrl+N"/>
                 <MenuItem Header="_Open" Command="ApplicationCommands.Open" InputGestureText="Ctrl+O"/>
                 <MenuItem Header="_Save" Command="ApplicationCommands.Save" InputGestureText="Ctrl+S"/>
-                <MenuItem Header="Sa_ve as ..." InputGestureText="Ctrl+SHIFT+S"/>
+                <MenuItem Header="Sa_ve as ..." Command="ApplicationCommands.SaveAs" InputGestureText="Ctrl+SHIFT+S"/>
                 <Separator/>
                 <MenuItem Header="_Import" InputGestureText="Ctrl+SHIFT+I"/>
                 <MenuItem Header="_Export" InputGestureText="Ctrl+SHIFT+E"/>

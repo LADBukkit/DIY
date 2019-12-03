@@ -20,6 +20,8 @@ namespace DIY.Project
         public int Width { get; set; }
         public int Height { get; set; }
 
+        public string PATH = null;
+
         public ConcurrentHashSet<int> PixelCache { get; set; }
 
         public FixedStack<DIYAction> UndoCache = new FixedStack<DIYAction>(50);
