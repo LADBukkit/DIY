@@ -328,10 +328,10 @@ namespace DIY.Util
                 spanAbove = spanBelow = false;
                 while(x1 < Width && IsEqual(GetPixel(x1, y0), cOld))
                 {
-                    SetPixel(x1, y0, cNew, false);
                     points.Add(new Point(x1, y0));
+                    SetPixel(x1, y0, cNew, false);
 
-                    if(!spanAbove && y0 > 0 && IsEqual(GetPixel(x1, y0 - 1), cOld))
+                    if (!spanAbove && y0 > 0 && IsEqual(GetPixel(x1, y0 - 1), cOld))
                     {
                         stack.Push(new Point(x1, y0 - 1));
                         spanAbove = true;

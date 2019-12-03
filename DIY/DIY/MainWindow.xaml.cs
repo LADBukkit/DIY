@@ -93,6 +93,8 @@ namespace DIY
             settings.Save();
 
             Updater = new Thread(() => HandleQueue());
+            Updater.IsBackground = true;
+            Updater.Priority = ThreadPriority.Highest;
             Updater.Start();
 
             DispatcherTimer t2 = new DispatcherTimer();
@@ -202,6 +204,7 @@ namespace DIY
         private void Window_Closed(object sender, EventArgs e)
         {
             Running = false;
+            Updater.Join(1000);
             Application.Current.Shutdown();
         }
 
