@@ -50,7 +50,11 @@ namespace DIY.Project
                 Layer lay = Layers[0];
                 if(x >= lay.OffsetX && x < lay.GetBitmap().Width + lay.OffsetX && y >= lay.OffsetY && y < lay.GetBitmap().Height + lay.OffsetY)
                 {
-                    pxl = lay.GetBitmap().GetPixel(x - lay.OffsetX, y - lay.OffsetY);
+                    DIYColor co = lay.GetBitmap().GetPixel(x - lay.OffsetX, y - lay.OffsetY);
+                    if(co.A != 0)
+                    {
+                        pxl = BlendMode.NORMAL.BlendColors(pxl, co, lay.Opacity);
+                    }
                 }
             }
             for(int i = 1; i < Layers.Count; i++)
@@ -58,7 +62,11 @@ namespace DIY.Project
                 Layer lay = Layers[i];
                 if (x >= lay.OffsetX && x < lay.GetBitmap().Width + lay.OffsetX && y >= lay.OffsetY && y < lay.GetBitmap().Height + lay.OffsetY)
                 {
-                    pxl = lay.Mode.BlendColors(pxl, lay.GetBitmap().GetPixel(x - lay.OffsetX, y - lay.OffsetY), lay.Opacity);
+                    DIYColor co = lay.GetBitmap().GetPixel(x - lay.OffsetX, y - lay.OffsetY);
+                    if (co.A != 0)
+                    {
+                        pxl = lay.Mode.BlendColors(pxl, co, lay.Opacity);
+                    }
                 }
             }
             action(x, y, BlendMode.NORMAL.BlendColors(under, pxl, 1));
@@ -67,7 +75,7 @@ namespace DIY.Project
         public void CalcBitmap(Action<int, int, DIYColor> action) {
             HashSet<int> hsI = new HashSet<int>();
             PixelCache.ForEach(pos => {
-                if (pos < 0) return;
+                if (pos < 0 || hsI.Contains(pos)) return;
                 int x = pos % Width;
                 int y = pos / Width;
                 DrawPixel(x, y, action);

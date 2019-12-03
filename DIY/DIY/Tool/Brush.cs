@@ -45,7 +45,6 @@ namespace DIY.Tool
                 action = new ImageAction("Draw");
                 action.Layer = project.SelectedLayer;
                 action.Old = ilay.Img.Clone();
-
                 List<Point> ppos = ilay.Img.DrawFilledCircle((int)p.X, (int)p.Y, (int) Math.Round(Size / 2D), c);
                 List<int> pos = new List<int>(ppos.Select(i => (int)((i.X + ilay.OffsetX) + ((i.Y + lay.OffsetY) * ilay.Img.Width))));
 

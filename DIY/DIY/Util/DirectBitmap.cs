@@ -64,27 +64,7 @@ namespace DIY.Util
                 DIYColor old = GetPixel(x, y);
                 if(old.A != 0)
                 {
-                    double a1 = old.A / 255D;
-                    double a0 = c.A / 255D;
-                    double r1 = old.R / 255D;
-                    double r0 = c.R / 255D;
-                    double g1 = old.G / 255D;
-                    double g0 = c.G / 255D;
-                    double b1 = old.B / 255D;
-                    double b0 = c.B / 255D;
-
-                    double a01 = a0 + a1 * (1D - a0);
-                    if (a01 == 0D)
-                    {
-                        c = new DIYColor(0);
-                    }
-                    else
-                    {
-                        double r01 = (r0 * a0 + r1 * a1 * (1D - a0));
-                        double g01 = (g0 * a0 + g1 * a1 * (1D - a0));
-                        double b01 = (b0 * a0 + b1 * a1 * (1D - a0));
-                        c = new DIYColor((int)(a01 * 255), (int)(r01 * 255), (int)(g01 * 255), (int)(b01 * 255));
-                    }
+                    c = Project.BlendMode.NORMAL.BlendColors(old, c, 1);
                 }
             }
 

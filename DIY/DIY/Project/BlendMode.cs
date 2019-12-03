@@ -144,9 +144,13 @@ namespace DIY.Project
     {
         public static DIYColor BM_Normal(DIYColor c1, DIYColor c2, double opacity)
         {
-            opacity = (c2.A / 255D) * opacity;
+            double aa = c2.A / 255D * opacity;
+            double ab = c1.A / 255D;
+            double ac = aa + (1 - aa) * ab;
 
-            return (c2 * opacity) + (c1 * (1D - opacity));
+            DIYColor c = (c2 * aa + c1 * (1 - aa) * ab) / ac;
+            c.A = (int) (ac * 255);
+            return c;
         }
 
         public static DIYColor BM_Multiply(DIYColor c1, DIYColor c2, double opacity)
