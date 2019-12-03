@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,6 +24,8 @@ namespace DIY.Project
 
         public FixedStack<DIYAction> UndoCache = new FixedStack<DIYAction>(50);
         public FixedStack<DIYAction> RedoCache = new FixedStack<DIYAction>(50);
+
+        public DIYProject(){}
 
         public DIYProject(int width, int height)
         {
@@ -128,6 +131,93 @@ namespace DIY.Project
                 mw.UndoMenu.Header = "_Undo" + (UndoCache.Count > 0 ? "   -   " + UndoCache.Peek().Name : "");
                 mw.RedoMenu.Header = "_Redo" + (RedoCache.Count > 0 ? "   -   " + RedoCache.Peek().Name : "");
             });
+        }
+
+
+        /// <summary>
+        /// Magic Int is 0x0D201912 but is swapped due to endiness
+        /// </summary>
+        private static readonly uint MAGIC_INT = 0x1219200D;
+
+        public void Save(string path)
+        {
+            using(BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create)))
+            {
+                writer.Write(MAGIC_INT);
+                writer.Write(Width);
+                writer.Write(Height);
+                writer.Write(SelectedLayer);
+                writer.Write(Layers.Count);
+                for(int i = 0; i < Layers.Count; i++)
+                {
+                    Layer lay = Layers[i];
+                    if(lay is ImageLayer)
+                    {
+                        writer.Write((byte) 1);
+                        ImageLayer ilay = (ImageLayer)lay;
+                        for(int j = 0; j < ilay.Img.Bits.Length; j++)
+                        {
+                            writer.Write(ilay.Img.Bits[j]);
+                        }
+                    }
+                    else
+                    {
+                        writer.Write(0);
+                    }
+
+                    writer.Write(lay.Name);
+                    writer.Write(lay.Mode.Name);
+                    writer.Write(lay.OffsetX);
+                    writer.Write(lay.OffsetY);
+                    writer.Write(lay.Opacity);
+                }
+            }
+        }
+
+        public void Open(string path)
+        {
+            using(BinaryReader reader = new BinaryReader(File.Open(path, FileMode.Open)))
+            {
+                if (reader.ReadUInt32() != MAGIC_INT) throw new ArgumentException("Wrong Magic Byte!");
+
+                Width = reader.ReadInt32();
+                Height = reader.ReadInt32();
+                SelectedLayer = reader.ReadInt32();
+
+                int layCount = reader.ReadInt32();
+                for(int i = 0; i < layCount; i++)
+                {
+                    byte type = reader.ReadByte();
+                    Layer lay;
+                    if(type == 1)
+                    {
+                        lay = new ImageLayer(Width, Height);
+                        ImageLayer ilay = (ImageLayer) lay;
+                        for(int j = 0; j < Width * Height; j++)
+                        {
+                            ilay.Img.Bits[j] = reader.ReadInt32();
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Wrong Layer Type");
+                    }
+
+                    lay.Name = reader.ReadString();
+                    lay.Mode = BlendMode.GetByName(reader.ReadString());
+                    lay.OffsetX = reader.ReadInt32();
+                    lay.OffsetY = reader.ReadInt32();
+                    lay.Opacity = reader.ReadDouble();
+
+                    Layers.Add(lay);
+                }
+            }
+
+            PixelCache = new ConcurrentHashSet<int>();
+            for (int j = 0; j < Width * Height; j++)
+            {
+                PixelCache.Add(j);
+            }
         }
     }
 }

@@ -97,6 +97,18 @@ namespace DIY.Project
             }
         }
 
+        public static BlendMode GetByName(string name)
+        {
+            foreach(BlendMode bm in Values)
+            {
+                if (bm != null && bm.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+                {
+                    return bm;
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// Delegate for blending colors
         /// </summary>

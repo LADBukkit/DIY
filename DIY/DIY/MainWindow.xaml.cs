@@ -481,5 +481,39 @@ namespace DIY
                 Project.PixelCache.Add(i);
             }
         }
+
+        private void Save_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (Project == null) return;
+
+            Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog();
+            sfd.Filter = "DIY Project File(*.diy)|*.diy";
+            sfd.Title = "Save File...";
+            
+            sfd.FileOk += (sender, e) => {
+                Project.Save(sfd.FileName);
+            };
+
+            sfd.ShowDialog();
+        }
+
+        private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
+            ofd.Filter = "DIY Project File(*.diy)|*.diy";
+            ofd.Title = "Open File...";
+
+            ofd.FileOk += (sender, e) => {
+                Project = new DIYProject();
+
+                Project.Open(ofd.FileName);
+
+                opglDraw.Height = Project.Height;
+                opglDraw.Width = Project.Width;
+                contentZoomBox.FitToBounds();
+            };
+
+            ofd.ShowDialog();
+        }
     }
 }

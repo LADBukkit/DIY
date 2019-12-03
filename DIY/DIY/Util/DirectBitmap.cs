@@ -306,10 +306,11 @@ namespace DIY.Util
 
         public List<Point> FloodFill(int x0, int y0, int threshold, DIYColor cOld, DIYColor cNew)
         {
-            bool IsEqual(DIYColor c1, DIYColor c2)
+            bool[] ps = new bool[Width * Height];
+            bool IsEqual(Point p, DIYColor c2)
             {
-                double dis = ColorUtil.DistanceSquared(c1, c2) * FF_MAX_DIS;
-                return dis <= threshold;
+                double dis = ColorUtil.DistanceSquared(GetPixel((int) p.X,(int) p.Y), c2) * FF_MAX_DIS;
+                return dis <= threshold && !(ps[((int)p.X) + ((int)p.Y) * Width]);
             }
 
             List<Point> points = new List<Point>();
@@ -323,30 +324,31 @@ namespace DIY.Util
                 y0 = (int) p.Y;
 
                 x1 = x0;
-                while (x1 >= 0 && IsEqual(GetPixel(x1, y0), cOld)) x1--;
+                while (x1 >= 0 && IsEqual(new Point(x1, y0), cOld)) x1--;
                 x1++;
                 spanAbove = spanBelow = false;
-                while(x1 < Width && IsEqual(GetPixel(x1, y0), cOld))
+                while(x1 < Width && IsEqual(new Point(x1, y0), cOld))
                 {
                     points.Add(new Point(x1, y0));
+                    ps[x1 + y0 * Width] = true;
                     SetPixel(x1, y0, cNew, false);
 
-                    if (!spanAbove && y0 > 0 && IsEqual(GetPixel(x1, y0 - 1), cOld))
+                    if (!spanAbove && y0 > 0 && IsEqual(new Point(x1, y0 - 1), cOld))
                     {
                         stack.Push(new Point(x1, y0 - 1));
                         spanAbove = true;
                     }
-                    else if (spanAbove && y0 > 0 && !IsEqual(GetPixel(x1, y0 - 1), cOld))
+                    else if (spanAbove && y0 > 0 && !IsEqual(new Point(x1, y0 - 1), cOld))
                     {
                         spanAbove = false;
                     }
 
-                    if (!spanBelow && y0 < Height - 1 && IsEqual(GetPixel(x1, y0 + 1), cOld))
+                    if (!spanBelow && y0 < Height - 1 && IsEqual(new Point(x1, y0 + 1), cOld))
                     {
                         stack.Push(new Point(x1, y0 + 1));
                         spanBelow = true;
                     }
-                    else if (spanBelow && y0 < Height - 1 && !IsEqual(GetPixel(x1, y0 + 1), cOld))
+                    else if (spanBelow && y0 < Height - 1 && !IsEqual(new Point(x1, y0 + 1), cOld))
                     {
                         spanBelow = false;
                     }
