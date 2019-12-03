@@ -157,16 +157,20 @@ namespace DIY.Project
             double ab = c1.A / 255D;
             double ac = aa + (1 - aa) * ab;
 
-            DIYColor c = (c2 * aa + c1 * (1 - aa) * ab) / ac;
-            c.A = (int) (ac * 255);
+            int f(int a, int b)
+            {
+                return (int)((b * aa + a * (1 - aa) * ab) / ac);
+            }
+
+            DIYColor c = new DIYColor((byte)(ac * 255), (byte) f(c1.R, c2.R), (byte)f(c1.G, c2.G), (byte)f(c1.B, c2.B));
             return c;
         }
 
         public static DIYColor BM_Multiply(DIYColor c1, DIYColor c2, double opacity)
         {
-            static int f(int a, int b) => a * b / 255;
+            static int f(int a, int b) => Math.Max(0, Math.Min(255, a * b / 255));
 
-            c2 = new DIYColor(f(c1.A, c2.A), f(c1.R, c2.R), f(c1.G, c2.G), f(c1.B, c2.B));
+            c2 = new DIYColor((byte) f(c1.A, c2.A), (byte) f(c1.R, c2.R), (byte) f(c1.G, c2.G), (byte) f(c1.B, c2.B));
 
             return BM_Normal(c1, c2, opacity);
         }
@@ -177,10 +181,10 @@ namespace DIY.Project
             {
                 double ad = a / 255D;
                 double bd = b / 255D;
-                return (int)((1 - (1 - ad) * (1 - bd)) * 255);
+                return Math.Max(0, Math.Min(255, (int)((1 - (1 - ad) * (1 - bd)) * 255)));
             }
 
-            c2 = new DIYColor(f(c1.A, c2.A), f(c1.R, c2.R), f(c1.G, c2.G), f(c1.B, c2.B));
+            c2 = new DIYColor((byte) f(c1.A, c2.A), (byte) f(c1.R, c2.R), (byte) f(c1.G, c2.G), (byte) f(c1.B, c2.B));
 
             return BM_Normal(c1, c2, opacity);
         }
@@ -193,12 +197,12 @@ namespace DIY.Project
                 double bd = b / 255D;
                 if(ad < 0.5)
                 {
-                    return (int)(2 * ad * bd * 255);
+                    return Math.Max(0, Math.Min(255, (int)(2 * ad * bd * 255)));
                 }
-                return (int)((1 - 2 * (1 - ad) * (1 - bd)) * 255);
+                return Math.Max(0, Math.Min(255, (int)((1 - 2 * (1 - ad) * (1 - bd)) * 255)));
             }
 
-            c2 = new DIYColor(f(c1.A, c2.A), f(c1.R, c2.R), f(c1.G, c2.G), f(c1.B, c2.B));
+            c2 = new DIYColor((byte) f(c1.A, c2.A), (byte) f(c1.R, c2.R), (byte) f(c1.G, c2.G), (byte) f(c1.B, c2.B));
 
             return BM_Normal(c1, c2, opacity);
         }
@@ -211,12 +215,12 @@ namespace DIY.Project
                 double bd = b / 255D;
                 if (ad < 0.5)
                 {
-                    return (int)(2 * ad * bd * 255);
+                    return Math.Max(0, Math.Min(255, (int)(2 * ad * bd * 255)));
                 }
-                return (int)((1 - 2 * (1 - ad) * (1 - bd)) * 255);
+                return Math.Max(0, Math.Min(255, (int)((1 - 2 * (1 - ad) * (1 - bd)) * 255)));
             }
 
-            c2 = new DIYColor(f(c2.A, c1.A), f(c2.R, c1.R), f(c2.G, c1.G), f(c2.B, c1.B));
+            c2 = new DIYColor((byte)f(c2.A, c1.A), (byte)f(c2.R, c1.R), (byte)f(c2.G, c1.G), (byte)f(c2.B, c1.B));
 
             return BM_Normal(c1, c2, opacity);
         }
@@ -227,10 +231,10 @@ namespace DIY.Project
             {
                 double ad = a / 255D;
                 double bd = b / 255D;
-                return (int) (((1 - 2 * bd) * (ad * ad) + 2 * bd * ad) * 255);
+                return Math.Max(0, Math.Min(255, (int) (((1 - 2 * bd) * (ad * ad) + 2 * bd * ad) * 255)));
             }
 
-            c2 = new DIYColor(f(c1.A, c2.A), f(c1.R, c2.R), f(c1.G, c2.G), f(c1.B, c2.B));
+            c2 = new DIYColor((byte)f(c1.A, c2.A), (byte)f(c1.R, c2.R), (byte)f(c1.G, c2.G), (byte)f(c1.B, c2.B));
 
             return BM_Normal(c1, c2, opacity);
         }
@@ -241,10 +245,10 @@ namespace DIY.Project
             {
                 double ad = a / 255D;
                 double bd = b / 255D;
-                return (int)((ad / bd) * 255);
+                return Math.Max(0, Math.Min(255, (int)((ad / bd) * 255)));
             }
 
-            c2 = new DIYColor(f(c1.A, c2.A), f(c1.R, c2.R), f(c1.G, c2.G), f(c1.B, c2.B));
+            c2 = new DIYColor((byte)f(c1.A, c2.A), (byte)f(c1.R, c2.R), (byte)f(c1.G, c2.G), (byte)f(c1.B, c2.B));
 
             return BM_Normal(c1, c2, opacity);
         }
@@ -255,10 +259,10 @@ namespace DIY.Project
             {
                 double ad = a / 255D;
                 double bd = b / 255D;
-                return (int)((ad + bd) * 255);
+                return Math.Max(0, Math.Min(255, (int)((ad + bd) * 255)));
             }
 
-            c2 = new DIYColor(f(c1.A, c2.A), f(c1.R, c2.R), f(c1.G, c2.G), f(c1.B, c2.B));
+            c2 = new DIYColor((byte)f(c1.A, c2.A), (byte)f(c1.R, c2.R), (byte)f(c1.G, c2.G), (byte)f(c1.B, c2.B));
 
             return BM_Normal(c1, c2, opacity);
         }
@@ -269,10 +273,10 @@ namespace DIY.Project
             {
                 double ad = a / 255D;
                 double bd = b / 255D;
-                return (int)((ad - bd) * 255);
+                return Math.Max(0, Math.Min(255, (int)((ad - bd) * 255)));
             }
 
-            c2 = new DIYColor(f(c1.A, 255 - c2.A), f(c1.R, c2.R), f(c1.G, c2.G), f(c1.B, c2.B));
+            c2 = new DIYColor((byte)f(c1.A, c2.A), (byte)f(c1.R, c2.R), (byte)f(c1.G, c2.G), (byte)f(c1.B, c2.B));
 
             return BM_Normal(c1, c2, opacity);
         }
@@ -283,10 +287,10 @@ namespace DIY.Project
             {
                 double ad = a / 255D;
                 double bd = b / 255D;
-                return (int)(Math.Abs(ad - bd) * 255);
+                return Math.Max(0, Math.Min(255, (int)(Math.Abs(ad - bd) * 255)));
             }
 
-            c2 = new DIYColor(f(c1.A, 255 - c2.A), f(c1.R, c2.R), f(c1.G, c2.G), f(c1.B, c2.B));
+            c2 = new DIYColor((byte)f(c1.A, c2.A), (byte)f(c1.R, c2.R), (byte)f(c1.G, c2.G), (byte)f(c1.B, c2.B));
 
             return BM_Normal(c1, c2, opacity);
         }
@@ -295,7 +299,7 @@ namespace DIY.Project
         {
             static int f(int a, int b) => Math.Min(a, b);
 
-            c2 = new DIYColor(f(c1.A, c2.A), f(c1.R, c2.R), f(c1.G, c2.G), f(c1.B, c2.B));
+            c2 = new DIYColor((byte)f(c1.A, c2.A), (byte)f(c1.R, c2.R), (byte)f(c1.G, c2.G), (byte)f(c1.B, c2.B));
 
             return BM_Normal(c1, c2, opacity);
         }
@@ -304,7 +308,7 @@ namespace DIY.Project
         {
             static int f(int a, int b) => Math.Max(a, b);
 
-            c2 = new DIYColor(f(c1.A, c2.A), f(c1.R, c2.R), f(c1.G, c2.G), f(c1.B, c2.B));
+            c2 = new DIYColor((byte)f(c1.A, c2.A), (byte)f(c1.R, c2.R), (byte)f(c1.G, c2.G), (byte)f(c1.B, c2.B));
 
             return BM_Normal(c1, c2, opacity);
         }

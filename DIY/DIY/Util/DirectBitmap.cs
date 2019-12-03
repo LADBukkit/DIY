@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using Point = System.Windows.Point;
+using System.Diagnostics;
 
 namespace DIY.Util
 {
@@ -76,7 +77,7 @@ namespace DIY.Util
         {
             if (x < 0 || x >= Width || y < 0 || y >= Height)
             {
-                return null;
+                return new DIYColor();
             }
             int index = x + (y * Width);
             int col = Bits[index];
@@ -245,12 +246,29 @@ namespace DIY.Util
             return new List<Point>(set);
         }
 
+        private static readonly Dictionary<int, List<Point>> FILLED_CIRCLE_CACHE = new Dictionary<int, List<Point>>();
+
         public List<Point> DrawFilledCircle(int x0, int y0, int radius, DIYColor c)
         {
-            List<Point> points = PointsFilledCircle(x0, y0, radius);
+            List<Point> ps;
+            if(FILLED_CIRCLE_CACHE.ContainsKey(radius))
+            {
+                ps = FILLED_CIRCLE_CACHE[radius];
+            }
+            else
+            {
+                ps = PointsFilledCircle(0, 0, radius);
+                FILLED_CIRCLE_CACHE[radius] = ps;
+            }
+
+            List<Point> points = new List<Point>();
+            foreach(Point p in ps)
+            {
+                points.Add(new Point(p.X + x0, p.Y + y0));
+            }
+
             foreach (Point i in points)
             {
-                if (c == null) continue;
                 SetPixel((int) i.X, (int) i.Y, c);
             }
             return points;
@@ -258,12 +276,27 @@ namespace DIY.Util
 
         public List<Point> RemoveFilledCircle(int x0, int y0, int radius, double percent)
         {
-            List<Point> points = PointsFilledCircle(x0, y0, radius);
+            List<Point> ps;
+            if (FILLED_CIRCLE_CACHE.ContainsKey(radius))
+            {
+                ps = FILLED_CIRCLE_CACHE[radius];
+            }
+            else
+            {
+                ps = PointsFilledCircle(0, 0, radius);
+                FILLED_CIRCLE_CACHE[radius] = ps;
+            }
+
+            List<Point> points = new List<Point>();
+            foreach (Point p in ps)
+            {
+                points.Add(new Point(p.X + x0, p.Y + y0));
+            }
+
             foreach (Point i in points)
             {
                 DIYColor c = GetPixel((int) i.X, (int)i.Y);
-                if (c == null) continue;
-                c.A = (int) (c.A * (1 - percent));
+                c.A = (byte) (c.A * (1 - percent));
                 SetPixel((int) i.X, (int)i.Y, c, false);
             }
             return points;

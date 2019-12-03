@@ -227,6 +227,8 @@ namespace DIY
             }
         }
 
+        private Point OLDPOINT;
+
         private void contentZoomBox_MouseMove(object sender, MouseEventArgs e)
         {
             if (BlockMouse) return;
@@ -235,6 +237,11 @@ namespace DIY
             {
                 Layer lay = Project.Layers[Project.SelectedLayer];
                 Point p = e.GetPosition(opglDraw);
+                if((int) p.X == (int) OLDPOINT.X && (int)p.Y == (int)OLDPOINT.Y)
+                {
+                    return;
+                }
+                OLDPOINT = p;
                 if(!(CurrentBrush is DIY.Tool.Move))
                 {
                     p.X -= lay.OffsetX;
@@ -255,6 +262,7 @@ namespace DIY
             {
                 Layer lay = Project.Layers[Project.SelectedLayer];
                 Point p = e.GetPosition(opglDraw);
+                OLDPOINT = p;
                 if (!(CurrentBrush is DIY.Tool.Move))
                 {
                     p.X -= lay.OffsetX;
@@ -299,7 +307,7 @@ namespace DIY
                     Project.Undo(this);
                     BlockMouse = false;
                 });
-                while (!ActionQueue.IsEmpty) { }
+                //while (!ActionQueue.IsEmpty) { }
             }
         }
 
@@ -315,7 +323,7 @@ namespace DIY
                     Project.Redo(this);
                     BlockMouse = false;
                 });
-                while (!ActionQueue.IsEmpty) { }
+                //while (!ActionQueue.IsEmpty) { }
             }
         }
 
@@ -363,18 +371,26 @@ namespace DIY
         private void opglDraw_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs e)
         {
             if (Project == null) return;
-            OpenGL gl = opglDraw.OpenGL;
+            ActionQueue.Enqueue(() => {
+                bool drawn = false;
+                opglDraw.Dispatcher.Invoke(() =>
+                {
+                    OpenGL gl = opglDraw.OpenGL;
 
-            gl.Color(0f, 0f, 0f);
-            gl.PointSize(1f);
-            gl.Begin(BeginMode.Points);
+                    gl.Color(0f, 0f, 0f);
+                    gl.PointSize(1f);
+                    gl.Begin(BeginMode.Points);
 
-            Project.CalcBitmap((x, y, c) => {
-                gl.Color((byte)c.R, (byte)c.G, (byte)c.B);
-                gl.Vertex(x + 0.5, y + 0.5, -1);
+                    Project.CalcBitmap((x, y, c) => {
+                        gl.Color((byte)c.R, (byte)c.G, (byte)c.B);
+                        gl.Vertex(x + 0.5, y + 0.5, -1);
+                    });
+
+                    gl.End();
+                    drawn = true;
+                });
+                while (!drawn) { }
             });
-
-            gl.End();
         }
 
         private void opglDraw_Resized(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
