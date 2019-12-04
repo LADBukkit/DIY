@@ -271,6 +271,7 @@ namespace DIY.Util
             {
                 SetPixel((int) i.X, (int) i.Y, c);
             }
+
             return points;
         }
 

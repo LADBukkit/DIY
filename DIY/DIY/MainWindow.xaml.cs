@@ -15,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Rectangle = System.Drawing.Rectangle;
+using Bitmap = System.Drawing.Bitmap;
 
 namespace DIY
 {
@@ -23,6 +24,9 @@ namespace DIY
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static RoutedUICommand C_IMPORT = new RoutedUICommand("Import", "Import", typeof(MainWindow));
+        public static RoutedUICommand C_EXPORT = new RoutedUICommand("Export", "Export", typeof(MainWindow));
+
         /// <summary>
         /// The Preferences window. Saved so you can't open it multiple times.
         /// </summary>
@@ -537,6 +541,59 @@ namespace DIY
             };
 
             ofd.ShowDialog();
+        }
+
+        private void Import_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
+            ofd.Filter = "Supported Format (*.bmp;*.gif;*.jpeg;*.jpg;*.png)|*.bmp;*.gif;*.jpeg;*.jpg;*.png";
+            ofd.Title = "Import Image...";
+            
+            ofd.FileOk += (sender, e) => {
+                Bitmap bmp = new Bitmap(ofd.FileName);
+                Project = new DIYProject(bmp.Width, bmp.Height);
+                ImageLayer il = (ImageLayer) Project.Layers[0];
+
+                for(int x = 0; x < bmp.Width; x++)
+                {
+                    for (int y = 0; y < bmp.Height; y++)
+                    {
+                        System.Drawing.Color c = bmp.GetPixel(x, y);
+                        il.Img.SetPixel(x, y, new DIYColor(c.A, c.R, c.G, c.B), false);
+                    }
+                }
+                bmp.Dispose();
+
+                opglDraw.Height = Project.Height;
+                opglDraw.Width = Project.Width;
+                contentZoomBox.FitToBounds();
+            };
+
+            ofd.ShowDialog();
+        }
+
+        private void Export_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (Project == null) return;
+
+            Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog();
+            sfd.Filter = "BMP|*.bmp|GIF|*.gif|JPEG|*.jpg|PNG|*.png";
+            sfd.Title = "Export Image...";
+
+            sfd.FileOk += (sender, e) =>
+            {
+                DirectBitmap bmp = new DirectBitmap(Project.Width, Project.Height);
+                for (int x = 0; x < bmp.Width; x++)
+                {
+                    for (int y = 0; y < bmp.Height; y++)
+                    {
+                        Project.DrawPixel(x, y, (x0, y0, c) => bmp.SetPixel(x, y, c, false), false);
+                    }
+                }
+                bmp.Bitmap.Save(sfd.FileName);
+                bmp.Dispose();
+            };
+            sfd.ShowDialog();
         }
     }
 }

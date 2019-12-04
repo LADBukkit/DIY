@@ -24,8 +24,8 @@ namespace DIY.Project
 
         public ConcurrentHashSet<int> PixelCache { get; set; }
 
-        public FixedStack<DIYAction> UndoCache = new FixedStack<DIYAction>(50);
-        public FixedStack<DIYAction> RedoCache = new FixedStack<DIYAction>(50);
+        public FixedStack<DIYAction> UndoCache = new FixedStack<DIYAction>(20);
+        public FixedStack<DIYAction> RedoCache = new FixedStack<DIYAction>(20);
 
         public DIYProject(){}
 
@@ -45,7 +45,12 @@ namespace DIY.Project
             }
         }
 
-        private void DrawPixel(int x, int y, Action<int, int, DIYColor> action)
+        ~DIYProject()
+        {
+            PixelCache.Dispose();
+        }
+
+        public void DrawPixel(int x, int y, Action<int, int, DIYColor> action, bool underlying = true)
         {
             DIYColor under = ((x % 2) == (y % 2)) ? new DIYColor(255, 64, 64, 64) : new DIYColor(255, 16, 16, 16);
 
@@ -74,7 +79,14 @@ namespace DIY.Project
                     }
                 }
             }
-            action(x, y, BlendMode.NORMAL.BlendColors(under, pxl, 1));
+            if(underlying)
+            {
+                action(x, y, BlendMode.NORMAL.BlendColors(under, pxl, 1));
+            }
+            else
+            {
+                action(x, y, pxl);
+            }
         }
 
         public void CalcBitmap(Action<int, int, DIYColor> action) {

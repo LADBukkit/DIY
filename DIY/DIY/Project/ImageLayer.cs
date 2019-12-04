@@ -15,6 +15,14 @@ namespace DIY.Project
             Img = new DirectBitmap(width, height);
         }
 
+        ~ImageLayer()
+        {
+            if(Img != null)
+            {
+                Img.Dispose();
+            }
+        }
+
         public override DirectBitmap GetBitmap()
         {
             return Img;

@@ -18,6 +18,8 @@
         <CommandBinding Command="ApplicationCommands.Save" Executed="Save_Executed" />
         <CommandBinding Command="ApplicationCommands.SaveAs" Executed="Save_As_Executed" />
         <CommandBinding Command="ApplicationCommands.Open" Executed="Open_Executed" />
+        <CommandBinding Command="local:MainWindow.C_IMPORT" Executed="Import_Executed" />
+        <CommandBinding Command="local:MainWindow.C_EXPORT" Executed="Export_Executed" />
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Command="ApplicationCommands.New" Gesture="Ctrl+N" />
@@ -26,6 +28,8 @@
         <KeyBinding Command="ApplicationCommands.Save" Gesture="Ctrl+S" />
         <KeyBinding Command="ApplicationCommands.SaveAs" Gesture="Ctrl+SHIFT+S" />
         <KeyBinding Command="ApplicationCommands.Open" Gesture="Ctrl+O" />
+        <KeyBinding Command="local:MainWindow.C_IMPORT" Gesture="Ctrl+SHIFT+I" />
+        <KeyBinding Command="local:MainWindow.C_EXPORT" Gesture="Ctrl+SHIFT+E" />
     </Window.InputBindings>
     
     
@@ -38,8 +42,8 @@
                 <MenuItem Header="_Save" Command="ApplicationCommands.Save" InputGestureText="Ctrl+S"/>
                 <MenuItem Header="Sa_ve as ..." Command="ApplicationCommands.SaveAs" InputGestureText="Ctrl+SHIFT+S"/>
                 <Separator/>
-                <MenuItem Header="_Import" InputGestureText="Ctrl+SHIFT+I"/>
-                <MenuItem Header="_Export" InputGestureText="Ctrl+SHIFT+E"/>
+                <MenuItem Header="_Import" Command="local:MainWindow.C_IMPORT" InputGestureText="Ctrl+SHIFT+I"/>
+                <MenuItem Header="_Export" Command="local:MainWindow.C_EXPORT" InputGestureText="Ctrl+SHIFT+E"/>
                 <Separator/>
                 <MenuItem Header="E_xit" Click="Window_Closed" InputGestureText="Alt+F4"/>
             </MenuItem>
