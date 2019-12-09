@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:DIY.Style"
+                    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit">
+
+    <Style x:Key="MB_ButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+        <Setter Property="Padding" Value="5"/>
+    </Style>
+
+    <Style TargetType="xctk:MessageBox">
+        <Setter Property="WindowBackground" Value="{DynamicResource DIY_BG}"/>
+        <Setter Property="WindowBorderBrush" Value="{DynamicResource DIY_BG}"/>
+        <Setter Property="Background" Value="{DynamicResource DIY_MENU_BG}"/>
+        <Setter Property="ButtonRegionBackground" Value="{DynamicResource DIY_MENU_BG}"/>
+        <Setter Property="Foreground" Value="{DynamicResource DIY_FG}"/>
+        <Setter Property="CaptionForeground" Value="{DynamicResource DIY_FG}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="OkButtonStyle" Value="{StaticResource MB_ButtonStyle}"/>
+        <Setter Property="CloseButtonStyle" Value="{StaticResource MB_ButtonStyle}"/>
+    </Style>
+</ResourceDictionary>

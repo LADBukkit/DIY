@@ -515,12 +515,14 @@ namespace DIY
             if (Project.PATH == null)
             {
                 Save_As_Executed(sender, e);
-
             }
             else
             {
                 Project.Save(Project.PATH);
+
+                Xceed.Wpf.Toolkit.MessageBox.Show("The Projects has been saved to" + Environment.NewLine + "> " + Project.PATH, "Save");
             }
+
         }
 
         private void Save_As_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -536,7 +538,10 @@ namespace DIY
                 Project.PATH = sfd.FileName;
             };
 
-            sfd.ShowDialog();
+            if(sfd.ShowDialog() == true)
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("The Projects has been saved to" + Environment.NewLine + "> " + Project.PATH, "Save");
+            }
         }
 
         private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -622,7 +627,10 @@ namespace DIY
                 bmp.Bitmap.Save(sfd.FileName);
                 bmp.Dispose();
             };
-            sfd.ShowDialog();
+            if(sfd.ShowDialog() == true)
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("The Projects has been exported to" + Environment.NewLine + "> " + sfd.FileName, "Save");
+            }
         }
     }
 }
