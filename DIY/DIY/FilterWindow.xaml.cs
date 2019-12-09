@@ -48,6 +48,26 @@ namespace DIY
                     stackControls.Children.Add(sli);
                     stackControls.Children.Add(tb);
                 }
+                else if(fp.Type == typeof(double))
+                {
+                    Filter.FilterPropertyNumeric<double> fpi = (Filter.FilterPropertyNumeric<double>)fp;
+                    Slider sli = new Slider();
+                    sli.Maximum = fpi.Max;
+                    sli.Minimum = fpi.Min;
+                    sli.Value = fpi.Default;
+                    sli.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    sli.MouseDoubleClick += (sender, e) => sli.Value = fpi.Default;
+                    sli.ValueChanged += (sender, e) => sli.Value = fpi.Value = Math.Round(sli.Value, 1);
+                    sli.SmallChange = fpi.Interval;
+
+                    TextBlock tb = new TextBlock();
+                    Binding bin = new Binding("Value");
+                    bin.Source = sli;
+                    tb.SetBinding(TextBlock.TextProperty, bin);
+
+                    stackControls.Children.Add(sli);
+                    stackControls.Children.Add(tb);
+                }
             }
 
             DataContext = this;
@@ -55,10 +75,14 @@ namespace DIY
 
         public void PreviewImage()
         {
-            preview.Source = ColorUtil.ImageSourceFromBitmap(Filter.CalculateFilter(Layer.GetBitmap()).Bitmap);
-            preview.Width = Layer.GetBitmap().Width;
-            preview.Height = Layer.GetBitmap().Height;
-            previewZoomBox.FitToBounds();
+            using(DirectBitmap db = Filter.CalculateFilter(Layer.GetBitmap()))
+            {
+                preview.Source = ColorUtil.ImageSourceFromBitmap(db.Bitmap);
+                preview.Width = Layer.GetBitmap().Width;
+                preview.Height = Layer.GetBitmap().Height;
+                previewZoomBox.FitToBounds();
+            }
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

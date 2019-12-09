@@ -55,7 +55,7 @@
             </MenuItem>
             <MenuItem Header="Fi_lter">
                 <MenuItem Header="_Blur">
-                    <MenuItem Header="Gaussian Blur"/>
+                    <MenuItem Name="filter_gaussian" Header="Gaussian Blur" Click="Filter_Click"/>
                 </MenuItem>
                 <MenuItem Header="_Color">
                     <MenuItem Name="filter_hslwheel" Header="_HSL Wheel" Click="Filter_Click"/>

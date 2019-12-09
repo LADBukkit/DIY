@@ -36,6 +36,7 @@ namespace DIY.Filter
             Min = min;
             Max = max;
             Default = def;
+            Value = def;
             Interval = interval;
         }
     }

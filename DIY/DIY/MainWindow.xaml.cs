@@ -78,6 +78,7 @@ namespace DIY
             tools.Add("move", new DIY.Tool.Move());
 
             filterList.Add("filter_hslwheel", typeof(Filter.HSLWheel));
+            filterList.Add("filter_gaussian", typeof(Filter.GaussianBlur));
 
             // Select the default brush
             brush.IsChecked = true;
