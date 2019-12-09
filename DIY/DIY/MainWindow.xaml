@@ -58,7 +58,7 @@
                     <MenuItem Header="Gaussian Blur"/>
                 </MenuItem>
                 <MenuItem Header="_Color">
-                    <MenuItem Header="_Desaturate"/>
+                    <MenuItem Name="filter_hslwheel" Header="_HSL Wheel" Click="Filter_Click"/>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Help">

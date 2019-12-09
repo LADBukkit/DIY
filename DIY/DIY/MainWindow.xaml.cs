@@ -37,6 +37,8 @@ namespace DIY
         /// </summary>
         private readonly Dictionary<string, DIY.Tool.Tool> tools = new Dictionary<string, DIY.Tool.Tool>();
 
+        private readonly Dictionary<string, Type> filterList = new Dictionary<string, Type>();
+
         /// <summary>
         /// The settings handler.
         /// </summary>
@@ -74,6 +76,8 @@ namespace DIY
             tools.Add("pipette", new DIY.Tool.Pipette());
             tools.Add("fill", new DIY.Tool.Fill());
             tools.Add("move", new DIY.Tool.Move());
+
+            filterList.Add("filter_hslwheel", typeof(Filter.HSLWheel));
 
             // Select the default brush
             brush.IsChecked = true;
@@ -629,6 +633,32 @@ namespace DIY
             if(sfd.ShowDialog() == true)
             {
                 Xceed.Wpf.Toolkit.MessageBox.Show("The Projects has been exported to" + Environment.NewLine + "> " + sfd.FileName, "Save");
+            }
+        }
+
+        private void Filter_Click(object sender, RoutedEventArgs e)
+        {
+            if (Project == null) return;
+            if(Project.Layers[Project.SelectedLayer] is ImageLayer)
+            {
+                ImageLayer il = (ImageLayer)Project.Layers[Project.SelectedLayer];
+                Filter.Filter filter = (Filter.Filter) Activator.CreateInstance(filterList[((MenuItem)sender).Name]);
+                FilterWindow fw = new FilterWindow(filter, il);
+                if(fw.ShowDialog() == true)
+                {
+                    ImageAction ia = new ImageAction("Filter: " + filter.Name);
+                    ia.Layer = Project.SelectedLayer;
+                    ia.Old = il.Img;
+                    il.Img = fw.Filter.CalculateFilter(il.Img);
+                    ia.New = il.Img;
+
+                    for (int i = 0; i < Project.Width * Project.Height; i++)
+                    {
+                        ia.ChangedPixels.Add(i);
+                        Project.PixelCache.Add(i);
+                    }
+                    Project.PushUndo(this, ia);
+                }
             }
         }
     }
