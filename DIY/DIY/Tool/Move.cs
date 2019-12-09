@@ -1,4 +1,5 @@
 ﻿using DIY.Project;
+using DIY.Project.Action;
 using DIY.Util;
 using System;
 using System.Collections.Generic;
@@ -52,7 +53,11 @@ namespace DIY.Tool
 
         public override void MouseUp(MainWindow mw, Point p)
         {
-            // TODO Undo state
+            MoveAction ma = new MoveAction();
+            ma.Layer = Layer;
+            ma.OldOff = new Point(OldOffX, OldOffY);
+            ma.NewOff = new Point(Layer.OffsetX, Layer.OffsetY);
+            mw.Project.PushUndo(mw, ma);
         }
 
         public override void PrepareProperties(StackPanel parent)

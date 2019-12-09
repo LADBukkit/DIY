@@ -61,6 +61,7 @@ namespace DIY
         public DIYProject Project { get; set; }
 
         private bool BlockMouse = false;
+        private bool IsMouseDown = false;
 
         public MainWindow()
         {
@@ -273,6 +274,7 @@ namespace DIY
 
             if (e.ChangedButton == MouseButton.Left && CurrentBrush != null && Project != null)
             {
+                IsMouseDown = true;
                 Layer lay = Project.Layers[Project.SelectedLayer];
                 Point p = e.GetPosition(opglDraw);
                 OLDPOINT = p;
@@ -294,6 +296,7 @@ namespace DIY
 
             if (e.ChangedButton == MouseButton.Left && CurrentBrush != null && Project != null)
             {
+                IsMouseDown = false;
                 Layer lay = Project.Layers[Project.SelectedLayer];
                 Point p = e.GetPosition(opglDraw);
                 if (!(CurrentBrush is DIY.Tool.Move))
@@ -312,9 +315,16 @@ namespace DIY
         {
             if(Project != null)
             {
+
                 if(CurrentBrush != null)
                 {
-                    ActionQueue.Enqueue(() => { BlockMouse = true; CurrentBrush.MouseUp(this, new Point(-1, -1)); });
+                    ActionQueue.Enqueue(() => {
+                        BlockMouse = true;
+                        if(IsMouseDown)
+                        {
+                            CurrentBrush.MouseUp(this, new Point(-1, -1));
+                        }
+                    });
                 }
                 ActionQueue.Enqueue(() => {
                     Project.Undo(this);
@@ -330,7 +340,13 @@ namespace DIY
             {
                 if (CurrentBrush != null)
                 {
-                    ActionQueue.Enqueue(() => { BlockMouse = true; CurrentBrush.MouseUp(this, new Point(-1, -1)); });
+                    ActionQueue.Enqueue(() => {
+                        BlockMouse = true;
+                        if (IsMouseDown)
+                        {
+                            CurrentBrush.MouseUp(this, new Point(-1, -1));
+                        }
+                    });
                 }
                 ActionQueue.Enqueue(() => {
                     Project.Redo(this);
@@ -551,10 +567,23 @@ namespace DIY
             
             ofd.FileOk += (sender, e) => {
                 Bitmap bmp = new Bitmap(ofd.FileName);
-                Project = new DIYProject(bmp.Width, bmp.Height);
-                ImageLayer il = (ImageLayer) Project.Layers[0];
+                ImageLayer il = null;
+                if(Project == null)
+                {
+                    Project = new DIYProject(bmp.Width, bmp.Height);
+                    il = (ImageLayer)Project.Layers[0];
+                }
+                else
+                {
+                    il = new ImageLayer(bmp.Width, bmp.Height);
+                    Project.Layers.Add(il);
+                    for (int i = 0; i < Project.Width * Project.Height; i++)
+                    {
+                        Project.PixelCache.Add(i);
+                    }
+                }
 
-                for(int x = 0; x < bmp.Width; x++)
+                for (int x = 0; x < bmp.Width; x++)
                 {
                     for (int y = 0; y < bmp.Height; y++)
                     {
