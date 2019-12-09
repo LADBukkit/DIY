@@ -36,7 +36,7 @@ namespace DIY.Tool
                 Color co = mw.ColorPicker.GetColor();
                 DIYColor c = new DIYColor(255, co.R, co.G, co.B);
                 List<Point> ppos = ilay.Img.FloodFill((int) p.X, (int) p.Y, Threshold, ilay.Img.GetPixel((int) p.X, (int) p.Y), c);
-                List<int> pos = new List<int>(ppos.Select(i => (int)((i.X + ilay.OffsetX) + ((i.Y + lay.OffsetY) * ilay.Img.Width))));
+                List<int> pos = new List<int>(ppos.Select(i => (int)((i.X + ilay.OffsetX) + ((i.Y + lay.OffsetY) * mw.Project.Width))));
 
                 foreach (int i in pos)
                 {

@@ -522,7 +522,6 @@ namespace DIY
 
                 Xceed.Wpf.Toolkit.MessageBox.Show("The Projects has been saved to" + Environment.NewLine + "> " + Project.PATH, "Save");
             }
-
         }
 
         private void Save_As_Executed(object sender, ExecutedRoutedEventArgs e)

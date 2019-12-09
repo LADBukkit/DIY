@@ -43,7 +43,7 @@ namespace DIY.Tool
                 action.Old = ilay.Img.Clone();
 
                 List<Point> ppos = ilay.Img.RemoveFilledCircle((int)p.X, (int)p.Y, (int)Math.Round(Size / 2D), Opacity / 100D);
-                List<int> pos = new List<int>(ppos.Select(i => (int)((i.X + ilay.OffsetX) + ((i.Y + lay.OffsetY) * ilay.Img.Width))));
+                List<int> pos = new List<int>(ppos.Select(i => (int)((i.X + ilay.OffsetX) + ((i.Y + lay.OffsetY) * mw.Project.Width))));
 
                 foreach (int i in pos)
                 {
@@ -64,7 +64,7 @@ namespace DIY.Tool
             {
                 ImageLayer ilay = (ImageLayer)lay;
                 List<Point> ppos = ilay.Img.RemoveFilledCircle((int)p.X, (int)p.Y, (int)Math.Round(Size / 2D), Opacity / 100D);
-                List<int> pos = new List<int>(ppos.Select(i => (int)((i.X + ilay.OffsetX) + ((i.Y + lay.OffsetY) * ilay.Img.Width))));
+                List<int> pos = new List<int>(ppos.Select(i => (int)((i.X + ilay.OffsetX) + ((i.Y + lay.OffsetY) * mw.Project.Width))));
 
                 foreach (int i in pos)
                 {

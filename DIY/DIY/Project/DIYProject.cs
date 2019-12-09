@@ -169,6 +169,8 @@ namespace DIY.Project
                     {
                         writer.Write((byte) 1);
                         ImageLayer ilay = (ImageLayer)lay;
+                        writer.Write(ilay.Img.Width);
+                        writer.Write(ilay.Img.Height);
                         for(int j = 0; j < ilay.Img.Bits.Length; j++)
                         {
                             writer.Write(ilay.Img.Bits[j]);
@@ -205,9 +207,11 @@ namespace DIY.Project
                     Layer lay;
                     if(type == 1)
                     {
-                        lay = new ImageLayer(Width, Height);
+                        int w = reader.ReadInt32();
+                        int h = reader.ReadInt32();
+                        lay = new ImageLayer(w, h);
                         ImageLayer ilay = (ImageLayer) lay;
-                        for(int j = 0; j < Width * Height; j++)
+                        for(int j = 0; j < w * h; j++)
                         {
                             ilay.Img.Bits[j] = reader.ReadInt32();
                         }
