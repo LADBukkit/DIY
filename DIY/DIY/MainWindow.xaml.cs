@@ -80,6 +80,7 @@ namespace DIY
 
             filterList.Add("filter_hslwheel", typeof(Filter.HSLWheel));
             filterList.Add("filter_gaussian", typeof(Filter.GaussianBlur));
+            filterList.Add("filter_invert", typeof(Filter.Invert));
 
             // Select the default brush
             brush.IsChecked = true;
@@ -662,6 +663,11 @@ namespace DIY
                     Project.PushUndo(this, ia);
                 }
             }
+        }
+
+        private void About_Click(object sender, RoutedEventArgs e)
+        {
+            Xceed.Wpf.Toolkit.MessageBox.Show("DrawItYourself - DIY" + Environment.NewLine + Environment.NewLine + "A Multi-Layered drawing Software developed by" + Environment.NewLine + "> Simon Tettenborn" + Environment.NewLine + "> Philipp Kretler" + Environment.NewLine + "> Robin Eschbach", "About");
         }
     }
 }

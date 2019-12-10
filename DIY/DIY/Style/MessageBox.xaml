@@ -9,7 +9,7 @@
 
     <Style TargetType="xctk:MessageBox">
         <Setter Property="WindowBackground" Value="{DynamicResource DIY_BG}"/>
-        <Setter Property="WindowBorderBrush" Value="{DynamicResource DIY_BG}"/>
+        <Setter Property="WindowBorderBrush" Value="{DynamicResource DIY_MENU_BG}"/>
         <Setter Property="Background" Value="{DynamicResource DIY_MENU_BG}"/>
         <Setter Property="ButtonRegionBackground" Value="{DynamicResource DIY_MENU_BG}"/>
         <Setter Property="Foreground" Value="{DynamicResource DIY_FG}"/>

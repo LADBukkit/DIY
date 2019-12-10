@@ -59,11 +59,11 @@
                 </MenuItem>
                 <MenuItem Header="_Color">
                     <MenuItem Name="filter_hslwheel" Header="_HSL Wheel" Click="Filter_Click"/>
+                    <MenuItem Name="filter_invert" Header="_Invert" Click="Filter_Click"/>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="_Manual"/>
-                <MenuItem Header="_About"/>
+                <MenuItem Header="_About" Click="About_Click"/>
             </MenuItem>
         </Menu>
 
