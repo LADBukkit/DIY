@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using Point = System.Windows.Point;
 using System.Diagnostics;
+using System.Windows;
 
 namespace DIY.Util
 {
@@ -272,6 +273,37 @@ namespace DIY.Util
                 SetPixel((int) i.X, (int) i.Y, c);
             }
 
+            return points;
+        }
+
+
+        public List<Point> DrawFilledSquare(int x0, int y0, int radius, DIYColor c)
+        {
+            List<Point> points = new List<Point>();
+            for(int x = -radius; x <= radius; x++)
+            {
+                for (int y = -radius; y <= radius; y++)
+                {
+                    points.Add(new Point(x0 + x, y0 + y));
+                    SetPixel(x0 + x, y0 + y, c);
+                }
+            }
+            return points;
+        }
+
+        public List<Point> RemoveFilledSquare(int x0, int y0, int radius, double percent)
+        {
+            List<Point> points = new List<Point>();
+            for (int x = -radius; x <= radius; x++)
+            {
+                for (int y = -radius; y <= radius; y++)
+                {
+                    points.Add(new Point(x0 + x, y0 + y));
+                    DIYColor c = GetPixel(x0 + x, y0 + y);
+                    c.A = (byte)(c.A * (1 - percent));
+                    SetPixel(x0 + x, y0 + y, c, false);
+                }
+            }
             return points;
         }
 

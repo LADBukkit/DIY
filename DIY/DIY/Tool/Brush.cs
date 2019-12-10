@@ -30,6 +30,8 @@ namespace DIY.Tool
         /// </summary>
         public int Opacity { get; set; } = 100;
 
+        public int Form { get; set; } = 0;
+
         private ImageAction action { get; set; }
 
         public override void MouseDown(MainWindow mw, Point p)
@@ -45,7 +47,15 @@ namespace DIY.Tool
                 action = new ImageAction("Draw");
                 action.Layer = project.SelectedLayer;
                 action.Old = ilay.Img.Clone();
-                List<Point> ppos = ilay.Img.DrawFilledCircle((int)p.X, (int)p.Y, (int) Math.Round(Size / 2D), c);
+                List<Point> ppos = new List<Point>();
+                if (Form == 0)
+                {
+                    ppos = ilay.Img.DrawFilledCircle((int)p.X, (int)p.Y, (int)Math.Round(Size / 2D), c);
+                }
+                else if(Form == 1)
+                {
+                    ppos = ilay.Img.DrawFilledSquare((int)p.X, (int)p.Y, (int)Math.Round(Size / 2D), c);
+                }
                 List<int> pos = new List<int>(ppos.Select(i => (int)((i.X + ilay.OffsetX) + ((i.Y + lay.OffsetY) * mw.Project.Width))));
 
                 foreach (int i in pos)
@@ -68,7 +78,15 @@ namespace DIY.Tool
             if (lay is ImageLayer)
             {
                 ImageLayer ilay = (ImageLayer)lay;
-                List<Point> ppos = ilay.Img.DrawFilledCircle((int)p.X, (int)p.Y, (int)Math.Round(Size / 2D), c);
+                List<Point> ppos = new List<Point>();
+                if (Form == 0)
+                {
+                    ppos = ilay.Img.DrawFilledCircle((int)p.X, (int)p.Y, (int)Math.Round(Size / 2D), c);
+                }
+                else if (Form == 1)
+                {
+                    ppos = ilay.Img.DrawFilledSquare((int)p.X, (int)p.Y, (int)Math.Round(Size / 2D), c);
+                }
                 List<int> pos = new List<int>(ppos.Select(i => (int)((i.X + ilay.OffsetX) + ((i.Y + lay.OffsetY) * mw.Project.Width))));
 
                 foreach (int i in pos)
@@ -101,6 +119,15 @@ namespace DIY.Tool
         public override void PrepareProperties(StackPanel parent)
         {
             parent.Children.Clear();
+
+            ComboBox cb = new ComboBox();
+            cb.Items.Add("Circle");
+            cb.Items.Add("Square");
+            Binding cBind = new Binding("Form");
+            cBind.Source = this;
+            cBind.Mode = BindingMode.TwoWay;
+            cb.SetBinding(ComboBox.SelectedIndexProperty, cBind);
+            parent.Children.Add(cb);
 
             // Size Regulator
             ValueRegulator sReg = new ValueRegulator();
