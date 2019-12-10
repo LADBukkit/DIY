@@ -6,15 +6,12 @@ using SharpGL.Enumerations;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing.Imaging;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Rectangle = System.Drawing.Rectangle;
 using Bitmap = System.Drawing.Bitmap;
 
 namespace DIY
@@ -26,6 +23,7 @@ namespace DIY
     {
         public static RoutedUICommand C_IMPORT = new RoutedUICommand("Import", "Import", typeof(MainWindow));
         public static RoutedUICommand C_EXPORT = new RoutedUICommand("Export", "Export", typeof(MainWindow));
+        public static RoutedUICommand C_CLOSE = new RoutedUICommand("Clear", "Clear", typeof(MainWindow));
 
         /// <summary>
         /// The Preferences window. Saved so you can't open it multiple times.
@@ -668,6 +666,14 @@ namespace DIY
         private void About_Click(object sender, RoutedEventArgs e)
         {
             Xceed.Wpf.Toolkit.MessageBox.Show("DrawItYourself - DIY" + Environment.NewLine + Environment.NewLine + "A Multi-Layered drawing Software developed by" + Environment.NewLine + "> Simon Tettenborn" + Environment.NewLine + "> Philipp Kretler" + Environment.NewLine + "> Robin Eschbach", "About");
+        }
+
+        private void Close_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Project = null;
+            ActionQueue.Clear();
+            opglDraw.Width = 0;
+            opglDraw.Height = 0;
         }
     }
 }

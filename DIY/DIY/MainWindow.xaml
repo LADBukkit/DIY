@@ -20,6 +20,7 @@
         <CommandBinding Command="ApplicationCommands.Open" Executed="Open_Executed" />
         <CommandBinding Command="local:MainWindow.C_IMPORT" Executed="Import_Executed" />
         <CommandBinding Command="local:MainWindow.C_EXPORT" Executed="Export_Executed" />
+        <CommandBinding Command="local:MainWindow.C_CLOSE" Executed="Close_Executed" />
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Command="ApplicationCommands.New" Gesture="Ctrl+N" />
@@ -30,6 +31,7 @@
         <KeyBinding Command="ApplicationCommands.Open" Gesture="Ctrl+O" />
         <KeyBinding Command="local:MainWindow.C_IMPORT" Gesture="Ctrl+SHIFT+I" />
         <KeyBinding Command="local:MainWindow.C_EXPORT" Gesture="Ctrl+SHIFT+E" />
+        <KeyBinding Command="local:MainWindow.C_CLOSE" Gesture="Ctrl+SHIFT+X" />
     </Window.InputBindings>
     
     
@@ -45,6 +47,7 @@
                 <MenuItem Header="_Import" Command="local:MainWindow.C_IMPORT" InputGestureText="Ctrl+SHIFT+I"/>
                 <MenuItem Header="_Export" Command="local:MainWindow.C_EXPORT" InputGestureText="Ctrl+SHIFT+E"/>
                 <Separator/>
+                <MenuItem Header="_Close" Command="local:MainWindow.C_CLOSE" InputGestureText="Ctrl+SHIFT+X"/>
                 <MenuItem Header="E_xit" Click="Window_Closed" InputGestureText="Alt+F4"/>
             </MenuItem>
             <MenuItem Header="_Edit">
