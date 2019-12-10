@@ -103,10 +103,23 @@ namespace DIY.Filter
                 return new double[] { 1 };
             }
             double[] kernel = new double[length];
-
+            double sum = 0;
             for (int i = 0; i < length; i++)
             {
                 kernel[i] = (1.0 / Math.Sqrt(2 * Math.PI * std * std)) * Math.Exp(- ((i * i) / (2.0 * std * std)));
+                if(i == 0)
+                {
+                    sum += kernel[i];
+                }
+                else
+                {
+                    sum += kernel[i] * 2;
+                }
+            }
+            sum = 1 / sum;
+            for(int i = 0; i < kernel.Length; i++)
+            {
+                kernel[i] *= sum;
             }
             return kernel;
         }

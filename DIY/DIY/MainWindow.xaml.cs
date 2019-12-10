@@ -76,6 +76,7 @@ namespace DIY
             tools.Add("pipette", new DIY.Tool.Pipette());
             tools.Add("fill", new DIY.Tool.Fill());
             tools.Add("move", new DIY.Tool.Move());
+            tools.Add("smudge", new DIY.Tool.Smudge());
 
             filterList.Add("filter_hslwheel", typeof(Filter.HSLWheel));
             filterList.Add("filter_gaussian", typeof(Filter.GaussianBlur));

@@ -276,22 +276,7 @@ namespace DIY.Util
             return points;
         }
 
-
-        public List<Point> DrawFilledSquare(int x0, int y0, int radius, DIYColor c)
-        {
-            List<Point> points = new List<Point>();
-            for(int x = -radius; x <= radius; x++)
-            {
-                for (int y = -radius; y <= radius; y++)
-                {
-                    points.Add(new Point(x0 + x, y0 + y));
-                    SetPixel(x0 + x, y0 + y, c);
-                }
-            }
-            return points;
-        }
-
-        public List<Point> RemoveFilledSquare(int x0, int y0, int radius, double percent)
+        public List<Point> PointsFilledSquare(int x0, int y0, int radius)
         {
             List<Point> points = new List<Point>();
             for (int x = -radius; x <= radius; x++)
@@ -299,10 +284,29 @@ namespace DIY.Util
                 for (int y = -radius; y <= radius; y++)
                 {
                     points.Add(new Point(x0 + x, y0 + y));
-                    DIYColor c = GetPixel(x0 + x, y0 + y);
-                    c.A = (byte)(c.A * (1 - percent));
-                    SetPixel(x0 + x, y0 + y, c, false);
                 }
+            }
+            return points;
+        }
+
+        public List<Point> DrawFilledSquare(int x0, int y0, int radius, DIYColor c)
+        {
+            List<Point> points = PointsFilledSquare(x0, y0, radius);
+            foreach (Point i in points)
+            {
+                SetPixel((int)i.X, (int)i.Y, c);
+            }
+            return points;
+        }
+
+        public List<Point> RemoveFilledSquare(int x0, int y0, int radius, double percent)
+        {
+            List<Point> points = PointsFilledSquare(x0, y0, radius);
+            foreach (Point i in points)
+            {
+                DIYColor c = GetPixel((int)i.X, (int)i.Y);
+                c.A = (byte)(c.A * (1 - percent));
+                SetPixel((int)i.X, (int)i.Y, c, false);
             }
             return points;
         }
