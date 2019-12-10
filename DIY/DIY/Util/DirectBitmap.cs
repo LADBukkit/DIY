@@ -78,7 +78,7 @@ namespace DIY.Util
         {
             if (x < 0 || x >= Width || y < 0 || y >= Height)
             {
-                return new DIYColor();
+                return DIYColor.NULL_TYPE;
             }
             int index = x + (y * Width);
             int col = Bits[index];

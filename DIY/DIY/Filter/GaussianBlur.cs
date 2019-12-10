@@ -35,12 +35,20 @@ namespace DIY.Filter
                     for(int i = 1; i < kernelH.Length; i++)
                     {
                         DIYColor dc1 = input.GetPixel(x + i, y);
+                        if (dc1 == DIYColor.NULL_TYPE)
+                        {
+                            dc1 = dc;
+                        }
                         a += dc1.A * kernelH[i];
                         r += dc1.R * kernelH[i];
                         g += dc1.G * kernelH[i];
                         b += dc1.B * kernelH[i];
 
                         dc1 = input.GetPixel(x - i, y);
+                        if (dc1 == DIYColor.NULL_TYPE)
+                        {
+                            dc1 = dc;
+                        }
                         a += dc1.A * kernelH[i];
                         r += dc1.R * kernelH[i];
                         g += dc1.G * kernelH[i];
@@ -70,12 +78,20 @@ namespace DIY.Filter
                     for (int i = 1; i < kernelV.Length; i++)
                     {
                         DIYColor dc1 = db.GetPixel(x, y + i);
+                        if(dc1 == DIYColor.NULL_TYPE)
+                        {
+                            dc1 = dc;
+                        }
                         a += dc1.A * kernelV[i];
                         r += dc1.R * kernelV[i];
                         g += dc1.G * kernelV[i];
                         b += dc1.B * kernelV[i];
 
                         dc1 = db.GetPixel(x, y - i);
+                        if (dc1 == DIYColor.NULL_TYPE)
+                        {
+                            dc1 = dc;
+                        }
                         a += dc1.A * kernelV[i];
                         r += dc1.R * kernelV[i];
                         g += dc1.G * kernelV[i];

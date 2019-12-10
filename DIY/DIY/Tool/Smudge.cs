@@ -163,8 +163,7 @@ namespace DIY.Tool
 
         public void SmudgePoints(ImageLayer ilay, List<Point> points)
         {
-            Dictionary<Point, DIYColor> NewColorY = new Dictionary<Point, DIYColor>();
-            Dictionary<Point, DIYColor> NewColorX = new Dictionary<Point, DIYColor>();
+            Dictionary<Point, DIYColor> NewColor = new Dictionary<Point, DIYColor>();
 
             foreach (Point p in points)
             {
@@ -178,12 +177,20 @@ namespace DIY.Tool
                 for (int i = 1; i < kernel.Length; i++)
                 {
                     DIYColor dc1 = ilay.Img.GetPixel(x + i, y);
+                    if (dc1 == DIYColor.NULL_TYPE)
+                    {
+                        dc1 = dc;
+                    }
                     a += dc1.A * kernel[i];
                     r += dc1.R * kernel[i];
                     g += dc1.G * kernel[i];
                     b += dc1.B * kernel[i];
 
                     dc1 = ilay.Img.GetPixel(x - i, y);
+                    if (dc1 == DIYColor.NULL_TYPE)
+                    {
+                        dc1 = dc;
+                    }
                     a += dc1.A * kernel[i];
                     r += dc1.R * kernel[i];
                     g += dc1.G * kernel[i];
@@ -193,26 +200,40 @@ namespace DIY.Tool
                 r = Math.Max(0, Math.Min(255, r));
                 g = Math.Max(0, Math.Min(255, g));
                 b = Math.Max(0, Math.Min(255, b));
-                NewColorY.Add(p, new DIYColor((byte)a, (byte)r, (byte)g, (byte)b));
+                NewColor.Add(p, new DIYColor((byte)a, (byte)r, (byte)g, (byte)b));
             }
+
+            foreach (Point p in points)
+            {
+                ilay.Img.SetPixel((int)p.X, (int)p.Y, NewColor[p], false);
+            }
+            NewColor.Clear();
             foreach (Point p in points)
             {
                 int x = (int)p.X;
                 int y = (int)p.Y;
-                DIYColor dc = NewColorY[p];
+                DIYColor dc = ilay.Img.GetPixel(x, y);
                 double a = dc.A * kernel[0];
                 double r = dc.R * kernel[0];
                 double g = dc.G * kernel[0];
                 double b = dc.B * kernel[0];
                 for (int i = 1; i < kernel.Length; i++)
                 {
-                    DIYColor dc1 = NewColorY.ContainsKey(new Point(x, y + i)) ? NewColorY[new Point(x, y + i)] : ilay.Img.GetPixel(x, y + i);
+                    DIYColor dc1 = ilay.Img.GetPixel(x, y + i);
+                    if (dc1 == DIYColor.NULL_TYPE)
+                    {
+                        dc1 = dc;
+                    }
                     a += dc1.A * kernel[i];
                     r += dc1.R * kernel[i];
                     g += dc1.G * kernel[i];
                     b += dc1.B * kernel[i];
 
-                    dc1 = NewColorY.ContainsKey(new Point(x, y - i)) ? NewColorY[new Point(x, y - i)] : ilay.Img.GetPixel(x, y - i);
+                    dc1 = ilay.Img.GetPixel(x, y - i);
+                    if (dc1 == DIYColor.NULL_TYPE)
+                    {
+                        dc1 = dc;
+                    }
                     a += dc1.A * kernel[i];
                     r += dc1.R * kernel[i];
                     g += dc1.G * kernel[i];
@@ -222,12 +243,12 @@ namespace DIY.Tool
                 r = Math.Max(0, Math.Min(255, r));
                 g = Math.Max(0, Math.Min(255, g));
                 b = Math.Max(0, Math.Min(255, b));
-                NewColorX.Add(p, new DIYColor((byte)a, (byte)r, (byte)g, (byte)b));
+                NewColor.Add(p, new DIYColor((byte)a, (byte)r, (byte)g, (byte)b));
             }
 
             foreach (Point p in points)
             {
-                ilay.Img.SetPixel((int)p.X, (int)p.Y, NewColorX[p], false);
+                ilay.Img.SetPixel((int)p.X, (int)p.Y, NewColor[p], false);
             }
         }
     }
