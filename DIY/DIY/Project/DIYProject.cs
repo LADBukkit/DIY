@@ -13,22 +13,62 @@ using System.Windows.Media;
 
 namespace DIY.Project
 {
+    /// <summary>
+    /// The heart of the Project
+    /// This holds all the data for the drawing project
+    /// </summary>
     public class DIYProject
     {
+        /// <summary>
+        /// The list of the layers
+        /// </summary>
         public List<Layer> Layers { get; set; } = new List<Layer>();
+
+        /// <summary>
+        /// The Index of the currently selected Layer
+        /// </summary>
         public int SelectedLayer { get; set; }
+
+        /// <summary>
+        /// The Width of the Project
+        /// </summary>
         public int Width { get; set; }
+
+        /// <summary>
+        /// The Height of the Project
+        /// </summary>
         public int Height { get; set; }
 
+        /// <summary>
+        /// The Save-Path of the Project
+        /// </summary>
         public string PATH = null;
 
+        /// <summary>
+        /// The Pixels to Update
+        /// </summary>
         public ConcurrentHashSet<int> PixelCache { get; set; }
 
+        /// <summary>
+        /// The Actions to undo
+        /// </summary>
         public FixedStack<DIYAction> UndoCache = new FixedStack<DIYAction>(20);
+
+        /// <summary>
+        /// The Actions to redo
+        /// </summary>
         public FixedStack<DIYAction> RedoCache = new FixedStack<DIYAction>(20);
 
+        /// <summary>
+        /// Empty Project used for opening
+        /// </summary>
         public DIYProject(){}
 
+        /// <summary>
+        /// A Project with 1 transparent Layer
+        /// </summary>
+        /// <param name="width">The Width of the Project</param>
+        /// <param name="height">The Height of the Project</param>
         public DIYProject(int width, int height)
         {
             Width = width;
@@ -38,6 +78,7 @@ namespace DIY.Project
             Layers.Add(lay);
             SelectedLayer = 0;
 
+            // Update all Pixels
             PixelCache = new ConcurrentHashSet<int>();
             for(int i = 0; i < width * height; i++)
             {
@@ -45,11 +86,21 @@ namespace DIY.Project
             }
         }
 
+        /// <summary>
+        /// Disposes the PixelCache
+        /// </summary>
         ~DIYProject()
         {
             PixelCache.Dispose();
         }
 
+        /// <summary>
+        /// Calculates 1 Pixel and calls the action
+        /// </summary>
+        /// <param name="x">The X Coordinate</param>
+        /// <param name="y">The Y Coordinate</param>
+        /// <param name="action">The Action (Normally the drawing)</param>
+        /// <param name="underlying">If there should be the underlying pattern</param>
         public void DrawPixel(int x, int y, Action<int, int, DIYColor> action, bool underlying = true)
         {
             DIYColor under = ((x % 2) == (y % 2)) ? new DIYColor(255, 64, 64, 64) : new DIYColor(255, 16, 16, 16);
@@ -89,6 +140,10 @@ namespace DIY.Project
             }
         }
 
+        /// <summary>
+        /// Calculates all pixels that have been changed
+        /// </summary>
+        /// <param name="action">The Action for drawing</param>
         public void CalcBitmap(Action<int, int, DIYColor> action) {
             HashSet<int> hsI = new HashSet<int>();
             PixelCache.ForEach(pos => {
@@ -104,6 +159,11 @@ namespace DIY.Project
             }
         }
 
+        /// <summary>
+        /// Pushes 1 action onto the undo stack, clears he redo stack and changes the edit menu items
+        /// </summary>
+        /// <param name="mw">The MainWindow</param>
+        /// <param name="action">The Action to push</param>
         public void PushUndo(MainWindow mw, DIYAction action)
         {
             UndoCache.Push(action);
@@ -116,6 +176,10 @@ namespace DIY.Project
             });
         }
 
+        /// <summary>
+        /// Undos one Action and changes the edit menu items
+        /// </summary>
+        /// <param name="mw">The MainWindow</param>
         public void Undo(MainWindow mw)
         {
             if (UndoCache.Count < 1) return;
@@ -132,6 +196,10 @@ namespace DIY.Project
             });
         }
 
+        /// <summary>
+        /// Redos one Action and changes the edit menu items
+        /// </summary>
+        /// <param name="mw">The MainWindow</param>
         public void Redo(MainWindow mw)
         {
             if (RedoCache.Count < 1) return;
@@ -153,20 +221,30 @@ namespace DIY.Project
         /// </summary>
         private static readonly uint MAGIC_INT = 0x1219200D;
 
+        /// <summary>
+        /// Saves this Project as .diy file
+        /// </summary>
+        /// <param name="path">The path of the file</param>
         public void Save(string path)
         {
             using(BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create)))
             {
+                // Write the Magic int for identifying
                 writer.Write(MAGIC_INT);
+
+                // Write the Project Properties
                 writer.Write(Width);
                 writer.Write(Height);
                 writer.Write(SelectedLayer);
+
+                // Write the Layers
                 writer.Write(Layers.Count);
                 for(int i = 0; i < Layers.Count; i++)
                 {
                     Layer lay = Layers[i];
                     if(lay is ImageLayer)
                     {
+                        // Write the bitmap if this is an ImageLayer
                         writer.Write((byte) 1);
                         ImageLayer ilay = (ImageLayer)lay;
                         writer.Write(ilay.Img.Width);
@@ -181,6 +259,7 @@ namespace DIY.Project
                         writer.Write(0);
                     }
 
+                    // Write the Layer Properties
                     writer.Write(lay.Name);
                     writer.Write(lay.Mode.Name);
                     writer.Write(lay.OffsetX);
@@ -190,6 +269,12 @@ namespace DIY.Project
             }
         }
 
+        /// <summary>
+        /// Opens a .diy file
+        /// 
+        /// It just reverses the save function.
+        /// </summary>
+        /// <param name="path">the path of the file</param>
         public void Open(string path)
         {
             using(BinaryReader reader = new BinaryReader(File.Open(path, FileMode.Open)))

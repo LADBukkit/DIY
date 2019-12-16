@@ -6,8 +6,14 @@ using System.Windows.Media;
 
 namespace DIY.Project
 {
+    /// <summary>
+    /// A Layer for normal drawing
+    /// </summary>
     public class ImageLayer : Layer
     {
+        /// <summary>
+        /// The Underlying Image
+        /// </summary>
         public DirectBitmap Img { get; set; }
         
         public ImageLayer(int width, int height)
