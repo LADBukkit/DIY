@@ -4,9 +4,19 @@ using System.Text;
 
 namespace DIY.Project.Action
 {
+    /// <summary>
+    /// Action for switching the positions of layers
+    /// </summary>
     public class SwitchLayerAction : DIYAction
     {
+        /// <summary>
+        /// The Old Position
+        /// </summary>
         public int POld { get; set; }
+
+        /// <summary>
+        /// The New Position
+        /// </summary>
         public int PNew { get; set; }
 
         public SwitchLayerAction() : base("Move Layer") { }

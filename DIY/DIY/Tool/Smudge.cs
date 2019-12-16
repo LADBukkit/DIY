@@ -46,7 +46,7 @@ namespace DIY.Tool
             {
                 ImageLayer ilay = (ImageLayer)lay;
                 action = new ImageAction("Draw");
-                action.Layer = project.SelectedLayer;
+                action.Layer = (ImageLayer)mw.Project.Layers[mw.Project.SelectedLayer];
                 action.Old = ilay.Img.Clone();
                 List<Point> ppos = new List<Point>();
                 if (Form == 0)

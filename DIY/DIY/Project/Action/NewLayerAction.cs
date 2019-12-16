@@ -4,8 +4,14 @@ using System.Text;
 
 namespace DIY.Project.Action
 {
+    /// <summary>
+    /// The Action for creating a new Layer
+    /// </summary>
     public class NewLayerAction : DIYAction
     {
+        /// <summary>
+        /// The Layer to add
+        /// </summary>
         public Layer Layer { get; set; }
 
         public NewLayerAction() : base("New Layer"){}

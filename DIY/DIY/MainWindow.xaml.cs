@@ -648,7 +648,7 @@ namespace DIY
                 if(fw.ShowDialog() == true)
                 {
                     ImageAction ia = new ImageAction("Filter: " + filter.Name);
-                    ia.Layer = Project.SelectedLayer;
+                    ia.Layer = (ImageLayer) Project.Layers[Project.SelectedLayer];
                     ia.Old = il.Img;
                     il.Img = fw.Filter.CalculateFilter(il.Img);
                     ia.New = il.Img;

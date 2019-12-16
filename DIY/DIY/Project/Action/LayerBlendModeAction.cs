@@ -4,10 +4,24 @@ using System.Text;
 
 namespace DIY.Project.Action
 {
+    /// <summary>
+    /// The Action for changing the BlendMode of a Layer
+    /// </summary>
     public class LayerBlendModeAction : DIYAction
     {
+        /// <summary>
+        /// The Layer the changes are from
+        /// </summary>
         public Layer Layer { get; set; }
+
+        /// <summary>
+        /// The Old BlendMode
+        /// </summary>
         public BlendMode Old { get; set; }
+
+        /// <summary>
+        /// The New BlendMode
+        /// </summary>
         public BlendMode New { get; set; }
 
         public LayerBlendModeAction() : base("Change Layer BlendMode") { }

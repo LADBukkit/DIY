@@ -30,7 +30,7 @@ namespace DIY.Tool
             if(lay is ImageLayer) {
                 ImageLayer ilay = (ImageLayer)lay;
                 ImageAction action = new ImageAction("Fill");
-                action.Layer = project.SelectedLayer;
+                action.Layer = (ImageLayer)mw.Project.Layers[mw.Project.SelectedLayer];
                 action.Old = ilay.Img.Clone();
 
                 Color co = mw.ColorPicker.GetColor();

@@ -4,9 +4,19 @@ using System.Text;
 
 namespace DIY.Project.Action
 {
+    /// <summary>
+    /// Action for deleting a Layer
+    /// </summary>
     public class DeleteAction : DIYAction
     {
+        /// <summary>
+        /// The Position of the deleted Layer
+        /// </summary>
         public int Position { get; set; }
+
+        /// <summary>
+        /// The Deleted Layer
+        /// </summary>
         public Layer Layer { get; set; }
 
         public DeleteAction() : base("Delete Layer") { }
