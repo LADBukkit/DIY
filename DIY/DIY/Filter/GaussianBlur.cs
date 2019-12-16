@@ -6,12 +6,17 @@ using DIY.Util;
 
 namespace DIY.Filter
 {
+    /// <summary>
+    /// The Gaussian Blur is a Blur using the Gaussian Distribution
+    /// This Implementation applies it horizontally and vertically with different Standard Deviations (StD)
+    /// </summary>
     public class GaussianBlur : Filter
     {
         public override string Name => "Gaussian Blur";
 
         public GaussianBlur()
         {
+            // The two Properties for Horizontal and Vertical Blur
             Properties = new FilterProperty[] {
                 new FilterPropertyNumeric<double>("Offset X", 0, 15, 0.5, 0.1),
                 new FilterPropertyNumeric<double>("Offset Y", 0, 15, 0.5, 0.1)
@@ -21,6 +26,8 @@ namespace DIY.Filter
         public override DirectBitmap CalculateFilter(DirectBitmap input)
         {
             DirectBitmap db = input.Clone();
+
+            // The Kernel for Horizontal Processing
             double[] kernelH = CalculateKernel(((FilterPropertyNumeric<double>)Properties[0]).Value);
 
             for (int x = 0; x < db.Width; x++)
@@ -35,6 +42,8 @@ namespace DIY.Filter
                     for(int i = 1; i < kernelH.Length; i++)
                     {
                         DIYColor dc1 = input.GetPixel(x + i, y);
+                        
+                        // If No Color found use the color of x, y
                         if (dc1 == DIYColor.NULL_TYPE)
                         {
                             dc1 = dc;
@@ -64,6 +73,7 @@ namespace DIY.Filter
             }
 
             DirectBitmap db1 = db.Clone();
+            // The Kernel for Vertical Processing
             double[] kernelV = CalculateKernel(((FilterPropertyNumeric<double>)Properties[1]).Value);
 
             for (int x = 0; x < db.Width; x++)
@@ -111,6 +121,12 @@ namespace DIY.Filter
             return db1;
         }
 
+        /// <summary>
+        /// Calculates a Gaussian Kernel with a std
+        /// The Length of the Array is 3 * std
+        /// </summary>
+        /// <param name="std">The Standard Deviation</param>
+        /// <returns>The Kernel for the StD</returns>
         public static double[] CalculateKernel(double std)
         {
             int length = (int) Math.Ceiling(3 * std);
@@ -120,6 +136,8 @@ namespace DIY.Filter
             }
             double[] kernel = new double[length];
             double sum = 0;
+
+            // Calculate Gaussian Distribution
             for (int i = 0; i < length; i++)
             {
                 kernel[i] = (1.0 / Math.Sqrt(2 * Math.PI * std * std)) * Math.Exp(- ((i * i) / (2.0 * std * std)));
@@ -133,6 +151,8 @@ namespace DIY.Filter
                 }
             }
             sum = 1 / sum;
+
+            // Normalize Distribution to the sum of 1
             for(int i = 0; i < kernel.Length; i++)
             {
                 kernel[i] *= sum;

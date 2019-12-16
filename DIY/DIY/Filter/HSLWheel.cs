@@ -5,12 +5,16 @@ using DIY.Util;
 
 namespace DIY.Filter
 {
+    /// <summary>
+    /// The HSWheel Filter applies shifting for hue, saturation and lightness
+    /// </summary>
     public class HSLWheel : Filter
     {
         public override string Name => "HSL Wheel";
 
         public HSLWheel()
         {
+            // The Different Properties for h, s and l
             Properties = new FilterProperty[] {
                 new FilterPropertyNumeric<int>("Hue", -180, 180, 0, 1),
                 new FilterPropertyNumeric<int>("Saturation", -100, 100, 0, 1),
@@ -26,6 +30,7 @@ namespace DIY.Filter
                 DIYColor dc = new DIYColor(db.Bits[i]);
                 ColorUtil.ToHSL(dc.R, dc.G, dc.B, out double h, out double s, out double l);
 
+                // Shift by the properties
                 h += ((FilterPropertyNumeric<int>)Properties[0]).Value;
                 s += ((FilterPropertyNumeric<int>)Properties[1]).Value / 100D;
                 l += ((FilterPropertyNumeric<int>)Properties[2]).Value / 100D;
