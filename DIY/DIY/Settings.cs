@@ -6,11 +6,14 @@ using System.Windows.Media;
 
 namespace DIY
 {
+    /// <summary>
+    /// The Different Settings of this Programm
+    /// </summary>
     public class Settings : ApplicationSettingsBase
     {
         [UserScopedSetting()]
         [DefaultSettingValue(null)]
-        public String c_DIY_BG
+        public string c_DIY_BG
         {
             get => this["c_DIY_BG"].ToString();
             set => this["c_DIY_BG"] = value;
@@ -18,7 +21,7 @@ namespace DIY
 
         [UserScopedSetting()]
         [DefaultSettingValue(null)]
-        public String c_DIY_FG
+        public string c_DIY_FG
         {
             get => this["c_DIY_FG"].ToString();
             set => this["c_DIY_FG"] = value;
@@ -26,7 +29,7 @@ namespace DIY
 
         [UserScopedSetting()]
         [DefaultSettingValue(null)]
-        public String c_DIY_BUTTON_HOVER
+        public string c_DIY_BUTTON_HOVER
         {
             get => this["c_DIY_BUTTON_HOVER"].ToString();
             set => this["c_DIY_BUTTON_HOVER"] = value;
@@ -34,7 +37,7 @@ namespace DIY
 
         [UserScopedSetting()]
         [DefaultSettingValue(null)]
-        public String c_DIY_MENU_BG
+        public string c_DIY_MENU_BG
         {
             get => this["c_DIY_MENU_BG"].ToString();
             set => this["c_DIY_MENU_BG"] = value;
@@ -42,7 +45,7 @@ namespace DIY
 
         [UserScopedSetting()]
         [DefaultSettingValue(null)]
-        public String c_DIY_BRUSH_BG
+        public string c_DIY_BRUSH_BG
         {
             get => this["c_DIY_BRUSH_BG"].ToString();
             set => this["c_DIY_BRUSH_BG"] = value;
@@ -50,7 +53,7 @@ namespace DIY
 
         [UserScopedSetting()]
         [DefaultSettingValue(null)]
-        public String c_DIY_BRUSH_FG
+        public string c_DIY_BRUSH_FG
         {
             get => this["c_DIY_BRUSH_FG"].ToString();
             set => this["c_DIY_BRUSH_FG"] = value;

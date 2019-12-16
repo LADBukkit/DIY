@@ -13,19 +13,20 @@ using System.Windows.Shapes;
 namespace DIY
 {
     /// <summary>
-    /// Interaktionslogik für RenameWindow.xaml
+    /// Codebehind for the rename window
     /// </summary>
     public partial class RenameWindow : Window
     {
 
         public static readonly DependencyProperty OldnameProperty = DependencyProperty.Register("Oldname", typeof(string), typeof(RenameWindow), new PropertyMetadata(""));
+        /// <summary>
+        /// The Oldname of this
+        /// </summary>
         public string Oldname
         {
             get { return (string)GetValue(OldnameProperty); }
             set { SetValue(OldnameProperty, value); }
         }
-
-        public bool Okay = false;
 
         public RenameWindow(string Oldname)
         {
@@ -37,13 +38,13 @@ namespace DIY
 
         private void Abort_Click(object sender, RoutedEventArgs e)
         {
-            Okay = false;
+            DialogResult = false;
             Close();
         }
 
         private void Okay_Click(object sender, RoutedEventArgs e)
         {
-            Okay = true;
+            DialogResult = true;
             Close();
         }
     }

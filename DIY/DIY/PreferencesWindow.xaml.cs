@@ -47,6 +47,12 @@ namespace DIY
                 catch (FormatException) { }
             }
         }
+
+        /// <summary>
+        /// Handles saving of the settings
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             foreach (PrefColorCtrl pcc in Theme.Children.OfType<PrefColorCtrl>())
@@ -57,6 +63,11 @@ namespace DIY
             this.Close();
         }
 
+        /// <summary>
+        /// Handles the reset on close
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             foreach (string key in Application.Current.Resources.MergedDictionaries[0].Keys)

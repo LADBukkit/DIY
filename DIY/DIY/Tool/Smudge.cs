@@ -30,6 +30,11 @@ namespace DIY.Tool
         /// </summary>
         public int Hardness { get; set; } = 5;
 
+        /// <summary>
+        /// The Form of this Brush
+        /// 0 = Circle
+        /// 1 = Square
+        /// </summary>
         public int Form { get; set; } = 0;
 
         private ImageAction action { get; set; }

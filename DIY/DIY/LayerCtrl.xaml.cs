@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 namespace DIY
 {
     /// <summary>
-    /// Interaktionslogik für LayerCtrl.xaml
+    /// A Control for the Layers insided the Layer List
     /// </summary>
     public partial class LayerCtrl : UserControl
     {
@@ -25,6 +25,9 @@ namespace DIY
         }
 
         public static readonly DependencyProperty LayerNameProperty = DependencyProperty.Register("LayerName", typeof(string), typeof(LayerCtrl), new PropertyMetadata(""));
+        /// <summary>
+        /// The Name of the Layer
+        /// </summary>
         public string LayerName
         {
             get { return (string)GetValue(LayerNameProperty); }
@@ -32,6 +35,9 @@ namespace DIY
         }
 
         public static readonly DependencyProperty ImageProperty = DependencyProperty.Register("Image", typeof(ImageSource), typeof(LayerCtrl), new PropertyMetadata(null));
+        /// <summary>
+        /// The Image of this
+        /// </summary>
         public ImageSource Image
         {
             get { return (ImageSource)GetValue(ImageProperty); }
@@ -39,6 +45,9 @@ namespace DIY
         }
 
         public static readonly DependencyProperty SelectedProperty = DependencyProperty.Register("Selected", typeof(bool), typeof(LayerCtrl), new PropertyMetadata(false));
+        /// <summary>
+        /// If this Layer is selected
+        /// </summary>
         public bool Selected
         {
             get { return (bool)GetValue(SelectedProperty); }

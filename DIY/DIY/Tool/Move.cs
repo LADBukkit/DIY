@@ -12,15 +12,29 @@ using Xceed.Wpf.Toolkit;
 namespace DIY.Tool
 {
     /// <summary>
-    /// The Pipette Tool
-    /// Used for grabbing a color
+    /// The Move Tool
+    /// Used for moving a layer
     /// </summary>
     class Move : Tool
     {
+        /// <summary>
+        /// The Layer to Move
+        /// </summary>
         public Layer Layer { get; set; }
+
+        /// <summary>
+        /// The Old Position of the Layer
+        /// </summary>
         public Point OldPosition;
 
+        /// <summary>
+        /// The Old Offset X
+        /// </summary>
         public int OldOffX { get; set; }
+
+        /// <summary>
+        /// The Old Offset Y
+        /// </summary>
         public int OldOffY { get; set; }
 
         public override void MouseDown(MainWindow mw, Point p)

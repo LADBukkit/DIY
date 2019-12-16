@@ -10,11 +10,18 @@ using Xceed.Wpf.Toolkit;
 namespace DIY
 {
     /// <summary>
-    /// Interaktionslogik für FilterWindow.xaml
+    /// Codebehind for the filter window
     /// </summary>
     public partial class FilterWindow : Window
     {
+        /// <summary>
+        /// The filter of this
+        /// </summary>
         public Filter.Filter Filter { get; set; }
+
+        /// <summary>
+        /// The Layer to apply this
+        /// </summary>
         public ImageLayer Layer { get; set; }
 
         public FilterWindow(Filter.Filter filter, ImageLayer layer)
@@ -25,6 +32,7 @@ namespace DIY
             Title = Filter.Name;
             Layer = layer;
 
+            // Create the controls for the Properties
             foreach(Filter.FilterProperty fp in Filter.Properties)
             {
                 stackControls.Children.Add(new TextBlock() { Text = fp.Name });
@@ -73,21 +81,18 @@ namespace DIY
             DataContext = this;
         }
 
+        /// <summary>
+        /// Used to Preview the Layer in the previewZoomBox
+        /// </summary>
         public void PreviewImage()
         {
-            using(DirectBitmap db = Filter.CalculateFilter(Layer.GetBitmap()))
+            using (DirectBitmap db = Filter.CalculateFilter(Layer.GetBitmap()))
             {
                 preview.Source = ColorUtil.ImageSourceFromBitmap(db.Bitmap);
                 preview.Width = Layer.GetBitmap().Width;
                 preview.Height = Layer.GetBitmap().Height;
                 previewZoomBox.FitToBounds();
             }
-
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            PreviewImage();
         }
 
         private void Preview_Click(object sender, RoutedEventArgs e)

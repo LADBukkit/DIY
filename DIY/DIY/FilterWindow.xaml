@@ -6,7 +6,7 @@
         xmlns:wpfTool="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:DIY"
         mc:Ignorable="d"
-        Title="FilterWindow" Height="500" Width="500" WindowStartupLocation="CenterScreen" Style="{StaticResource WindowStyle}" ResizeMode="NoResize" Loaded="Window_Loaded">
+        Title="FilterWindow" Height="500" Width="500" WindowStartupLocation="CenterScreen" Style="{StaticResource WindowStyle}" ResizeMode="NoResize" Loaded="Preview_Click">
     <DockPanel LastChildFill="True">
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right" >
             <Button HorizontalAlignment="Right" Padding="5" Margin="5" Click="Abort_Click">Abort</Button>

@@ -14,11 +14,15 @@ using System.Linq;
 namespace DIY.Tool
 {
     /// <summary>
-    /// The Pipette Tool
-    /// Used for grabbing a color
+    /// The Fill Tool
+    /// Used for filling an area
     /// </summary>
     class Fill : Tool
     {
+        /// <summary>
+        /// The Threshold for the fille
+        /// 100 = 100%
+        /// </summary>
         public int Threshold { get; set; }
 
         public override void MouseDown(MainWindow mw, Point p)

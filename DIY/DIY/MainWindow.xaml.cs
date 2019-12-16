@@ -60,7 +60,14 @@ namespace DIY
         /// </summary>
         public DIYProject Project { get; set; }
 
+        /// <summary>
+        /// Whether the mouse is blocked
+        /// </summary>
         private bool BlockMouse = false;
+
+        /// <summary>
+        /// Whether the mouse is pressed
+        /// </summary>
         private bool IsMouseDown = false;
 
         public MainWindow()
@@ -76,6 +83,7 @@ namespace DIY
             tools.Add("move", new DIY.Tool.Move());
             tools.Add("smudge", new DIY.Tool.Smudge());
 
+            // Add the filter to the dictionary
             filterList.Add("filter_hslwheel", typeof(Filter.HSLWheel));
             filterList.Add("filter_gaussian", typeof(Filter.GaussianBlur));
             filterList.Add("filter_invert", typeof(Filter.Invert));
@@ -102,11 +110,13 @@ namespace DIY
             }
             settings.Save();
 
+            // Start the Thread for handling the queue
             Updater = new Thread(() => HandleQueue());
             Updater.IsBackground = true;
             Updater.Priority = ThreadPriority.Highest;
             Updater.Start();
 
+            // Start the updater for the ui elements
             DispatcherTimer t2 = new DispatcherTimer();
             t2.Tick += (sender, e) => UpdateProject();
             t2.Interval = new TimeSpan(0, 0, 0, 0, 50);
@@ -127,12 +137,12 @@ namespace DIY
             }
         }
 
+        /// <summary>
+        /// Updates the UI Elements
+        /// </summary>
         private void UpdateProject()
         {
             if (Project == null) return;
-
-            //Project.CalcBitmap();
-            //drawingPanel.InvalidateVisual();
 
             LayerList.Children.Clear();
             for(int i = Project.Layers.Count - 1; i >= 0 ; i--)
@@ -246,8 +256,16 @@ namespace DIY
             }
         }
 
+        /// <summary>
+        /// The Oldpoint for point checking
+        /// </summary>
         private Point OLDPOINT;
 
+        /// <summary>
+        /// When moving the Mouse while pressing left on the canvas
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void contentZoomBox_MouseMove(object sender, MouseEventArgs e)
         {
             if (BlockMouse) return;
@@ -273,6 +291,11 @@ namespace DIY
             }
         }
 
+        /// <summary>
+        /// Start pressing on the canvas
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void contentZoomBox_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (BlockMouse) return;
@@ -295,11 +318,16 @@ namespace DIY
             }
         }
 
+        /// <summary>
+        /// Releasing the mouse after Pressing on the canvas
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void contentZoomBox_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (BlockMouse) return;
 
-            if (e.ChangedButton == MouseButton.Left && CurrentBrush != null && Project != null)
+            if (e.ChangedButton == MouseButton.Left && e.LeftButton == MouseButtonState.Released && CurrentBrush != null && Project != null)
             {
                 IsMouseDown = false;
                 Layer lay = Project.Layers[Project.SelectedLayer];
@@ -316,6 +344,11 @@ namespace DIY
             }
         }
 
+        /// <summary>
+        /// Executes the Undo Command
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Undo_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             if(Project != null)
@@ -335,10 +368,14 @@ namespace DIY
                     Project.Undo(this);
                     BlockMouse = false;
                 });
-                //while (!ActionQueue.IsEmpty) { }
             }
         }
 
+        /// <summary>
+        /// Executes the Redo Command
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Redo_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             if (Project != null)
@@ -361,6 +398,11 @@ namespace DIY
             }
         }
 
+        /// <summary>
+        /// Handles pressing on new layer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NewLayer_Click(object sender, RoutedEventArgs e)
         {
             if (Project == null) return;
@@ -373,6 +415,11 @@ namespace DIY
             Project.PushUndo(this, ac);
         }
 
+        /// <summary>
+        /// Handles changing the opacity of the Layer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LayerOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (Project == null) return;
@@ -384,6 +431,11 @@ namespace DIY
             }
         }
 
+        /// <summary>
+        /// Handles changing the BlendMode of the Layer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LayerBlendMode_Selected(object sender, RoutedEventArgs e)
         {
             if (Project == null) return;
@@ -402,6 +454,11 @@ namespace DIY
             }
         }
 
+        /// <summary>
+        /// Draws the canvas
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void opglDraw_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs e)
         {
             if (Project == null) return;
@@ -427,6 +484,11 @@ namespace DIY
             });
         }
 
+        /// <summary>
+        /// Handles resizing the canvas
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void opglDraw_Resized(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
             OpenGL gl = opglDraw.OpenGL;
@@ -436,12 +498,22 @@ namespace DIY
             gl.MatrixMode(MatrixMode.Modelview);
         }
 
+        /// <summary>
+        /// Handles initializing the canvas
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void opglDraw_OpenGLInitialized(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
             OpenGL gl = opglDraw.OpenGL;
             gl.ClearColor(0, 0, 0, 0);
         }
 
+        /// <summary>
+        /// Handles moving a Layer down
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LayerDown_Click(object sender, RoutedEventArgs e)
         {
             if (Project == null || Project.SelectedLayer <= 0) return;
@@ -455,6 +527,11 @@ namespace DIY
             Project.PushUndo(this, ac);
         }
 
+        /// <summary>
+        /// Handles moving a Layer up
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LayerUp_Click(object sender, RoutedEventArgs e)
         {
             if (Project == null || Project.SelectedLayer >= Project.Layers.Count - 1) return;
@@ -468,14 +545,18 @@ namespace DIY
             Project.PushUndo(this, ac);
         }
 
+        /// <summary>
+        /// Handles renaming a Layer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Rename_Click(object sender, RoutedEventArgs e)
         {
             if (Project == null) return;
             Layer lay = Project.Layers[Project.SelectedLayer];
             RenameWindow rn = new RenameWindow(lay.Name);
-            rn.ShowDialog();
-
-            if(rn.Okay)
+            
+            if(rn.ShowDialog() == true)
             {
 
                 RenameAction ra = new RenameAction();
@@ -488,6 +569,11 @@ namespace DIY
             }
         }
 
+        /// <summary>
+        /// Handles deleting a Layer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
             if (Project == null) return;
@@ -513,6 +599,11 @@ namespace DIY
             }
         }
 
+        /// <summary>
+        /// Handles Saving a Project
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Save_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             if (Project == null) return;
@@ -529,6 +620,11 @@ namespace DIY
             }
         }
 
+        /// <summary>
+        /// Handles Saving a Project whilest asking for a path
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Save_As_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             if (Project == null) return;
@@ -548,6 +644,11 @@ namespace DIY
             }
         }
 
+        /// <summary>
+        /// Handles opening a Project
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
@@ -568,6 +669,11 @@ namespace DIY
             ofd.ShowDialog();
         }
 
+        /// <summary>
+        /// Handles Importing an Image
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Import_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
@@ -610,6 +716,11 @@ namespace DIY
             ofd.ShowDialog();
         }
 
+        /// <summary>
+        /// Handles Exporting the Project as an Image
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Export_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             if (Project == null) return;
@@ -637,6 +748,11 @@ namespace DIY
             }
         }
 
+        /// <summary>
+        /// Handles opening and applying the filters
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Filter_Click(object sender, RoutedEventArgs e)
         {
             if (Project == null) return;
@@ -663,11 +779,21 @@ namespace DIY
             }
         }
 
+        /// <summary>
+        /// Handles the showing of the About Window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void About_Click(object sender, RoutedEventArgs e)
         {
             Xceed.Wpf.Toolkit.MessageBox.Show("DrawItYourself - DIY" + Environment.NewLine + Environment.NewLine + "A Multi-Layered drawing Software developed by" + Environment.NewLine + "> Simon Tettenborn" + Environment.NewLine + "> Philipp Kretler" + Environment.NewLine + "> Robin Eschbach", "About");
         }
 
+        /// <summary>
+        /// Handles Closing the current Project
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Close_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             Project = null;

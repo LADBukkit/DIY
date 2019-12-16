@@ -171,6 +171,13 @@ namespace DIY.Util
             return (Math.Max(l1, l2) + 0.05D) / (Math.Min(l1, l2) + 0.05D);
         }
 
+        /// <summary>
+        /// Calculates the distance between 2 colors
+        /// It calculates the square for the performance
+        /// </summary>
+        /// <param name="c1">The first color</param>
+        /// <param name="c2">The second color</param>
+        /// <returns></returns>
         public static double DistanceSquared(DIYColor c1, DIYColor c2)
         {
             double da = (c1.A - c2.A) * (c1.A - c2.A);
