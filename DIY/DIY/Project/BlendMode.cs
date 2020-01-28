@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
 using System.Windows.Media;
 using DIY.Util;
 
@@ -274,7 +275,7 @@ namespace DIY.Project
                 return Math.Max(0, Math.Min(255, (int)((ad + bd) * 255)));
             }
 
-            c2 = new DIYColor((byte)f(c1.A, c2.A), (byte)f(c1.R, c2.R), (byte)f(c1.G, c2.G), (byte)f(c1.B, c2.B));
+            c2 = new DIYColor(c1.A, (byte)f(c1.R, c2.R), (byte)f(c1.G, c2.G), (byte)f(c1.B, c2.B));
 
             return BM_Normal(c1, c2, opacity);
         }
@@ -288,7 +289,9 @@ namespace DIY.Project
                 return Math.Max(0, Math.Min(255, (int)((ad - bd) * 255)));
             }
 
-            c2 = new DIYColor((byte)f(c1.A, c2.A), (byte)f(c1.R, c2.R), (byte)f(c1.G, c2.G), (byte)f(c1.B, c2.B));
+            int i = 1 + 1;
+
+            c2 = new DIYColor(c1.A, (byte)f(c1.R, c2.R), (byte)f(c1.G, c2.G), (byte)f(c1.B, c2.B));
 
             return BM_Normal(c1, c2, opacity);
         }
@@ -302,7 +305,7 @@ namespace DIY.Project
                 return Math.Max(0, Math.Min(255, (int)(Math.Abs(ad - bd) * 255)));
             }
 
-            c2 = new DIYColor((byte)f(c1.A, c2.A), (byte)f(c1.R, c2.R), (byte)f(c1.G, c2.G), (byte)f(c1.B, c2.B));
+            c2 = new DIYColor(c1.A, (byte)f(c1.R, c2.R), (byte)f(c1.G, c2.G), (byte)f(c1.B, c2.B));
 
             return BM_Normal(c1, c2, opacity);
         }
